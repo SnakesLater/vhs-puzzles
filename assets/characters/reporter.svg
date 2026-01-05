@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Reporter silhouette -->
+  <circle cx="50" cy="25" r="15" fill="#666"/>
+  <rect x="40" y="40" width="20" height="35" fill="#444"/>
+  <rect x="32" y="42" width="8" height="30" fill="#444"/>
+  <rect x="60" y="42" width="8" height="30" fill="#444"/>
+  <!-- Microphone -->
+  <rect x="75" y="30" width="15" height="5" fill="#333" transform="rotate(30 75 30)"/>
+  <rect x="85" y="20" width="8" height="8" fill="#333"/>
+</svg>

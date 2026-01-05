@@ -1,0 +1,35 @@
+.difficulty-btn {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid #555;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.difficulty-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.difficulty-btn.active {
+    background: #ff6b35;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 107, 53, 0.7);
+    transform: scale(1.05);
+}
+
+.difficulty-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.difficulty-btn.active {
+    background: #ff6b35;
+    border-color: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 107, 53, 0.7);
+    transform: scale(1.05);
+}

@@ -1,0 +1,282 @@
+/* VHS Effects CSS */
+
+#vhs-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+#static-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.03;
+}
+
+#scanlines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.15),
+        rgba(0, 0, 0, 0.15) 1px,
+        transparent 1px,
+        transparent 2px
+    );
+    pointer-events: none;
+}
+
+#tracking-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        180deg,
+        transparent,
+        transparent 3px,
+        rgba(255, 255, 255, 0.02) 3px,
+        rgba(255, 255, 255, 0.02) 6px
+    );
+    pointer-events: none;
+    animation: trackingMove 8s linear infinite;
+}
+
+@keyframes trackingMove {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(100px); }
+}
+
+/* Glitch Text Effect */
+.glitch-text {
+    position: relative;
+    animation: glitch 2s infinite;
+}
+
+.glitch-text::before,
+.glitch-text::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.glitch-text::before {
+    left: 2px;
+    text-shadow: -2px 0 #ff00ff;
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitch-anim-1 2s infinite linear alternate-reverse;
+}
+
+.glitch-text::after {
+    left: -2px;
+    text-shadow: -2px 0 #00ffff;
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitch-anim-2 2s infinite linear alternate-reverse;
+}
+
+@keyframes glitch {
+    0%, 90%, 100% { transform: translate(0); }
+    92% { transform: translate(-5px, 2px); }
+    94% { transform: translate(5px, -2px); }
+    96% { transform: translate(-3px, 1px); }
+}
+
+@keyframes glitch-anim-1 {
+    0% { clip: rect(20px, 9999px, 10px, 0); }
+    20% { clip: rect(60px, 9999px, 80px, 0); }
+    40% { clip: rect(40px, 9999px, 10px, 0); }
+    60% { clip: rect(80px, 9999px, 60px, 0); }
+    80% { clip: rect(10px, 9999px, 40px, 0); }
+    100% { clip: rect(30px, 9999px, 70px, 0); }
+}
+
+@keyframes glitch-anim-2 {
+    0% { clip: rect(80px, 9999px, 10px, 0); }
+    20% { clip: rect(10px, 9999px, 60px, 0); }
+    40% { clip: rect(60px, 9999px, 40px, 0); }
+    60% { clip: rect(30px, 9999px, 80px, 0); }
+    80% { clip: rect(50px, 9999px, 10px, 0); }
+    100% { clip: rect(20px, 9999px, 50px, 0); }
+}
+
+/* Tape Quality Effects */
+.tape-quality-100 {
+    filter: none;
+}
+
+.tape-quality-80 .tape-quality-60 {
+    filter: contrast(1.1) brightness(0.95);
+}
+
+.tape-quality-60 .tape-quality-40 {
+    filter: contrast(1.2) brightness(0.9) saturate(1.1);
+}
+
+.tape-quality-40 .tape-quality-20 {
+    filter: contrast(1.3) brightness(0.85) saturate(1.2);
+}
+
+.tape-quality-20 .tape-quality-0 {
+    filter: contrast(1.4) brightness(0.8) saturate(1.3);
+}
+
+/* Screen Shake */
+.shake {
+    animation: screenShake 0.5s ease-in-out;
+}
+
+@keyframes screenShake {
+    0%, 100% { transform: translate(0, 0); }
+    10%, 30%, 50%, 70%, 90% { transform: translate(-5px, -5px); }
+    20%, 40%, 60%, 80% { transform: translate(5px, 5px); }
+}
+
+/* Color Shift */
+.color-shift {
+    animation: colorShift 0.5s ease-in-out;
+}
+
+@keyframes colorShift {
+    0%, 100% { filter: hue-rotate(0deg); }
+    50% { filter: hue-rotate(20deg); }
+}
+
+/* Scanline Flicker */
+.scanline-flicker {
+    animation: scanlineFlicker 0.1s infinite;
+}
+
+@keyframes scanlineFlicker {
+    0%, 100% { opacity: 0.15; }
+    50% { opacity: 0.25; }
+}
+
+/* Tracking Error */
+.tracking-error {
+    animation: trackingError 0.5s ease-in-out;
+}
+
+@keyframes trackingError {
+    0%, 100% { transform: translateY(0); }
+    25% { transform: translateY(-20px); }
+    75% { transform: translateY(20px); }
+}
+
+/* Dropout Effect */
+.dropout {
+    animation: dropout 0.3s ease-in-out;
+}
+
+@keyframes dropout {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* Vertical Hold Loss */
+.vertical-hold {
+    animation: verticalHold 1s linear infinite;
+}
+
+@keyframes verticalHold {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-100%); }
+}
+
+/* Jumpscare Overlay */
+#jumpscare-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    animation: jumpscareFadeIn 0.1s ease-out;
+}
+
+@keyframes jumpscareFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+#jumpscare-content {
+    text-align: center;
+    animation: jumpscareShake 0.5s infinite;
+}
+
+#jumpscare-content h1 {
+    font-size: 5rem;
+    color: #8b0000;
+    text-shadow: 0 0 20px #ff0000;
+    margin-bottom: 1rem;
+}
+
+#jumpscare-content p {
+    font-size: 2rem;
+    color: #666;
+}
+
+@keyframes jumpscareShake {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(-10px, 10px) rotate(-5deg); }
+    75% { transform: translate(10px, -10px) rotate(5deg); }
+}
+
+/* Timer Overlay */
+#timer-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1500;
+    animation: fadeIn 0.3s ease;
+}
+
+.timer-display {
+    text-align: center;
+}
+
+.timer-label {
+    display: block;
+    font-size: 1.5rem;
+    color: var(--secondary-accent);
+    margin-bottom: 1rem;
+}
+
+#timer-count {
+    font-size: 6rem;
+    color: #8b0000;
+    text-shadow: 0 0 20px #ff0000;
+}
+
+.timer-warning {
+    color: #ff6b35 !important;
+    animation: timerPulse 0.5s infinite;
+}
+
+@keyframes timerPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}

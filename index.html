@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VHS HORROR PUZZLE COLLECTION</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/vhs-effects.css">
+    <link rel="stylesheet" href="css/difficulty.css">
+    <link rel="stylesheet" href="css/games/connections.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Nosifer&family=Special+Elite&family=Butcherman&family=VT323&family=Black+Ops+One&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="vhs-overlay">
+        <canvas id="static-canvas"></canvas>
+        <div id="scanlines"></div>
+        <div id="tracking-lines"></div>
+    </div>
+
+    <div id="main-container" class="tape-quality-100">
+        
+        <!-- Main Menu: Tape Selection -->
+        <div id="tape-selection" class="screen">
+            <div class="vhs-header">
+                <h1 class="glitch-text">VHS HORROR PUZZLE COLLECTION</h1>
+                <p class="tape-counter">TAPE INSERTED: <span id="tape-number">--</span></p>
+            </div>
+
+            <div id="mode-selection" class="mode-grid">
+                <button class="mode-btn tape-btn" data-mode="story">
+                    <canvas class="tape-canvas front" width="350" height="467"></canvas>
+                    <canvas class="tape-canvas back" width="350" height="467"></canvas>
+                </button>
+                <button class="mode-btn tape-btn" data-mode="game">
+                    <canvas class="tape-canvas front" width="350" height="467"></canvas>
+                    <canvas class="tape-canvas back" width="350" height="467"></canvas>
+                </button>
+                <button class="mode-btn tape-btn" data-mode="game">
+                    <canvas class="tape-canvas front" width="280" height="508"></canvas>
+                    <canvas class="tape-canvas back" width="280" height="508"></canvas>
+                </button>
+            </div>
+
+            <div id="difficulty-selection" class="mode-grid hidden">
+                <button class="difficulty-btn" data-difficulty="easy">
+                    <canvas class="tape-canvas front" width="350" height="467"></canvas>
+                    <canvas class="tape-canvas back" width="350" height="467"></canvas>
+                </button>
+                <button class="difficulty-btn" data-difficulty="medium">
+                    <canvas class="tape-canvas front" width="350" height="467"></canvas>
+                    <canvas class="tape-canvas back" width="350" height="467"></canvas>
+                </button>
+                <button class="difficulty-btn" data-difficulty="hard">
+                    <canvas class="tape-canvas front" width="350" height="467"></canvas>
+                    <canvas class="tape-canvas back" width="350" height="467"></canvas>
+                </button>
+                <button class="difficulty-btn hidden" data-difficulty="insane">
+                    <canvas class="tape-canvas front" width="350" height="467"></canvas>
+                    <canvas class="tape-canvas back" width="350" height="467"></canvas>
+                </button>
+            </div>
+
+            <div id="story-selection" class="story-grid hidden"></div>
+            
+            <div id="game-selection" class="game-grid hidden">
+                <button class="game-btn" data-game="connections">
+                    <canvas class="tape-canvas front" width="350" height="467"></canvas>
+                    <canvas class="tape-canvas back" width="350" height="467"></canvas>
+                </button>
+                <button class="game-btn" data-game="wordle" disabled>
+                    <canvas class="tape-canvas front" width="350" height="467"></canvas>
+                    <canvas class="tape-canvas back" width="350" height="467"></canvas>
+                </button>
+                <button class="game-btn" data-game="strands" disabled>
+                    <canvas class="tape-canvas front" width="350" height="467"></canvas>
+                    <canvas class="tape-canvas back" width="350" height="467"></canvas>
+                </button>
+                <button class="game-btn" data-game="spelling-bee" disabled>
+                    <canvas class="tape-canvas front" width="350" height="467"></canvas>
+                    <canvas class="tape-canvas back" width="350" height="467"></canvas>
+                </button>
+                <button class="game-btn" data-game="letter-boxed" disabled>
+                    <canvas class="tape-canvas front" width="350" height="467"></canvas>
+                    <canvas class="tape-canvas back" width="350" height="467"></canvas>
+                </button>
+            </div>
+
+            <button id="back-btn" class="nav-btn hidden">◀ REWIND</button>
+        </div>
+
+        <!-- Story Mode -->
+        <div id="story-mode" class="screen hidden">
+            <div class="story-layout">
+                <!-- 20% LEFT COLUMN -->
+                <div class="left-column">
+                    
+                    <!-- AVATAR (40% of 20% = 8% screen width) -->
+                    <div class="avatar-area">
+                        <video id="avatar-video" class="avatar-video" 
+                               src="assets/characters/_382151f3-f7fa-41b2-9abd-147bfff0ef31.mp4" 
+                               autoplay loop muted playsinline></video>
+                    </div>
+                    
+                    <!-- STORY TEXT AREA (60% of 20% = 12% screen width) -->
+                    <div class="story-text-area">
+                        <canvas id="story-text-canvas"></canvas>
+                    </div>
+                </div>
+                
+                <!-- 80% PUZZLE AREA -->
+                <div class="puzzle-area">
+                    <div class="puzzle-header-box">
+                        <span class="puzzle-game-type" id="puzzle-game-type">CONNECTIONS</span>
+                        <div class="vhs-counter-container">
+                            <svg class="vhs-icon active" viewBox="0 0 100 60" data-tape="1">
+                                <defs>
+                                    <linearGradient id="tapeGrad1" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#2a2a2a"/>
+                                        <stop offset="50%" style="stop-color:#1a1a1a"/>
+                                        <stop offset="100%" style="stop-color:#0d0d0d"/>
+                                    </linearGradient>
+                                    <linearGradient id="labelGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" style="stop-color:#c9b037"/>
+                                        <stop offset="50%" style="stop-color:#e6c547"/>
+                                        <stop offset="100%" style="stop-color:#c9b037"/>
+                                    </linearGradient>
+                                </defs>
+                                <rect x="2" y="8" width="96" height="44" rx="3" fill="url(#tapeGrad1)" stroke="#444" stroke-width="1"/>
+                                <rect x="15" y="12" width="50" height="12" rx="1" fill="url(#labelGrad1)"/>
+                                <rect x="35" y="28" width="30" height="16" rx="2" fill="#111" stroke="#555" stroke-width="1"/>
+                                <circle cx="42" cy="36" r="5" fill="#333" stroke="#666" stroke-width="1"/>
+                                <circle cx="42" cy="36" r="2" fill="#222"/>
+                                <circle cx="58" cy="36" r="5" fill="#333" stroke="#666" stroke-width="1"/>
+                                <circle cx="58" cy="36" r="2" fill="#222"/>
+                            </svg>
+                            <svg class="vhs-icon active" viewBox="0 0 100 60" data-tape="2">
+                                <defs>
+                                    <linearGradient id="tapeGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#2a2a2a"/>
+                                        <stop offset="50%" style="stop-color:#1a1a1a"/>
+                                        <stop offset="100%" style="stop-color:#0d0d0d"/>
+                                    </linearGradient>
+                                    <linearGradient id="labelGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" style="stop-color:#c9b037"/>
+                                        <stop offset="50%" style="stop-color:#e6c547"/>
+                                        <stop offset="100%" style="stop-color:#c9b037"/>
+                                    </linearGradient>
+                                </defs>
+                                <rect x="2" y="8" width="96" height="44" rx="3" fill="url(#tapeGrad2)" stroke="#444" stroke-width="1"/>
+                                <rect x="15" y="12" width="50" height="12" rx="1" fill="url(#labelGrad2)"/>
+                                <rect x="35" y="28" width="30" height="16" rx="2" fill="#111" stroke="#555" stroke-width="1"/>
+                                <circle cx="42" cy="36" r="5" fill="#333" stroke="#666" stroke-width="1"/>
+                                <circle cx="42" cy="36" r="2" fill="#222"/>
+                                <circle cx="58" cy="36" r="5" fill="#333" stroke="#666" stroke-width="1"/>
+                                <circle cx="58" cy="36" r="2" fill="#222"/>
+                            </svg>
+                            <svg class="vhs-icon active" viewBox="0 0 100 60" data-tape="3">
+                                <defs>
+                                    <linearGradient id="tapeGrad3" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#2a2a2a"/>
+                                        <stop offset="50%" style="stop-color:#1a1a1a"/>
+                                        <stop offset="100%" style="stop-color:#0d0d0d"/>
+                                    </linearGradient>
+                                    <linearGradient id="labelGrad3" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" style="stop-color:#c9b037"/>
+                                        <stop offset="50%" style="stop-color:#e6c547"/>
+                                        <stop offset="100%" style="stop-color:#c9b037"/>
+                                    </linearGradient>
+                                </defs>
+                                <rect x="2" y="8" width="96" height="44" rx="3" fill="url(#tapeGrad3)" stroke="#444" stroke-width="1"/>
+                                <rect x="15" y="12" width="50" height="12" rx="1" fill="url(#labelGrad3)"/>
+                                <rect x="35" y="28" width="30" height="16" rx="2" fill="#111" stroke="#555" stroke-width="1"/>
+                                <circle cx="42" cy="36" r="5" fill="#333" stroke="#666" stroke-width="1"/>
+                                <circle cx="42" cy="36" r="2" fill="#222"/>
+                                <circle cx="58" cy="36" r="5" fill="#333" stroke="#666" stroke-width="1"/>
+                                <circle cx="58" cy="36" r="2" fill="#222"/>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <div id="game-container"></div>
+                    
+                    <!-- Blood Effect -->
+                    <div class="blood-container">
+                            <svg class="blood-svg" viewBox="0 0 100 10" preserveAspectRatio="none">
+                                <path id="blood-path" class="blood-path" 
+                                      d="M 0 5 Q 25 3, 50 5 T 100 5"
+                                      fill="none" 
+                                      stroke="#8b0000" 
+                                      stroke-width="6"
+                                      stroke-linecap="round"
+                                      filter="blur(1px) drop-shadow(0 2px 4px rgba(139, 0, 0, 0.8))"/>
+                            </svg>
+                            <div class="blood-pool"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button id="rewind-btn" class="action-btn hidden">⏪ REWIND THIS SCENE</button>
+        </div>
+
+        <!-- Game Mode (Single Puzzle) -->
+        <div id="game-mode" class="screen hidden">
+            <div class="tape-quality-meter">
+                <div class="quality-bar">
+                    <div class="quality-fill"></div>
+                </div>
+            </div>
+            <div id="single-game-container"></div>
+            <button id="game-mode-back" class="nav-btn">◀ EJECT TAPE</button>
+        </div>
+
+        <!-- Jumpscare Overlay -->
+        <div id="jumpscare-overlay" class="hidden">
+            <div id="jumpscare-content">
+                <h1 class="glitch-text">TAPE CORRUPTED</h1>
+                <p>The footage has been consumed...</p>
+            </div>
+        </div>
+
+        <!-- Timer (Optional) -->
+        <div id="timer-overlay" class="hidden">
+            <div class="timer-display">
+                <span class="timer-label">TIME REMAINING</span>
+                <span id="timer-count">00:00</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/systems/puzzle-loader.js"></script>
+    <script src="js/systems/tape-quality.js"></script>
+    <script src="js/systems/vhs-tape-renderer.js"></script>
+    <script src="js/vhs-effects.js"></script>
+    <script src="js/games/connections.js"></script>
+    <script src="js/avatar-controller.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
