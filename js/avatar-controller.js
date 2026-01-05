@@ -47,7 +47,6 @@ class AvatarVideoController {
             this.video.playbackRate = this.playbackRate;
             await this.video.play();
         } catch (e) {
-            console.log('Video play failed:', e);
             return;
         }
         

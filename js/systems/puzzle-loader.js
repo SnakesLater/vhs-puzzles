@@ -102,7 +102,7 @@ class PuzzleLoader {
 
     getStory(storyId) {
         if (!this.stories || !this.stories.campaigns) {
-            console.error('Stories not found');
+            // Data not loaded yet
             return null;
         }
 

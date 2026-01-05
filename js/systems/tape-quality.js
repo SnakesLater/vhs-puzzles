@@ -30,7 +30,7 @@ class TapeQualitySystem {
                 this.maxRewinds = 1;
                 break;
             case 'insane':
-                this.maxRewinds = 0;
+                this.maxRewinds = 1;
                 break;
             default:
                 this.maxRewinds = 3;
@@ -39,10 +39,10 @@ class TapeQualitySystem {
         this.reset();
     }
 
-        reset() {
+    reset() {
         this.quality = this.maxQuality;
         this.rewinds = this.maxRewinds;
-        
+
         resetBloodTrail();
         this.updateUI();
     }
@@ -150,12 +150,16 @@ class TapeQualitySystem {
         const vhsIcons = document.querySelectorAll('.vhs-icon');
         vhsIcons.forEach((icon, index) => {
             const iconNum = index + 1;
-            icon.classList.remove('active', 'lost');
-            
-            if (iconNum <= this.rewinds) {
-                icon.classList.add('active');
+            icon.classList.remove('active', 'lost', 'hidden');
+
+            if (iconNum <= this.maxRewinds) {
+                if (iconNum <= this.rewinds) {
+                    icon.classList.add('active');
+                } else {
+                    icon.classList.add('lost');
+                }
             } else {
-                icon.classList.add('lost');
+                icon.classList.add('hidden');
             }
         });
     }

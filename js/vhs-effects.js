@@ -31,15 +31,6 @@ class VHSEffects {
         }
     }
 
-    initAudio() {
-        try {
-            this.jumpscareAudio = new Audio('assets/audio/jumpscare.mp3');
-            this.jumpscareAudio.volume = 1.0;
-        } catch (e) {
-            console.warn('Audio not available:', e);
-        }
-    }
-
     initCanvas() {
         this.staticCanvas.width = window.innerWidth;
         this.staticCanvas.height = window.innerHeight;
@@ -173,7 +164,7 @@ class VHSEffects {
         
         if (this.jumpscareAudio) {
             this.jumpscareAudio.currentTime = 0;
-            this.jumpscareAudio.play().catch(e => console.log('Audio play failed:', e));
+            this.jumpscareAudio.play().catch(() => {});
         }
         
         setTimeout(() => {
@@ -185,7 +176,7 @@ class VHSEffects {
     playError() {
         if (this.errorAudio) {
             this.errorAudio.currentTime = 0;
-            this.errorAudio.play().catch(e => console.log('Error audio play failed:', e));
+            this.errorAudio.play().catch(() => {});
         }
     }
 
@@ -201,7 +192,7 @@ class VHSEffects {
     playClick() {
         if (this.clickAudio) {
             this.clickAudio.currentTime = 0;
-            this.clickAudio.play().catch(e => console.log('Click audio play failed:', e));
+            this.clickAudio.play().catch(() => {});
         }
     }
 

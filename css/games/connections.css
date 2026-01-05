@@ -1,7 +1,7 @@
 /* Connections Game CSS - Detective Footage Aesthetic */
 
 :root {
-    --puzzle-base-size: clamp(1.2rem, 3.5vw, 2.5rem);
+    --puzzle-base-size: clamp(2.5rem, 6vw, 4.5rem);
     --puzzle-header-size: calc(var(--puzzle-base-size) * 0.9);
     --puzzle-control-size: calc(var(--puzzle-base-size) * 0.5);
     --puzzle-message-size: calc(var(--puzzle-base-size) * 0.7);
@@ -29,7 +29,7 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(4, 1fr);
-    gap: 0.4rem;
+    gap: 0.2rem;
     flex: 1;
     width: 100%;
     min-height: 0;
@@ -38,7 +38,7 @@
 .word-tile {
     background: #1a1a2e;
     border: 3px solid #333;
-    padding: 0.3rem;
+    padding: 0.15rem;
     text-align: center;
     cursor: pointer;
     transition: all 0.15s ease;
@@ -57,11 +57,11 @@
 /* Long words get slightly smaller */
 .word-tile[data-word-length="7"],
 .word-tile[data-word-length="8"] {
-    font-size: calc(var(--puzzle-base-size) * 0.85);
+    font-size: calc(var(--puzzle-base-size) * 0.9);
 }
 
 .word-tile[data-word-length="9"] {
-    font-size: calc(var(--puzzle-base-size) * 0.75);
+    font-size: calc(var(--puzzle-base-size) * 0.8);
 }
 
 .word-tile:hover {
@@ -262,7 +262,7 @@
 /* Responsive adjustments */
 @media (max-width: 1024px) {
     :root {
-        --puzzle-base-size: clamp(1rem, 3vw, 2rem);
+        --puzzle-base-size: clamp(2rem, 5vw, 3.5rem);
         --puzzle-header-size: calc(var(--puzzle-base-size) * 0.85);
         --puzzle-control-size: calc(var(--puzzle-base-size) * 0.45);
         --puzzle-message-size: calc(var(--puzzle-base-size) * 0.6);
@@ -280,7 +280,7 @@
 
 @media (max-width: 768px) {
     :root {
-        --puzzle-base-size: clamp(0.8rem, 2.5vw, 1.5rem);
+        --puzzle-base-size: clamp(1.5rem, 4vw, 2.8rem);
         --puzzle-header-size: calc(var(--puzzle-base-size) * 0.8);
         --puzzle-control-size: calc(var(--puzzle-base-size) * 0.4);
         --puzzle-message-size: calc(var(--puzzle-base-size) * 0.5);

@@ -4,9 +4,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Game state
     let currentMode = null;
     let currentDifficulty = 'medium';
-    let currentStory = null;
+  let currentStory = null;
     let currentSceneIndex = 0;
     let currentGameType = null;
+    let currentConnectionsGame = null; // Scoped to module
 
     // DOM elements
     const screens = {
@@ -25,12 +26,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         gameModeBack: document.getElementById('game-mode-back')
     };
 
+    // Initialize tape renderer
+    const tapeRenderer = new VHSTapeRenderer();
+    tapeRenderer.initialize();
+
     // Initialize
     await initializeGame();
 
     async function initializeGame() {
         // Load puzzles and stories
         const loaded = await puzzleLoader.loadAll();
+        // Re-render menu buttons now that data is loaded
+        tapeRenderer.renderMenuButtons();
         
         if (!loaded) {
             alert('Failed to load game data. Please refresh.');
@@ -60,6 +67,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             btn.addEventListener('click', () => selectDifficulty(btn.dataset.difficulty));
         });
 
+        // Story selection
+        document.querySelectorAll('.story-card').forEach(btn => {
+            btn.addEventListener('click', () => selectStory(btn.dataset.story));
+        });
+
         // Game selection
         buttons.gameSelection.forEach(btn => {
             btn.addEventListener('click', () => selectGame(btn.dataset.game));
@@ -68,6 +80,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Back buttons
         buttons.back.addEventListener('click', () => goBack());
         buttons.gameModeBack.addEventListener('click', () => goBack());
+        document.getElementById('story-back-btn').addEventListener('click', () => {
+            document.getElementById('story-selection').classList.add('hidden');
+            document.getElementById('mode-selection').classList.remove('hidden');
+        });
+
 
         // Rewind button
         buttons.rewind.addEventListener('click', () => rewindScene());
@@ -89,6 +106,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 restartStory();
             }, 3000);
         });
+
+        tapeQualitySystem.onRewindUse(() => {
+            tapeRenderer.updateCounterDisplay();
+        });
+
     }
 
     function showScreen(screenName) {
@@ -134,6 +156,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    function selectStory(story) {
+        currentStory = story;
+        
+        document.getElementById('story-selection').classList.add('hidden');
+        document.getElementById('difficulty-selection').classList.remove('hidden');
+    }
+
     function selectGame(gameType) {
         currentGameType = gameType;
         
@@ -154,41 +183,28 @@ document.addEventListener('DOMContentLoaded', async () => {
         stories.forEach(story => {
             const isUnlocked = isStoryUnlocked(story.id);
             const isCompleted = isStoryCompleted(story.id);
-            
+
             const card = document.createElement('div');
             card.className = `story-card ${isUnlocked ? '' : 'locked'}`;
             card.dataset.story = story.id;
-            
+
             card.innerHTML = `
-                <div class="story-front">
-                    ${isUnlocked && story.id !== 'cabin_stalkings' ? '<div class="new-release-label">NEW RELEASE</div>' : ''}
-                    <h3 class="story-title">${story.title}</h3>
-                    <p class="story-premise">${story.premise}</p>
-                </div>
-                <div class="story-back">
-                    <p class="story-desc">${story.premise}</p>
-                    <div class="story-meta">
-                        <p class="scenes-count">
-                            <span>Scenes:</span>
-                            <span>${story.scenes.length}</span>
-                        </p>
-                        <p class="difficulty-level">
-                            <span>Difficulty:</span>
-                            <span>${getStoryDifficulty(story.id)}</span>
-                        </p>
-                    </div>
-                    <p class="story-status ${isUnlocked ? 'available' : 'rented-out'}">
-                        ${isUnlocked ? 'Available for viewing' : 'RENTED OUT'}
-                    </p>
+                <div class="flipper">
+                    <canvas class="tape-canvas front" width="350" height="467"></canvas>
+                    <canvas class="tape-canvas back" width="350" height="467"></canvas>
+                    <div class="tape-edge"></div>
                 </div>
             `;
-            
+
             if (isUnlocked) {
                 card.addEventListener('click', () => startStory(story.id));
             }
-            
+
             container.appendChild(card);
         });
+
+        // Render the story covers after creating the elements
+        tapeRenderer.renderMenuButtons();
     }
 
     function getStoryDifficulty(storyId) {
@@ -203,37 +219,41 @@ document.addEventListener('DOMContentLoaded', async () => {
     function startStory(storyId) {
         currentStory = storyId;
         currentSceneIndex = 0;
-        
+
+        tapeQualitySystem.reset();
+
         document.getElementById('story-selection').classList.add('hidden');
-        
+
         showScreen('storyMode');
         loadScene(0);
     }
 
     async function loadScene(index) {
         currentSceneIndex = index;
-        
+
         const scene = puzzleLoader.getScene(currentStory, index);
-        
+
         if (!scene) {
             completeStory();
             return;
         }
-        
+
+        // Reset tape quality for each scene
+        tapeQualitySystem.reset();
+
         // Cancel any ongoing text animation
         vhsEffects.cancelTypewriter();
-        
+
         // Reset blood trail for new scene
         resetBloodTrail();
-        
-        // Start typewriter immediately but don't wait for it
-        const narrativeEl = document.getElementById('narrative-text');
-        narrativeEl.textContent = '';
-        vhsEffects.typeText(narrativeEl, scene.narrative.before, 10);
-        
+
+        // Start typewriter on canvas immediately
+        tapeRenderer.storyRenderer.clearText();
+        tapeRenderer.storyRenderer.setText(scene.narrative.before);
+
         // Load puzzle immediately - player can start playing right away
         loadPuzzle(scene.gameType, scene.puzzleId, scene.timer);
-        
+
         // Update rewind button
         const rewindBtn = document.getElementById('rewind-btn');
         rewindBtn.classList.add('hidden');
@@ -253,7 +273,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         // Set condensed header
         const puzzleGameType = document.getElementById('puzzle-game-type');
-        const detectiveDialogue = document.getElementById('detective-dialogue');
+        const detectiveQuote = document.getElementById('detective-quote');
         
         const gameTypeMap = {
             'connections': 'CONNECTIONS',
@@ -266,32 +286,35 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (puzzleGameType) {
             puzzleGameType.textContent = gameTypeMap[gameType] || gameType.toUpperCase();
         }
-        if (detectiveDialogue) {
+        if (detectiveQuote) {
             const dialogues = [
-                'Well, look what just came across my desk. Lucky me...',
+                'Well, look what just came across my desk...',
                 'Another night, another puzzle. This should be interesting.',
                 'The pieces are scattered, but I\'ll make sense of it all.',
                 'Something doesn\'t add up. I need to find the connection.',
                 'This looks like the work of a twisted mind.',
                 'Let\'s see what secrets this puzzle hides.'
             ];
-            detectiveDialogue.textContent = dialogues[Math.floor(Math.random() * dialogues.length)];
+            const quote = dialogues[Math.floor(Math.random() * dialogues.length)];
+            detectiveQuote.innerHTML = `${quote}<br><span style="font-size: 0.8em; opacity: 0.8;">-Det. Mills</span>`;
         }
         
         // Start appropriate game
         if (gameType === 'connections') {
             currentConnectionsGame = new ConnectionsGame('game-container', puzzle);
-            
-            // Set callbacks
-            window.onGameComplete = async (won) => {
+
+            // Set up event listeners
+            eventManager.on('gameComplete', async (won) => {
                 if (won) {
-                    await showAfterNarrative();
+                    // After narrative already shown on after3
                 }
-            };
-            
-            window.onRewindRequested = () => {
+            });
+
+            eventManager.on('after3', async () => await showAfterNarrative());
+
+            eventManager.on('rewindRequested', () => {
                 rewindScene();
-            };
+            });
             
             // Start timer if specified
             if (timer) {
@@ -304,22 +327,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function showAfterNarrative() {
         const scene = puzzleLoader.getScene(currentStory, currentSceneIndex);
-        const narrativeEl = document.getElementById('narrative-text');
         
-        await vhsEffects.typeText(narrativeEl, scene.narrative.after, 30);
-        
-        // Show continue button
-        setTimeout(() => {
-            if (puzzleLoader.getNextScene(currentStory, currentSceneIndex)) {
-                const btn = document.createElement('button');
-                btn.className = 'action-btn';
-                btn.textContent = '▶ CONTINUE';
-                btn.addEventListener('click', nextScene);
-                document.getElementById('game-container').appendChild(btn);
-            } else {
-                completeStory();
-            }
-        }, 1000);
+        // Start typewriter on canvas for after narrative
+        tapeRenderer.storyRenderer.setText(scene.narrative.after);
+
+        // Show continue button immediately
+        if (puzzleLoader.getNextScene(currentStory, currentSceneIndex)) {
+            const btn = document.createElement('button');
+            btn.className = 'action-btn';
+            btn.textContent = '▶ CONTINUE';
+            btn.addEventListener('click', nextScene);
+            document.getElementById('game-container').appendChild(btn);
+        } else {
+            completeStory();
+        }
     }
 
     function nextScene() {
@@ -336,8 +357,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (puzzle) {
             tapeQualitySystem.reset();
             currentConnectionsGame = new ConnectionsGame('single-game-container', puzzle);
-            
-            window.onGameComplete = (won) => {
+
+            eventManager.on('gameComplete', (won) => {
                 if (won) {
                     setTimeout(() => {
                         alert('Puzzle completed! Returning to menu...');
@@ -349,9 +370,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                         goBack();
                     }, 1000);
                 }
-            };
-            
-            window.onRewindRequested = null;
+            });
+
+            eventManager.off('rewindRequested'); // Clear previous listeners
         }
     }
 
@@ -404,6 +425,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             currentConnectionsGame.stopTimer();
             currentConnectionsGame = null;
         }
+
+        // Clear event listeners
+        eventManager.clear('gameComplete');
+        eventManager.clear('rewindRequested');
         
         // Hide timer overlay if shown
         document.getElementById('timer-overlay').classList.add('hidden');
@@ -567,6 +592,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             insaneUnlocked: document.querySelector('[data-difficulty="insane"]').classList.contains('hidden') === false
         };
         localStorage.setItem('vhsHorrorProgress', JSON.stringify(progress));
+        window.progress = progress;
     }
 
     function isStoryUnlocked(storyId) {
@@ -619,9 +645,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!progress.storiesCompleted.includes(storyId)) {
             progress.storiesCompleted.push(storyId);
             localStorage.setItem('vhsHorrorProgress', JSON.stringify(progress));
+        window.progress = progress;
         }
     }
-
+  
     function markStoryUnlocked(storyId) {
         // Stories are unlocked when previous is completed
         // This is handled in isStoryUnlocked()

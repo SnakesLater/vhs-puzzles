@@ -96,9 +96,15 @@ class ConnectionsGame {
     updateButtons() {
         const deselectBtn = document.getElementById('deselect-btn');
         const submitBtn = document.getElementById('submit-btn');
-        
+
         deselectBtn.disabled = this.selectedWords.length === 0;
         submitBtn.disabled = this.selectedWords.length !== 4;
+
+        if (submitBtn.disabled) {
+            submitBtn.textContent = 'SELECT 4 WORDS';
+        } else {
+            submitBtn.textContent = this.correctGroups.size === 3 ? 'FINISH' : 'SUBMIT';
+        }
     }
 
     submitGuess() {
@@ -150,7 +156,12 @@ class ConnectionsGame {
                 tile.remove();
             }
         });
-        
+
+        // Check if this is the 3rd correct group for story mode
+        if (this.correctGroups.size === 3) {
+            eventManager.emit('after3');
+        }
+
         // Add solved group display
         const solvedContainer = document.getElementById('connections-solved-groups');
         const groupElement = document.createElement('div');
@@ -187,7 +198,9 @@ class ConnectionsGame {
         vhsEffects.shake();
         vhsEffects.playError();
         tapeQualitySystem.decreaseQuality(15);
-        
+        tapeQualitySystem.rewinds = Math.max(0, tapeQualitySystem.rewinds - 1);
+        tapeQualitySystem.updateUI();
+
         if (window.updateBloodTrail) {
             window.updateBloodTrail(this.mistakes, this.maxMistakes);
         }
@@ -244,17 +257,13 @@ class ConnectionsGame {
         
         if (continueBtn) {
             continueBtn.addEventListener('click', () => {
-                if (window.onGameComplete) {
-                    window.onGameComplete(won);
-                }
+                eventManager.emit('gameComplete', won);
             });
         }
-        
+
         if (rewindBtn) {
             rewindBtn.addEventListener('click', () => {
-                if (window.onRewindRequested) {
-                    window.onRewindRequested();
-                }
+                eventManager.emit('rewindRequested');
             });
         }
     }
