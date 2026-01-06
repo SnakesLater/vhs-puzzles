@@ -103,7 +103,7 @@ class ConnectionsGame {
         if (submitBtn.disabled) {
             submitBtn.textContent = 'SELECT 4 WORDS';
         } else {
-            submitBtn.textContent = this.correctGroups.size === 3 ? 'FINISH' : 'SUBMIT';
+            submitBtn.textContent = this.solvedGroups.length === 3 ? 'FINISH' : 'SUBMIT';
         }
     }
 
@@ -158,7 +158,7 @@ class ConnectionsGame {
         });
 
         // Check if this is the 3rd correct group for story mode
-        if (this.correctGroups.size === 3) {
+        if (this.solvedGroups.length === 3) {
             eventManager.emit('after3');
         }
 
@@ -212,6 +212,7 @@ class ConnectionsGame {
             this.completeGame(false);
         } else {
             this.showMessage('Incorrect group. Try again.', 'error');
+            this.deselectAll();
         }
     }
 

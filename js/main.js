@@ -306,7 +306,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Set up event listeners
             eventManager.on('gameComplete', async (won) => {
                 if (won) {
-                    // After narrative already shown on after3
+                    // Advance to next scene or complete story
+                    nextScene();
                 }
             });
 

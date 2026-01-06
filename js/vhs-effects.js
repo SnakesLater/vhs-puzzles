@@ -7,12 +7,38 @@ class VHSEffects {
         this.scanlines = document.getElementById('scanlines');
         this.trackingLines = document.getElementById('tracking-lines');
         this.currentTypewriterTimeout = null;
+        this.audioUnlocked = false;
         
         this.initAudio();
         this.initCanvas();
         this.startStatic();
+        this.setupAudioUnlock();
     }
 
+    setupAudioUnlock() {
+        const unlockAudio = () => {
+            if (this.audioUnlocked) return;
+            this.audioUnlocked = true;
+            
+            // Try to play and immediately pause each audio to unlock
+            const audioElements = [this.clickAudio, this.errorAudio, this.successAudio, this.jumpscareAudio];
+            audioElements.forEach(audio => {
+                if (audio) {
+                    audio.play().then(() => {
+                        audio.pause();
+                        audio.currentTime = 0;
+                    }).catch(() => {});
+                }
+            });
+            
+            console.log('Audio unlocked via user interaction');
+        };
+        
+        // Unlock on first click anywhere
+        document.addEventListener('click', unlockAudio, { once: true });
+        document.addEventListener('keydown', unlockAudio, { once: true });
+    }
+    
     initAudio() {
         try {
             this.jumpscareAudio = new Audio('assets/audio/jumpscare.mp3');
@@ -21,8 +47,14 @@ class VHSEffects {
             this.errorAudio = new Audio('assets/audio/error.wav');
             this.errorAudio.volume = 0.5;
             
-            this.successAudio = new Audio('assets/audio/success.ogg');
+            // Try .ogg first, fall back to .mp3 for Safari compatibility
+            this.successAudio = new Audio();
+            this.successAudio.src = 'assets/audio/success.ogg';
             this.successAudio.volume = 0.5;
+            
+            // Also prepare mp3 version
+            this.successAudioMp3 = new Audio('assets/audio/success.mp3');
+            this.successAudioMp3.volume = 0.5;
             
             this.clickAudio = new Audio('assets/audio/click.wav');
             this.clickAudio.volume = 0.3;
@@ -176,23 +208,38 @@ class VHSEffects {
     playError() {
         if (this.errorAudio) {
             this.errorAudio.currentTime = 0;
-            this.errorAudio.play().catch(() => {});
+            this.errorAudio.play().catch(e => {
+                console.log('Error audio play failed:', e.message);
+            });
         }
     }
 
     // Effect: Play success sound
     playSuccess() {
-        if (this.successAudio) {
-            this.successAudio.currentTime = 0;
-            this.successAudio.play().catch(e => console.log('Success audio play failed:', e));
-        }
+        const playAudio = (audio, name) => {
+            if (!audio) return false;
+            audio.currentTime = 0;
+            audio.play().then(() => true).catch(e => {
+                console.log(`${name} audio play failed:`, e.message);
+                return false;
+            });
+            return true;
+        };
+        
+        // Try .ogg first, then .mp3
+        if (this.successAudio && playAudio(this.successAudio, 'Success (ogg)')) return;
+        if (this.successAudioMp3 && playAudio(this.successAudioMp3, 'Success (mp3)')) return;
+        
+        console.log('No success audio available');
     }
 
     // Effect: Play click sound
     playClick() {
         if (this.clickAudio) {
             this.clickAudio.currentTime = 0;
-            this.clickAudio.play().catch(() => {});
+            this.clickAudio.play().catch(e => {
+                console.log('Click audio play failed:', e.message);
+            });
         }
     }
 
