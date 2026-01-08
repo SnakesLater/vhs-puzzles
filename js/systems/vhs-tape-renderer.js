@@ -142,6 +142,14 @@ class VHSTapeRenderer {
         let angle = 0;
         const animate = () => {
             angle += 0.05;
+            // Keep counter visuals updated each frame so the "reel" animation is visible
+            if (this.counterRenderer && typeof this.counterRenderer.renderCounterTapes === 'function') {
+                try {
+                    this.counterRenderer.renderCounterTapes();
+                } catch (e) {
+                    console.error('Error rendering counter tapes:', e);
+                }
+            }
             this.animationFrame = requestAnimationFrame(animate);
         };
         animate();
@@ -163,7 +171,8 @@ class VHSTapeRenderer {
                     this.coverRenderer.drawGameCover(frontCtx, frontCanvas.width, frontCanvas.height, backLines);
                     this.coverRenderer.drawGameBackCover(backCtx, backCanvas.width, backCanvas.height, backLines, true);
                 }
-                if (!btn.hasAttribute('data-flip-listeners') && index === 2) {
+                // Attach flip listeners for all tape buttons (was previously restricted to a single index)
+                if (!btn.hasAttribute('data-flip-listeners')) {
                     let flipTimeout;
                     frontCanvas.addEventListener('mouseenter', () => {
                         clearTimeout(flipTimeout);

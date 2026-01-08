@@ -18,19 +18,19 @@ Main Menu → Mode Selection (Story/Game) → Content Selection
 
 | System | Purpose | Key Files |
 |--------|---------|-----------|
-| **EventManager** | Centralized event dispatch for UI interactions | [event-manager.js](event-manager.js) |
-| **PuzzleLoader** | Loads JSON data with dual-transport fallback (fetch + XMLHttpRequest) | [puzzle-loader.js](puzzle-loader.js) |
-| **VHSTapeRenderer** | Orchestrates UI canvas rendering (uses delegate renderers) | [vhs-tape-renderer.js](vhs-tape-renderer.js) |
-| **VHSEffects** | Audio playback (static hum, clicks, victory sounds) | [vhs-effects.js](vhs-effects.js) |
-| **StoryTextRenderer** | Typewriter effect and narrative text display | [story-text-renderer.js](story-text-renderer.js) |
-| **TapeQuality** | Simulates VHS degradation effect based on "tape quality" slider | [tape-quality.js](tape-quality.js) |
-| **CounterRenderer** | Renders animated tape counter reels | [counter-renderer.js](counter-renderer.js) |
-| **TapeCoverRenderer** | Renders individual tape cover art (delegates) | [tape-cover-renderer.js](tape-cover-renderer.js) |
+| **EventManager** | Centralized event dispatch for UI interactions | [event-manager.js](../js/systems/event-manager.js) |
+| **PuzzleLoader** | Loads JSON data with dual-transport fallback (fetch + XMLHttpRequest) | [puzzle-loader.js](../js/systems/puzzle-loader.js) |
+| **VHSTapeRenderer** | Orchestrates UI canvas rendering (uses delegate renderers) | [vhs-tape-renderer.js](../js/systems/vhs-tape-renderer.js) |
+| **VHSEffects** | Audio playback (static hum, clicks, victory sounds) | [vhs-effects.js](../js/vhs-effects.js) |
+| **StoryTextRenderer** | Typewriter effect and narrative text display | [story-text-renderer.js](../js/systems/story-text-renderer.js) |
+| **TapeQuality** | Simulates VHS degradation effect based on "tape quality" slider | [tape-quality.js](../js/systems/tape-quality.js) |
+| **CounterRenderer** | Renders animated tape counter reels | [counter-renderer.js](../js/systems/counter-renderer.js) |
+| **TapeCoverRenderer** | Renders individual tape cover art (delegates) | [tape-cover-renderer.js](../js/systems/tape-cover-renderer.js) |
 
 ### Data Flow
-1. **Entry**: [index.html](index.html) loads all system modules in order
-2. **Initialization**: [main.js](main.js) calls `puzzleLoader.loadAll()` to fetch [data/puzzles.json](data/puzzles.json) and [data/stories.json](data/stories.json)
-3. **State Management**: Progress tracked in [data/progress.json](data/progress.json) (lastPlayed, storiesCompleted, insaneUnlocked)
+1. **Entry**: [index.html](../index.html) loads all system modules in order
+2. **Initialization**: [main.js](../js/main.js) calls `puzzleLoader.loadAll()` to fetch [data/puzzles.json](../data/puzzles.json) and [data/stories.json](../data/stories.json)
+3. **State Management**: Progress tracked in [data/progress.json](../data/progress.json) (lastPlayed, storiesCompleted, insaneUnlocked)
 4. **Game Logic**: Individual game classes instantiate in containers, use `eventManager.emit()` to signal completion
 
 ## Data Structures
@@ -83,7 +83,7 @@ Main Menu → Mode Selection (Story/Game) → Content Selection
 
 ### 1. Canvas-Based UI (VHS Aesthetic)
 - All buttons are canvas-rendered "tape covers" (no HTML buttons except functionality)
-- [TapeCoverRenderer](js/systems/tape-cover-renderer.js) draws decorative labels on canvas
+- [TapeCoverRenderer](../js/systems/tape-cover-renderer.js) draws decorative labels on canvas
 - Each tape button has a "flipper" div that rotates to show front/back
 - Style: Nostalgic horror fonts (Nosifer, VT323, Creepster) from Google Fonts
 
@@ -94,7 +94,7 @@ eventManager.emit('puzzle-complete', { puzzleId, correct: true });
 eventManager.emit('story-complete', { storyId });
 ```
 
-Listen in [main.js](main.js) to trigger progression and save progress to [progress.json](progress.json).
+Listen in [main.js](../js/main.js) to trigger progression and save progress to [progress.json](../data/progress.json).
 
 ### 3. Modular Rendering Delegation
 `VHSTapeRenderer` delegates to specialized renderers:
@@ -104,10 +104,10 @@ Listen in [main.js](main.js) to trigger progression and save progress to [progre
 - Each renderer owns its canvas drawing logic
 
 ### 4. Dual-Transport Loading
-[PuzzleLoader](js/systems/puzzle-loader.js) tries `fetch()` first, falls back to `XMLHttpRequest` for older browsers. This is intentional for maximum compatibility.
+[PuzzleLoader](../js/systems/puzzle-loader.js) tries `fetch()` first, falls back to `XMLHttpRequest` for older browsers. This is intentional for maximum compatibility.
 
 ### 5. Game Module Pattern
-Each game type (e.g., [ConnectionsGame](js/games/connections.js)) is a class that:
+Each game type (e.g., [ConnectionsGame](../js/games/connections.js)) is a class that:
 - Takes `(containerId, puzzleData)` in constructor
 - Manages own state (`selectedWords`, `mistakes`, `isComplete`)
 - Calls `eventManager.emit()` when solved
@@ -122,13 +122,13 @@ npm run start  # Starts Python HTTP server on port 8000
 ```
 
 ### Adding New Content
-1. **New Puzzle**: Add object to correct game type array in [data/puzzles.json](data/puzzles.json)
-2. **New Story**: Add campaign to [data/stories.json](data/stories.json), reference valid puzzle IDs
-3. **New Game Type**: Create [js/games/new-game.js](js/games/), add selector button in index.html, handle in main.js
+1. **New Puzzle**: Add object to correct game type array in [data/puzzles.json](../data/puzzles.json)
+2. **New Story**: Add campaign to [data/stories.json](../data/stories.json), reference valid puzzle IDs
+3. **New Game Type**: Create [js/games/new-game.js](../js/games/new-game.js), add selector button in index.html, handle in main.js
 
 ### Progress Persistence
-- [progress.json](progress.json) persists `lastPlayed`, `storiesCompleted`, `insaneUnlocked`
-- Modified by `saveProgress()` in [main.js](main.js) when story completes
+- [progress.json](../data/progress.json) persists `lastPlayed`, `storiesCompleted`, `insaneUnlocked`
+- Modified by `saveProgress()` in [main.js](../js/main.js) when story completes
 - Load at startup with `loadProgress()` to unlock story chains
 
 ## Critical Implementation Details
