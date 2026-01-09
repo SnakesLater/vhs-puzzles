@@ -60,17 +60,25 @@ class ConnectionsGame {
         const submitBtn = document.getElementById('submit-btn');
         const shuffleBtn = document.getElementById('shuffle-btn');
 
+        // Store handlers for cleanup
+        this.handlers = {
+            wordClick: (tile) => this.toggleWord(tile),
+            deselect: () => this.deselectAll(),
+            submit: () => this.submitGuess(),
+            shuffle: () => this.shuffleWords()
+        };
+
         wordTiles.forEach(tile => {
-            tile.addEventListener('click', () => this.toggleWord(tile));
+            cleanupManager.addListener(tile, 'click', () => this.handlers.wordClick(tile));
         });
 
-        deselectBtn.addEventListener('click', () => this.deselectAll());
-        submitBtn.addEventListener('click', () => this.submitGuess());
-        shuffleBtn.addEventListener('click', () => this.shuffleWords());
+        cleanupManager.addListener(deselectBtn, 'click', this.handlers.deselect);
+        cleanupManager.addListener(submitBtn, 'click', this.handlers.submit);
+        cleanupManager.addListener(shuffleBtn, 'click', this.handlers.shuffle);
     }
 
     toggleWord(tile) {
-        if (this.isComplete || tile.classList.contains('solved')) return;
+        if (this.isComplete || tile.classList.contains('solved')) {return;}
         
         const word = tile.dataset.word;
         
@@ -108,7 +116,7 @@ class ConnectionsGame {
     }
 
     submitGuess() {
-        if (this.selectedWords.length !== 4) return;
+        if (this.selectedWords.length !== 4) {return;}
         
         // Check if any selected word is already solved
         const alreadySolved = this.selectedWords.some(word => {
@@ -141,9 +149,9 @@ class ConnectionsGame {
     }
 
     setsEqual(set1, set2) {
-        if (set1.size !== set2.size) return false;
+        if (set1.size !== set2.size) {return false;}
         for (const item of set1) {
-            if (!set2.has(item)) return false;
+            if (!set2.has(item)) {return false;}
         }
         return true;
     }
@@ -241,31 +249,48 @@ class ConnectionsGame {
         this.isComplete = true;
         
         const controls = this.container.querySelector('.connections-controls');
-        controls.innerHTML = won 
-            ? '<button class="connections-btn primary" id="continue-btn">Continue</button>'
-            : '<button class="connections-btn" id="rewind-btn">Rewind Scene</button>';
+        // Clear existing buttons to prevent stacking
+        controls.innerHTML = '';
         
         if (won) {
             tapeQualitySystem.increaseQuality(10);
             this.showMessage('All groups found! The evidence makes sense now.', 'success');
-        } else {
-            this.showMessage('Case incomplete. The truth remains hidden...', 'error');
-        }
-        
-        // Event listeners for new buttons
-        const continueBtn = document.getElementById('continue-btn');
-        const rewindBtn = document.getElementById('rewind-btn');
-        
-        if (continueBtn) {
+            
+            const continueBtn = document.createElement('button');
+            continueBtn.className = 'connections-btn primary';
+            continueBtn.textContent = 'Continue';
+            continueBtn.id = 'continue-btn';
             continueBtn.addEventListener('click', () => {
                 eventManager.emit('gameComplete', won);
             });
-        }
-
-        if (rewindBtn) {
+            controls.appendChild(continueBtn);
+        } else {
+            this.showMessage('Case incomplete. The truth remains hidden...', 'error');
+            
+            const rewindBtn = document.createElement('button');
+            rewindBtn.className = 'connections-btn';
+            rewindBtn.textContent = 'Rewind Scene';
+            rewindBtn.id = 'rewind-btn';
             rewindBtn.addEventListener('click', () => {
-                eventManager.emit('rewindRequested');
+                if (!tapeQualitySystem.useRewind()) {
+                    // Out of rewinds: show eject button
+                    rewindBtn.remove();
+                    const ejectBtn = document.createElement('button');
+                    ejectBtn.className = 'connections-btn';
+                    ejectBtn.textContent = 'EJECT TAPE';
+                    ejectBtn.id = 'eject-btn';
+                    ejectBtn.addEventListener('click', () => {
+                        vhsEffects.showInsertVHS('INSERT VHS #1 TO RESTART', 3000);
+                        setTimeout(() => {
+                            eventManager.emit('ejectTape');
+                        }, 3000);
+                    });
+                    controls.appendChild(ejectBtn);
+                } else {
+                    eventManager.emit('rewindRequested');
+                }
             });
+            controls.appendChild(rewindBtn);
         }
     }
 
@@ -275,19 +300,29 @@ class ConnectionsGame {
         const timerDisplay = document.getElementById('timer-count');
         timerDisplay.textContent = this.formatTime(this.timeRemaining);
         
-        this.timer = setInterval(() => {
+        // Update story text renderer timer display as well
+        if (window.storyRenderer) {
+            storyRenderer.setTimer(`TIME: ${this.formatTime(this.timeRemaining)}`);
+        }
+        
+        this.timer = cleanupManager.addTimer(setInterval(() => {
             this.timeRemaining--;
             timerDisplay.textContent = this.formatTime(this.timeRemaining);
+            
+            // Update story text renderer timer display
+            if (window.storyRenderer) {
+                storyRenderer.setTimer(`TIME: ${this.formatTime(this.timeRemaining)}`);
+            }
             
             if (this.timeRemaining <= 10) {
                 timerDisplay.classList.add('timer-warning');
             }
             
             if (this.timeRemaining <= 0) {
-                clearInterval(this.timer);
+                this.stopTimer();
                 this.completeGame(false);
             }
-        }, 1000);
+        }, 1000));
     }
 
     formatTime(seconds) {
@@ -301,8 +336,19 @@ class ConnectionsGame {
             clearInterval(this.timer);
             this.timer = null;
         }
+        // Clear timer display from story text
+        if (window.storyRenderer) {
+            storyRenderer.setTimer('');
+        }
+    }
+
+    // Cleanup method for proper resource disposal
+    cleanup() {
+        this.stopTimer();
+        cleanupManager.cleanupAll();
+        this.isComplete = true;
     }
 }
 
 // Global game instance
-let currentConnectionsGame = null;
+const currentConnectionsGame = null;

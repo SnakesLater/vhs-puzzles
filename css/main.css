@@ -187,12 +187,19 @@ button:disabled {
 
 
 
-.mode-btn.tape-btn.flipped .flipper,
-.difficulty-btn.flipped .flipper,
-.story-card.flipped .flipper,
-.game-btn.flipped .flipper,
-.mode-btn.tape-btn:hover .flipper {
+.mode-btn.tape-btn:hover .flipper,
+.difficulty-btn:hover .flipper,
+.story-card:hover .flipper,
+.game-btn:hover .flipper {
     transform: rotateY(180deg);
+}
+
+/* Keep flipped state while hovering */
+.mode-btn.tape-btn:hover,
+.difficulty-btn:hover,
+.story-card:hover,
+.game-btn:hover {
+    /* Maintain hover state */
 }
 
 

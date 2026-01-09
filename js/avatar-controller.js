@@ -34,12 +34,12 @@ class AvatarVideoController {
     }
     
     startPlayback() {
-        if (this.isPaused) return;
+        if (this.isPaused) {return;}
         this.playForward();
     }
     
     async playForward() {
-        if (this.isPaused) return;
+        if (this.isPaused) {return;}
         
         const targetTime = this.endFrames[this.currentFrameIndex];
         
@@ -52,7 +52,7 @@ class AvatarVideoController {
         
         await this.waitForTime(targetTime);
         
-        if (this.isPaused) return;
+        if (this.isPaused) {return;}
         this.video.pause();
         
         setTimeout(() => {

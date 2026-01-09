@@ -186,6 +186,7 @@ class VHSTapeRenderer {
             }
         });
 
+        // Difficulty buttons with proper back covers
         document.querySelectorAll('.difficulty-btn').forEach((btn) => {
             const frontCanvas = btn.querySelector('.tape-canvas.front');
             const backCanvas = btn.querySelector('.tape-canvas.back');
@@ -197,29 +198,81 @@ class VHSTapeRenderer {
                 switch(difficulty) {
                     case 'easy':
                         this.coverRenderer.drawEasyCover(frontCtx, frontCanvas.width, frontCanvas.height, backLines);
-                        this.coverRenderer.drawEasyCover(backCtx, backCanvas.width, backCanvas.height, backLines);
+                        this.drawCoverBack(backCtx, backCanvas.width, backCanvas.height, backLines, 'easy');
                         break;
                     case 'medium':
                         this.coverRenderer.drawMediumCover(frontCtx, frontCanvas.width, frontCanvas.height, backLines);
-                        this.coverRenderer.drawMediumCover(backCtx, backCanvas.width, backCanvas.height, backLines);
+                        this.drawCoverBack(backCtx, backCanvas.width, backCanvas.height, backLines, 'medium');
                         break;
                     case 'hard':
                         this.coverRenderer.drawHardCover(frontCtx, frontCanvas.width, frontCanvas.height, backLines);
-                        this.coverRenderer.drawHardCover(backCtx, backCanvas.width, backCanvas.height, backLines);
+                        this.drawCoverBack(backCtx, backCanvas.width, backCanvas.height, backLines, 'hard');
                         break;
                     case 'insane':
                         if (typeof window.progress !== 'undefined' && window.progress.insaneUnlocked) {
                             this.coverRenderer.drawInsaneCover(frontCtx, frontCanvas.width, frontCanvas.height, backLines);
-                            this.coverRenderer.drawInsaneCover(backCtx, backCanvas.width, backCanvas.height, backLines);
+                            this.drawCoverBack(backCtx, backCanvas.width, backCanvas.height, backLines, 'insane');
                         } else {
                             this.renderGreyedOutCover(frontCtx, frontCanvas.width, frontCanvas.height, 'LOCKED');
                             this.renderGreyedOutCover(backCtx, backCanvas.width, backCanvas.height, 'LOCKED');
                         }
                         break;
                 }
+                // Attach flip listeners for difficulty buttons
+                if (!btn.hasAttribute('data-flip-listeners')) {
+                    let flipTimeout;
+                    frontCanvas.addEventListener('mouseenter', () => {
+                        clearTimeout(flipTimeout);
+                        btn.classList.add('flipped');
+                    });
+                    frontCanvas.addEventListener('mouseleave', () => {
+                        flipTimeout = setTimeout(() => btn.classList.remove('flipped'), 1000);
+                    });
+                    btn.setAttribute('data-flip-listeners', 'true');
+                }
             }
         });
 
+        // Story cards
+        document.querySelectorAll('.story-card').forEach((btn) => {
+            const frontCanvas = btn.querySelector('.tape-canvas.front');
+            const backCanvas = btn.querySelector('.tape-canvas.back');
+            if (frontCanvas && backCanvas) {
+                const story = btn.dataset.story;
+                const frontCtx = frontCanvas.getContext('2d');
+                const backCtx = backCanvas.getContext('2d');
+                const storyData = puzzleLoader.getStory(story) || { title: "STORY", premise: "A chilling tale" };
+                const isCompleted = window.progress && window.progress.storiesCompleted && window.progress.storiesCompleted.includes(story);
+                const achievement = isCompleted ? 'Achievement: Story Completed' : 'Achievement: Not Completed';
+                const badge = isCompleted ? 'Badge: Horror Survivor' : 'Badge: Locked';
+                const backLines = [storyData ? storyData.title.toUpperCase() : 'STORY', 'Rating: NC-17', 'Runtime: VARIES', 'Genre: Horror', achievement, badge];
+                switch(story) {
+                    case 'cabin_stalkings':
+                        this.coverRenderer.drawCabinStalkingsCover(frontCtx, frontCanvas.width, frontCanvas.height, backLines);
+                        this.coverRenderer.drawCabinStalkingsCover(backCtx, backCanvas.width, backCanvas.height, backLines, true);
+                        break;
+                    case 'midnight_broadcast':
+                        this.coverRenderer.drawMidnightBroadcastCover(frontCtx, frontCanvas.width, frontCanvas.height, backLines);
+                        this.coverRenderer.drawMidnightBroadcastCover(backCtx, backCanvas.width, backCanvas.height, backLines, true);
+                        break;
+                    case 'the_archive':
+                        this.coverRenderer.drawArchiveCover(frontCtx, frontCanvas.width, frontCanvas.height, backLines);
+                        this.coverRenderer.drawArchiveCover(backCtx, backCanvas.width, backCanvas.height, backLines, true);
+                        break;
+                }
+                if (!btn.hasAttribute('data-flip-listeners')) {
+                    let flipTimeout;
+                    frontCanvas.addEventListener('mouseenter', () => {
+                        clearTimeout(flipTimeout);
+                        btn.classList.add('flipped');
+                    });
+                    frontCanvas.addEventListener('mouseleave', () => {
+                        flipTimeout = setTimeout(() => btn.classList.remove('flipped'), 1000);
+                    });
+                    btn.setAttribute('data-flip-listeners', 'true');
+                }
+            }
+        });
         document.querySelectorAll('.story-card').forEach((btn) => {
             const frontCanvas = btn.querySelector('.tape-canvas.front');
             const backCanvas = btn.querySelector('.tape-canvas.back');
@@ -264,24 +317,36 @@ class VHSTapeRenderer {
                 switch(game) {
                     case 'connections':
                         this.coverRenderer.drawConnectionsCover(frontCtx, frontCanvas.width, frontCanvas.height, backLines);
-                        this.coverRenderer.drawConnectionsCover(backCtx, backCanvas.width, backCanvas.height, backLines, true);
+                        this.drawCoverBack(backCtx, backCanvas.width, backCanvas.height, backLines, 'connections');
                         break;
                     case 'wordle':
-                        this.renderGreyedOutCover(frontCtx, frontCanvas.width, frontCanvas.height, 'COMING SOON');
-                        this.renderGreyedOutCover(backCtx, backCanvas.width, backCanvas.height, 'COMING SOON');
+                        this.coverRenderer.drawWordleCover(frontCtx, frontCanvas.width, frontCanvas.height, backLines);
+                        this.drawCoverBack(backCtx, backCanvas.width, backCanvas.height, backLines, 'wordle');
                         break;
                     case 'strands':
-                        this.renderGreyedOutCover(frontCtx, frontCanvas.width, frontCanvas.height, 'COMING SOON');
-                        this.renderGreyedOutCover(backCtx, backCanvas.width, backCanvas.height, 'COMING SOON');
+                        this.coverRenderer.drawStrandsCover(frontCtx, frontCanvas.width, frontCanvas.height, backLines);
+                        this.drawCoverBack(backCtx, backCanvas.width, backCanvas.height, backLines, 'strands');
                         break;
                     case 'spelling-bee':
-                        this.renderGreyedOutCover(frontCtx, frontCanvas.width, frontCanvas.height, 'COMING SOON');
-                        this.renderGreyedOutCover(backCtx, backCanvas.width, backCanvas.height, 'COMING SOON');
+                        this.coverRenderer.drawSpellingBeeCover(frontCtx, frontCanvas.width, frontCanvas.height, backLines);
+                        this.drawCoverBack(backCtx, backCanvas.width, backCanvas.height, backLines, 'spelling-bee');
                         break;
                     case 'letter-boxed':
-                        this.renderGreyedOutCover(frontCtx, frontCanvas.width, frontCanvas.height, 'COMING SOON');
-                        this.renderGreyedOutCover(backCtx, backCanvas.width, backCanvas.height, 'COMING SOON');
+                        this.coverRenderer.drawLetterBoxedCover(frontCtx, frontCanvas.width, frontCanvas.height, backLines);
+                        this.drawCoverBack(backCtx, backCanvas.width, backCanvas.height, backLines, 'letter-boxed');
                         break;
+                }
+                // Add flip listeners for game buttons
+                if (!btn.hasAttribute('data-flip-listeners')) {
+                    let flipTimeout;
+                    frontCanvas.addEventListener('mouseenter', () => {
+                        clearTimeout(flipTimeout);
+                        btn.classList.add('flipped');
+                    });
+                    frontCanvas.addEventListener('mouseleave', () => {
+                        flipTimeout = setTimeout(() => btn.classList.remove('flipped'), 1000);
+                    });
+                    btn.setAttribute('data-flip-listeners', 'true');
                 }
             }
         });

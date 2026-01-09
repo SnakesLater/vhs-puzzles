@@ -40,10 +40,13 @@ class TapeQualitySystem {
     }
 
     reset() {
-        this.quality = this.maxQuality;
+        this.quality = 100;  // Always reset to full quality
         this.rewinds = this.maxRewinds;
 
-        resetBloodTrail();
+        // Reset blood trail if function exists
+        if (typeof resetBloodTrail === 'function') {
+            resetBloodTrail();
+        }
         this.updateUI();
     }
 
@@ -77,6 +80,9 @@ class TapeQualitySystem {
 
     useRewind() {
         if (this.rewinds <= 0) {
+            if (this.callbacks.onGameOver) {
+                this.callbacks.onGameOver();
+            }
             return false;
         }
         
@@ -99,10 +105,10 @@ class TapeQualitySystem {
     }
 
     getQualityLevel() {
-        if (this.quality >= 80) return 'high';
-        if (this.quality >= 60) return 'medium-high';
-        if (this.quality >= 40) return 'medium';
-        if (this.quality >= 20) return 'medium-low';
+        if (this.quality >= 80) {return 'high';}
+        if (this.quality >= 60) {return 'medium-high';}
+        if (this.quality >= 40) {return 'medium';}
+        if (this.quality >= 20) {return 'medium-low';}
         return 'critical';
     }
 
@@ -124,11 +130,11 @@ class TapeQualitySystem {
         const container = document.getElementById('main-container');
         if (container) {
             container.className = '';
-            if (this.quality >= 80) container.classList.add('tape-quality-100');
-            else if (this.quality >= 60) container.classList.add('tape-quality-60');
-            else if (this.quality >= 40) container.classList.add('tape-quality-40');
-            else if (this.quality >= 20) container.classList.add('tape-quality-20');
-            else container.classList.add('tape-quality-0');
+            if (this.quality >= 80) {container.classList.add('tape-quality-100');}
+            else if (this.quality >= 60) {container.classList.add('tape-quality-60');}
+            else if (this.quality >= 40) {container.classList.add('tape-quality-40');}
+            else if (this.quality >= 20) {container.classList.add('tape-quality-20');}
+            else {container.classList.add('tape-quality-0');}
         }
     }
 

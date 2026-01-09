@@ -5,11 +5,19 @@
   "main": "index.html",
   "scripts": {
     "start": "python -m http.server 8000",
-    "lint": "echo 'No linter configured yet'",
-    "test": "echo 'No tests configured yet'"
+    "lint": "eslint js/**/*.js --fix",
+    "lint:check": "eslint js/**/*.js",
+    "test": "echo 'Tests coming soon - placeholder for future test framework'"
   },
-  "keywords": ["puzzle", "horror", "vhs", "game"],
+  "keywords": [
+    "puzzle",
+    "horror",
+    "vhs",
+    "game"
+  ],
   "author": "",
   "license": "MIT",
-  "devDependencies": {}
+  "devDependencies": {
+    "eslint": "^9.39.2"
+  }
 }

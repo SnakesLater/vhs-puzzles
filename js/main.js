@@ -44,6 +44,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
+        // ALWAYS reset tape quality to 100 on game start
+        tapeQualitySystem.reset();
+
         // Check for saved progress
         loadProgress();
 
@@ -135,6 +138,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         
         buttons.back.classList.remove('hidden');
+        
+        // Render canvas designs for the now-visible buttons
+        tapeRenderer.renderMenuButtons();
         
         // NEW: Update button active states
         document.querySelectorAll('.difficulty-btn').forEach(btn => {
@@ -332,10 +338,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Start typewriter on canvas for after narrative
         tapeRenderer.storyRenderer.setText(scene.narrative.after);
 
+        // Clear any existing continue buttons first
+        const existingButtons = document.querySelectorAll('#game-container .action-btn');
+        existingButtons.forEach(btn => btn.remove());
+
         // Show continue button immediately
         if (puzzleLoader.getNextScene(currentStory, currentSceneIndex)) {
             const btn = document.createElement('button');
-            btn.className = 'action-btn';
+            btn.className = 'connections-btn primary';
             btn.textContent = '▶ CONTINUE';
             btn.addEventListener('click', nextScene);
             document.getElementById('game-container').appendChild(btn);
@@ -421,15 +431,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function goBack() {
+        // Clean up all resources
+        cleanupManager.cleanupAll();
+        
         // Clear game instances
         if (currentConnectionsGame) {
-            currentConnectionsGame.stopTimer();
+            currentConnectionsGame.cleanup();
             currentConnectionsGame = null;
         }
 
         // Clear event listeners
         eventManager.clear('gameComplete');
         eventManager.clear('rewindRequested');
+        
+        // Cancel blood trail animation
+        if (bloodTrailAnimationId) {
+            cancelAnimationFrame(bloodTrailAnimationId);
+            bloodTrailAnimationId = null;
+        }
         
         // Hide timer overlay if shown
         document.getElementById('timer-overlay').classList.add('hidden');
@@ -491,7 +510,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Animate blood trail flowing over time
     function animateBloodTrail(targetDashOffset, duration) {
         const bloodPath = document.getElementById('blood-path');
-        if (!bloodPath) return;
+        if (!bloodPath) {return;}
         
         // Cancel any existing animation
         if (bloodTrailAnimationId) {
@@ -515,6 +534,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             if (progress < 1) {
                 bloodTrailAnimationId = requestAnimationFrame(animate);
+            } else {
+                bloodTrailAnimationId = null;
             }
         }
         
@@ -555,7 +576,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         setTimeout(() => {
             timerOverlay.classList.add('hidden');
-            if (callback) callback();
+            if (callback) {callback();}
         }, 3000);
     }
 
@@ -598,17 +619,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function isStoryUnlocked(storyId) {
         const saved = localStorage.getItem('vhsHorrorProgress');
-        if (!saved) return storyId === 'cabin_stalkings'; // First story always unlocked
+        if (!saved) {return storyId === 'cabin_stalkings';} // First story always unlocked
         
         try {
             const progress = JSON.parse(saved);
-            if (storyId === 'cabin_stalkings') return true;
+            if (storyId === 'cabin_stalkings') {return true;}
             
             // Check if previous story is completed
             const allStories = puzzleLoader.getAllStories();
             const currentIndex = allStories.findIndex(s => s.id === storyId);
             
-            if (currentIndex <= 0) return true;
+            if (currentIndex <= 0) {return true;}
             
             const previousStoryId = allStories[currentIndex - 1].id;
             return progress.storiesCompleted && progress.storiesCompleted.includes(previousStoryId);
@@ -619,7 +640,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function isStoryCompleted(storyId) {
         const saved = localStorage.getItem('vhsHorrorProgress');
-        if (!saved) return false;
+        if (!saved) {return false;}
         
         try {
             const progress = JSON.parse(saved);
@@ -657,7 +678,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function getCompletedStories() {
         const saved = localStorage.getItem('vhsHorrorProgress');
-        if (!saved) return [];
+        if (!saved) {return [];}
         
         try {
             const progress = JSON.parse(saved);

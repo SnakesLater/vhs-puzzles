@@ -1,0 +1,30 @@
+stages:
+  - lint
+  - test
+
+# Lint stage - check code quality
+lint_code:
+  stage: lint
+  image: node:18
+  script:
+    - npm install
+    - npm run lint:check
+  only:
+    - main
+    - merge_requests
+
+# Basic validation - ensure files exist and are valid
+validate_project:
+  stage: test
+  image: node:18
+  script:
+    - echo "Checking project structure..."
+    - test -f index.html
+    - test -f package.json
+    - test -d js/
+    - test -d css/
+    - test -d data/
+    - echo "✅ Project structure valid"
+  only:
+    - main
+    - merge_requests

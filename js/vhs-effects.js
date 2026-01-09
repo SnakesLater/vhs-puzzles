@@ -8,6 +8,7 @@ class VHSEffects {
         this.trackingLines = document.getElementById('tracking-lines');
         this.currentTypewriterTimeout = null;
         this.audioUnlocked = false;
+        this.staticAnimationId = null;
         
         this.initAudio();
         this.initCanvas();
@@ -17,7 +18,7 @@ class VHSEffects {
 
     setupAudioUnlock() {
         const unlockAudio = () => {
-            if (this.audioUnlocked) return;
+            if (this.audioUnlocked) {return;}
             this.audioUnlocked = true;
             
             // Try to play and immediately pause each audio to unlock
@@ -39,27 +40,15 @@ class VHSEffects {
         document.addEventListener('keydown', unlockAudio, { once: true });
     }
     
-    initAudio() {
+    async initAudio() {
+        // Load audio on-demand using asset loader
+        this.audioCache = new Map();
+        
+        // Preload critical audio
         try {
-            this.jumpscareAudio = new Audio('assets/audio/jumpscare.mp3');
-            this.jumpscareAudio.volume = 1.0;
-            
-            this.errorAudio = new Audio('assets/audio/error.wav');
-            this.errorAudio.volume = 0.5;
-            
-            // Try .ogg first, fall back to .mp3 for Safari compatibility
-            this.successAudio = new Audio();
-            this.successAudio.src = 'assets/audio/success.ogg';
-            this.successAudio.volume = 0.5;
-            
-            // Also prepare mp3 version
-            this.successAudioMp3 = new Audio('assets/audio/success.mp3');
-            this.successAudioMp3.volume = 0.5;
-            
-            this.clickAudio = new Audio('assets/audio/click.wav');
-            this.clickAudio.volume = 0.3;
+            await assetLoader.preloadCritical();
         } catch (e) {
-            console.warn('Audio not available:', e);
+            console.warn('Failed to preload critical audio:', e);
         }
     }
 
@@ -74,14 +63,30 @@ class VHSEffects {
     }
 
     startStatic() {
-        const drawStatic = () => {
+        let lastUpdate = 0;
+        const updateInterval = 100; // Update every 100ms instead of every frame
+        
+        const drawStatic = (timestamp) => {
+            if (timestamp - lastUpdate < updateInterval) {
+                this.staticAnimationId = requestAnimationFrame(drawStatic);
+                return;
+            }
+            
+            lastUpdate = timestamp;
             const width = this.staticCanvas.width;
             const height = this.staticCanvas.height;
+            
+            // Only update if canvas is visible
+            if (this.staticCanvas.style.opacity === '0') {
+                this.staticAnimationId = requestAnimationFrame(drawStatic);
+                return;
+            }
             
             const imageData = this.staticCtx.createImageData(width, height);
             const data = imageData.data;
             
-            for (let i = 0; i < data.length; i += 4) {
+            // Reduce static density for performance
+            for (let i = 0; i < data.length; i += 8) { // Skip pixels for performance
                 const value = Math.random() * 255;
                 data[i] = value;
                 data[i + 1] = value;
@@ -90,10 +95,10 @@ class VHSEffects {
             }
             
             this.staticCtx.putImageData(imageData, 0, 0);
-            requestAnimationFrame(drawStatic);
+            this.staticAnimationId = requestAnimationFrame(drawStatic);
         };
         
-        drawStatic();
+        this.staticAnimationId = requestAnimationFrame(drawStatic);
     }
 
     // Effect: Screen shake on errors
@@ -183,6 +188,31 @@ class VHSEffects {
         }
     }
 
+    // Effect: Progressive failure visuals for misses
+    failureVisual(level = 1) {
+        // Play error sound and small shake
+        this.playError();
+        this.shake();
+
+        if (level === 1) {
+            // Small flicker and brief dropout
+            this.flickerScanlines(1);
+            this.dropout();
+        } else if (level === 2) {
+            // Stronger glitch: tracking + scanline flicker
+            this.flickerScanlines(2);
+            this.trackingError();
+            this.colorShift();
+        } else {
+            // Critical: vertical hold + heavier static and insert VHS prompt
+            this.staticCanvas.style.opacity = '0.25';
+            this.flickerScanlines(3);
+            this.trackingError();
+            this.verticalHold();
+            this.showInsertVHS('PLEASE INSERT VHS #2 TO CONTINUE', 5000);
+        }
+    }
+
     // Effect: Trigger jumpscare
     jumpscare() {
         const overlay = document.getElementById('jumpscare-overlay');
@@ -205,39 +235,36 @@ class VHSEffects {
     }
 
     // Effect: Play error sound
-    playError() {
-        if (this.errorAudio) {
-            this.errorAudio.currentTime = 0;
-            this.errorAudio.play().catch(e => {
+    async playError() {
+        const audio = await assetLoader.loadAudio('assets/audio/error');
+        if (audio) {
+            audio.currentTime = 0;
+            audio.volume = 0.5;
+            audio.play().catch(e => {
                 console.log('Error audio play failed:', e.message);
             });
         }
     }
 
     // Effect: Play success sound
-    playSuccess() {
-        const playAudio = (audio, name) => {
-            if (!audio) return false;
+    async playSuccess() {
+        const audio = await assetLoader.loadAudio('assets/audio/success');
+        if (audio) {
             audio.currentTime = 0;
-            audio.play().then(() => true).catch(e => {
-                console.log(`${name} audio play failed:`, e.message);
-                return false;
+            audio.volume = 0.5;
+            audio.play().catch(e => {
+                console.log('Success audio play failed:', e.message);
             });
-            return true;
-        };
-        
-        // Try .ogg first, then .mp3
-        if (this.successAudio && playAudio(this.successAudio, 'Success (ogg)')) return;
-        if (this.successAudioMp3 && playAudio(this.successAudioMp3, 'Success (mp3)')) return;
-        
-        console.log('No success audio available');
+        }
     }
 
     // Effect: Play click sound
-    playClick() {
-        if (this.clickAudio) {
-            this.clickAudio.currentTime = 0;
-            this.clickAudio.play().catch(e => {
+    async playClick() {
+        const audio = await assetLoader.loadAudio('assets/audio/click');
+        if (audio) {
+            audio.currentTime = 0;
+            audio.volume = 0.3;
+            audio.play().catch(e => {
                 console.log('Click audio play failed:', e.message);
             });
         }
@@ -299,6 +326,45 @@ class VHSEffects {
             
             iterations += 1 / 3;
         }, 30);
+    }
+
+    // Show an overlay prompting for VHS insertion
+    showInsertVHS(message = 'PLEASE INSERT VHS', duration = 4000) {
+        // avoid duplicates
+        if (document.getElementById('vhs-insert-overlay')) {return;}
+        const overlay = document.createElement('div');
+        overlay.id = 'vhs-insert-overlay';
+        overlay.style.position = 'fixed';
+        overlay.style.left = '0';
+        overlay.style.top = '0';
+        overlay.style.width = '100%';
+        overlay.style.height = '100%';
+        overlay.style.display = 'flex';
+        overlay.style.alignItems = 'center';
+        overlay.style.justifyContent = 'center';
+        overlay.style.zIndex = 9999;
+        overlay.style.pointerEvents = 'none';
+        overlay.style.backdropFilter = 'blur(2px)';
+
+        const box = document.createElement('div');
+        box.style.padding = '20px 30px';
+        box.style.background = 'rgba(0,0,0,0.75)';
+        box.style.border = '2px solid rgba(255,255,255,0.08)';
+        box.style.color = '#fff';
+        box.style.font = 'bold 28px "Courier New"';
+        box.style.letterSpacing = '2px';
+        box.style.textAlign = 'center';
+        box.textContent = message;
+
+        overlay.appendChild(box);
+        document.body.appendChild(overlay);
+
+        // Glitch the text slightly
+        this.glitchText(box, message, 1500);
+
+        setTimeout(() => {
+            if (overlay && overlay.parentNode) {overlay.parentNode.removeChild(overlay);}
+        }, duration);
     }
 }
 
