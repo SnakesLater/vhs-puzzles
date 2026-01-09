@@ -8,7 +8,7 @@ lint_code:
   image: node:18
   script:
     - npm install
-    - npm run lint:check
+    - npm run lint
   only:
     - main
     - merge_requests
