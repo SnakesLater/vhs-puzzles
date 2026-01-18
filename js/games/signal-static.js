@@ -36,7 +36,7 @@ class SignalStaticPuzzle extends BaseGame {
         // Ensure at least 5 channels have signals
         let signalCount = this.channels.filter(c => c.hasSignal).length;
         while (signalCount < 5) {
-            let randomChannel = Math.floor(Math.random() * 20);
+            const randomChannel = Math.floor(Math.random() * 20);
             if (!this.channels[randomChannel].hasSignal) {
                 this.channels[randomChannel].hasSignal = true;
                 this.channels[randomChannel].signalType = this.getRandomSignalType();
@@ -59,7 +59,7 @@ class SignalStaticPuzzle extends BaseGame {
 
     generateStaticPattern() {
         // Generate unique static interference pattern
-        let pattern = [];
+        const pattern = [];
         for (let i = 0; i < 100; i++) {
             pattern.push({
                 x: Math.random(),
@@ -180,8 +180,8 @@ class SignalStaticPuzzle extends BaseGame {
         }
         
         // Gradually reveal signal through static
-        let clarity = 1 - channel.interference;
-        let revealedText = this.scrambleText(channel.signalType, clarity);
+        const clarity = 1 - channel.interference;
+        const revealedText = this.scrambleText(channel.signalType, clarity);
         
         signalDisplay.innerHTML = `
             <div class="emerging-signal" style="opacity: ${clarity}">
@@ -200,14 +200,14 @@ class SignalStaticPuzzle extends BaseGame {
     scrambleText(text, clarity) {
         const chars = '█▓▒░▄▀■□▪▫';
         return text.split('').map(char => {
-            if (char === '_') return '_';
+            if (char === '_') {return '_';}
             return Math.random() < clarity ? char : 
                    chars[Math.floor(Math.random() * chars.length)];
         }).join('');
     }
 
     foundSignal(signalType) {
-        if (this.foundSignals.includes(signalType)) return;
+        if (this.foundSignals.includes(signalType)) {return;}
         
         this.foundSignals.push(signalType);
         this.updateFoundSignals();
