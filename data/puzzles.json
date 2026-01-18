@@ -131,8 +131,108 @@
       ]
     }
   ],
-  "wordle": [],
-  "strands": [],
-  "spelling-bee": [],
-  "letter-boxed": []
+  "wordle": [
+    {
+      "id": "wordle_detective_001",
+      "difficulty": "easy",
+      "targetWord": "CRIME",
+      "hint": "What the detective is trying to solve"
+    },
+    {
+      "id": "wordle_detective_002", 
+      "difficulty": "medium",
+      "targetWord": "EVIDENCE",
+      "hint": "What the detective collects at the scene"
+    },
+    {
+      "id": "wordle_detective_003",
+      "difficulty": "hard", 
+      "targetWord": "SUSPECT",
+      "hint": "Who the detective is looking for"
+    }
+  ],
+  "strands": [
+    {
+      "id": "strands_detective_001",
+      "difficulty": "easy",
+      "words": ["CLUE", "LEAD", "TRAIL", "TRACK"],
+      "theme": "Investigation terms",
+      "hint": "Following the evidence"
+    },
+    {
+      "id": "strands_detective_002",
+      "difficulty": "medium", 
+      "words": ["ALIBI", "MOTIVE", "WITNESS", "TESTIMONY"],
+      "theme": "Courtroom terms",
+      "hint": "Legal proceedings"
+    },
+    {
+      "id": "strands_detective_003",
+      "difficulty": "hard",
+      "words": ["FORENSIC", "AUTOPSY", "PATHOLOGY", "TOXICOLOGY"], 
+      "theme": "Medical investigation",
+      "hint": "Science of death"
+    }
+  ],
+  "spelling-bee": [
+    {
+      "id": "spelling_detective_001",
+      "difficulty": "easy",
+      "letters": ["C", "R", "I", "M", "E", "S", "L"],
+      "centerLetter": "E",
+      "pangram": "CRIMES",
+      "hint": "What the detective investigates"
+    },
+    {
+      "id": "spelling_detective_002",
+      "difficulty": "medium",
+      "letters": ["D", "E", "T", "C", "I", "V", "N"],
+      "centerLetter": "T",
+      "pangram": "DETECTIVE",
+      "hint": "The investigator's job title"
+    },
+    {
+      "id": "spelling_detective_003",
+      "difficulty": "hard",
+      "letters": ["A", "L", "I", "B", "S", "M", "O"],
+      "centerLetter": "S",
+      "pangram": "ALIBIS",
+      "hint": "What suspects provide"
+    }
+  ],
+  "letter-boxed": [
+    {
+      "id": "letterbox_detective_001",
+      "difficulty": "easy",
+      "sides": [
+        ["C", "R", "I"],
+        ["M", "E", "S"],
+        ["L", "A", "W"],
+        ["D", "T", "P"]
+      ],
+      "hint": "Legal investigation terms"
+    },
+    {
+      "id": "letterbox_detective_002",
+      "difficulty": "medium",
+      "sides": [
+        ["F", "O", "R"],
+        ["E", "N", "S"],
+        ["I", "C", "A"],
+        ["L", "B", "T"]
+      ],
+      "hint": "Forensic science terms"
+    },
+    {
+      "id": "letterbox_detective_003",
+      "difficulty": "hard",
+      "sides": [
+        ["V", "I", "C"],
+        ["T", "I", "M"],
+        ["W", "I", "T"],
+        ["N", "E", "S"]
+      ],
+      "hint": "Crime scene roles"
+    }
+  ]
 }

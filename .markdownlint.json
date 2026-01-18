@@ -1,0 +1,10 @@
+{
+  "default": true,
+  "MD041": false,
+  "MD010": false,
+  "MD013": false,
+  "ignores": [
+    ".git/**",
+    "node_modules/**"
+  ]
+}

@@ -175,6 +175,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (gameType === 'connections') {
             const puzzle = puzzleLoader.getRandomPuzzle('connections');
             startSingleGame(puzzle);
+        } else if (gameType === 'wordle') {
+            const puzzle = puzzleLoader.getRandomPuzzle('wordle');
+            startSingleGame(puzzle);
+        } else if (gameType === 'strands') {
+            const puzzle = puzzleLoader.getRandomPuzzle('strands');
+            startSingleGame(puzzle);
+        } else if (gameType === 'spelling-bee') {
+            const puzzle = puzzleLoader.getRandomPuzzle('spelling-bee');
+            startSingleGame(puzzle);
+        } else if (gameType === 'letter-boxed') {
+            const puzzle = puzzleLoader.getRandomPuzzle('letter-boxed');
+            startSingleGame(puzzle);
         } else {
             alert(`${gameType} is coming soon!`);
         }
@@ -329,6 +341,54 @@ document.addEventListener('DOMContentLoaded', async () => {
                     currentConnectionsGame.startTimer(timer);
                 });
             }
+        } else if (gameType === 'wordle') {
+            const wordleGame = new WordleGame('game-container', puzzle);
+            
+            eventManager.on('gameComplete', async (won) => {
+                if (won) {
+                    nextScene();
+                }
+            });
+            
+            eventManager.on('rewindRequested', () => {
+                rewindScene();
+            });
+        } else if (gameType === 'strands') {
+            const strandsGame = new StrandsGame('game-container', puzzle);
+            
+            eventManager.on('gameComplete', async (won) => {
+                if (won) {
+                    nextScene();
+                }
+            });
+            
+            eventManager.on('rewindRequested', () => {
+                rewindScene();
+            });
+        } else if (gameType === 'spelling-bee') {
+            const spellingBeeGame = new SpellingBeeGame('game-container', puzzle);
+            
+            eventManager.on('gameComplete', async (won) => {
+                if (won) {
+                    nextScene();
+                }
+            });
+            
+            eventManager.on('rewindRequested', () => {
+                rewindScene();
+            });
+        } else if (gameType === 'letter-boxed') {
+            const letterBoxedGame = new LetterBoxedGame('game-container', puzzle);
+            
+            eventManager.on('gameComplete', async (won) => {
+                if (won) {
+                    nextScene();
+                }
+            });
+            
+            eventManager.on('rewindRequested', () => {
+                rewindScene();
+            });
         }
     }
 
@@ -367,7 +427,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         if (puzzle) {
             tapeQualitySystem.reset();
-            currentConnectionsGame = new ConnectionsGame('single-game-container', puzzle);
+            
+            // Start appropriate game based on puzzle type
+            if (currentGameType === 'connections') {
+                currentConnectionsGame = new ConnectionsGame('single-game-container', puzzle);
+            } else if (currentGameType === 'wordle') {
+                currentConnectionsGame = new WordleGame('single-game-container', puzzle);
+            } else if (currentGameType === 'strands') {
+                currentConnectionsGame = new StrandsGame('single-game-container', puzzle);
+            } else if (currentGameType === 'spelling-bee') {
+                currentConnectionsGame = new SpellingBeeGame('single-game-container', puzzle);
+            } else if (currentGameType === 'letter-boxed') {
+                currentConnectionsGame = new LetterBoxedGame('single-game-container', puzzle);
+            }
 
             eventManager.on('gameComplete', (won) => {
                 if (won) {
