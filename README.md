@@ -4,12 +4,12 @@
 
 ## 🎮 Play Now
 
-**[Play on GitHub Pages](https://github.com/SnakesLater/vhs-connections)** *(Coming Soon)*
+**[Play on GitHub Pages](https://snakeslater.github.io/vhs-puzzles/)**
 
 Or run locally:
 ```bash
-git clone https://github.com/SnakesLater/vhs-connections.git
-cd vhs-connections
+git clone https://github.com/SnakesLater/vhs-puzzles.git
+cd vhs-puzzles
 npm start
 ```
 Open `http://localhost:8000` in your browser.
@@ -28,7 +28,7 @@ Open `http://localhost:8000` in your browser.
 
 ### 💡 Quick Idea Submission
 
-Got an Idea? Great! Just half an idea? Perfect! Just toss [create an issue](https://github.com/SnakesLater/vhs-connections/issues/new) with:
+Got an Idea? Great! Just half an idea? Perfect! Just toss [create an issue](https://github.com/SnakesLater/vhs-puzzles/issues/new) with:
 
 ```
 Title: [IDEA] Your concept in a few words
@@ -107,4 +107,4 @@ This project exists because a certain conglomerate took some like two daily game
 
 **Ready to add your mark to horror gaming history?** 
 
-[Start Contributing →](CONTRIBUTING.md) | [Play Now →](https://github.com/SnakesLater/vhs-connections)
+[Start Contributing →](CONTRIBUTING.md) | [Play Now →](https://snakeslater.github.io/vhs-puzzles/)
