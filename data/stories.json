@@ -1,0 +1,110 @@
+{
+  "campaigns": [
+    {
+      "id": "cabin_stalkings",
+      "title": "The Cabin Stalkings",
+      "premise": "Detective Mills investigates a series of disappearances at remote cabins in the woods. The evidence points to a pattern... but what's really hunting these victims?",
+      "characters": {
+        "detective": "Detective Mills",
+        "victim": "Unknown (multiple victims)"
+      },
+      "scenes": [
+        {
+          "sceneId": "cabin_stalkings_001",
+          "gameType": "connections",
+          "puzzleId": "conn_detective_001",
+          "timer": null,
+          "narrative": {
+            "before": "Detective Mills: 'The evidence bags are scattered across my desk. Three victims, three cabins... I need to piece together what was found at each scene before I can understand the pattern...'",
+            "after": "Detective Mills: 'Interesting. All the same types of weapons, all the same victim profiles. But these coffee orders... they're personal. Someone was watching them, studying them...'"
+          }
+        },
+        {
+          "sceneId": "cabin_stalkings_002",
+          "gameType": "connections",
+          "puzzleId": "conn_detective_002",
+          "timer": null,
+          "narrative": {
+            "before": "Detective Mills: 'The forensic report just came in. Prints everywhere at the crime scenes. But these aren't random - there's a pattern in the types of fingerprints being left behind...'",
+            "after": "Detective Mills: 'Loop, whorl, arch, composite... all four types found. But that's impossible. One person doesn't have all four types of fingerprints. Unless...'"
+          }
+        },
+        {
+          "sceneId": "cabin_stalkings_003",
+          "gameType": "connections",
+          "puzzleId": "conn_detective_003",
+          "timer": null,
+          "narrative": {
+            "before": "Detective Mills: 'I found this in the evidence locker. More tools were recovered than listed in the official report. Someone's hiding something...'",
+            "after": "Detective Mills: 'Swab, tape, light, bag... standard forensic tools. But these horror movie weapons... they match the MO of a killer from 20 years ago. The Butcher of Blackwood Cabin.'"
+          }
+        },
+        {
+          "sceneId": "cabin_stalkings_004",
+          "gameType": "connections",
+          "puzzleId": "conn_detective_004",
+          "timer": 60,
+          "narrative": {
+            "before": "Detective Mills: 'I'm at the fourth cabin. The security footage shows someone was here 20 minutes ago. I have limited time to gather evidence before they return...'",
+            "after": "Detective Mills: 'I barely got out with the evidence. Serial, mass, spree, vigilante... the killer's profile is becoming clear. And these forest sounds... I heard them all while I was escaping.'"
+          }
+        },
+        {
+          "sceneId": "cabin_stalkings_005",
+          "gameType": "connections",
+          "puzzleId": "conn_detective_005",
+          "timer": null,
+          "narrative": {
+            "before": "Detective Mills: 'Back at the station, going through cold case files. The Butcher of Blackwood Cabin was never caught. But these files... they contain references to something darker...'",
+            "after": "Detective Mills: 'Dark room, dark water, dark forest, dark soul... the pattern emerges. The killer doesn't just stalk cabins. They hunt in places of darkness. And I just got a call about another cabin...'"
+          }
+        }
+      ],
+      "epilogue": "Detective Mills: 'The Cabin Stalkings case... closed? No. Never closed. There are more cabins. More victims. More darkness. But now I understand the pattern. Now I can start hunting back...'"
+    },
+    {
+      "id": "midnight_broadcast",
+      "title": "The Midnight Broadcast",
+      "premise": "Reporter Jane receives a pirate TV signal that only appears at midnight. Each broadcast contains a puzzle - solve it, or the next victim dies. Can she decode the signal and stop the killer?",
+      "characters": {
+        "reporter": "Reporter Jane",
+        "victim": "Unknown (broadcast victims)"
+      },
+      "scenes": [
+        {
+          "sceneId": "midnight_broadcast_001",
+          "gameType": "connections",
+          "puzzleId": "conn_detective_001",
+          "timer": null,
+          "narrative": {
+            "before": "Reporter Jane: 'The broadcast just started. Static, then a message: \"Find what doesn't belong.\" I need to analyze what I'm seeing before it's too late...'",
+            "after": "Reporter Jane: 'The groups are connected. But what's the message hidden in these connections? There must be something I'm missing...'"
+          }
+        }
+      ],
+      "epilogue": "Reporter Jane: 'The signal has been decoded. But the killer... they're still out there. Watching. Broadcasting. Waiting for midnight...'"
+    },
+    {
+      "id": "the_archive",
+      "title": "The Archive",
+      "premise": "Archivist discovers forbidden texts that drive readers to madness. Each text contains a puzzle - solve it to seal the text away, or succumb to its influence.",
+      "characters": {
+        "archivist": "The Archivist",
+        "victim": "Previous archive readers"
+      },
+      "scenes": [
+        {
+          "sceneId": "the_archive_001",
+          "gameType": "connections",
+          "puzzleId": "conn_detective_001",
+          "timer": null,
+          "narrative": {
+            "before": "Archivist: 'I found this book in the restricted section. It says: \"Only those who can separate the threads of knowledge may read further.\" The pages are filled with scattered words...'",
+            "after": "Archivist: 'The words are connected by unseen threads. But I can feel something watching from between the pages...'"
+          }
+        }
+      ],
+      "epilogue": "Archivist: 'The archive has been cleansed. But the texts... they're not destroyed. Just sealed. For now. Another archivist will come. Another will be tempted. The cycle continues...'"
+    }
+  ]
+}

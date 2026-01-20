@@ -1,0 +1,238 @@
+{
+  "connections": [
+    {
+      "id": "conn_detective_001",
+      "difficulty": "easy",
+      "groups": [
+        {
+          "category": "Weapons found at crime scene",
+          "difficulty": "easy",
+          "words": ["KNIFE", "PISTOL", "ROPE", "HAMMER"]
+        },
+        {
+          "category": "Victim's last known locations",
+          "difficulty": "medium",
+          "words": ["CAFE", "OFFICE", "PARK", "HOME"]
+        },
+        {
+          "category": "Types of evidence bags",
+          "difficulty": "medium",
+          "words": ["BLOOD", "HAIR", "PRINT", "DUST"]
+        },
+        {
+          "category": "Detective's coffee orders",
+          "difficulty": "tricky",
+          "words": ["BLACK", "MILK", "SUGAR", "CREAM"]
+        }
+      ]
+    },
+    {
+      "id": "conn_detective_002",
+      "difficulty": "medium",
+      "groups": [
+        {
+          "category": "Fingerprint types",
+          "difficulty": "easy",
+          "words": ["LOOP", "WHORL", "ARCH", "COMPOSITE"]
+        },
+        {
+          "category": "Police radio codes",
+          "difficulty": "medium",
+          "words": ["ALPHA", "CODE", "URGENT", "COPY"]
+        },
+        {
+          "category": "Murder motives",
+          "difficulty": "hard",
+          "words": ["MONEY", "LOVE", "POWER", "REVENGE"]
+        },
+        {
+          "category": "Cabin in the woods features",
+          "difficulty": "tricky",
+          "words": ["CELLAR", "ATTIC", "PORCH", "DOCK"]
+        }
+      ]
+    },
+    {
+      "id": "conn_detective_003",
+      "difficulty": "medium",
+      "groups": [
+        {
+          "category": "Forensic tools",
+          "difficulty": "easy",
+          "words": ["SWAB", "TAPE", "LIGHT", "KITS"]
+        },
+        {
+          "category": "Suspect aliases",
+          "difficulty": "medium",
+          "words": ["SHADOW", "GHOST", "VIPER", "WOLF"]
+        },
+        {
+          "category": "Horror movie weapons",
+          "difficulty": "hard",
+          "words": ["BLADE", "CHAINSAW", "DRILL", "MACHETE"]
+        },
+        {
+          "category": "Words ending in 'ER'",
+          "difficulty": "tricky",
+          "words": ["KILLER", "STALKER", "WATCHER", "MURDERER"]
+        }
+      ]
+    },
+    {
+      "id": "conn_detective_004",
+      "difficulty": "hard",
+      "groups": [
+        {
+          "category": "Crime scene measurements",
+          "difficulty": "medium",
+          "words": ["FEET", "INCH", "YARD", "MILE"]
+        },
+        {
+          "category": "Types of killers",
+          "difficulty": "hard",
+          "words": ["SERIAL", "MASS", "SPREE", "VIGILANTE"]
+        },
+        {
+          "category": "Forest sounds",
+          "difficulty": "medium",
+          "words": ["HAWK", "WIND", "WOLF", "CROW"]
+        },
+        {
+          "category": "Anagram of 'STALKER'",
+          "difficulty": "tricky",
+          "words": ["STAR", "LARK", "RATS", "STALK"]
+        }
+      ]
+    },
+    {
+      "id": "conn_detective_005",
+      "difficulty": "hard",
+      "groups": [
+        {
+          "category": "Cold case files",
+          "difficulty": "medium",
+          "words": ["FILE", "CASE", "LEAD", "CLUE"]
+        },
+        {
+          "category": "Words that can follow 'DARK'",
+          "difficulty": "hard",
+          "words": ["ROOM", "WATER", "FOREST", "SOUL"]
+        },
+        {
+          "category": "Police ranks",
+          "difficulty": "easy",
+          "words": ["CADET", "DETECTIVE", "SERGEANT", "CHIEF"]
+        },
+        {
+          "category": "Horror creature synonyms",
+          "difficulty": "tricky",
+          "words": ["BEAST", "MONSTER", "FIEND", "DEMON"]
+        }
+      ]
+    }
+  ],
+  "wordle": [
+    {
+      "id": "wordle_detective_001",
+      "difficulty": "easy",
+      "targetWord": "CRIME",
+      "hint": "What the detective is trying to solve"
+    },
+    {
+      "id": "wordle_detective_002", 
+      "difficulty": "medium",
+      "targetWord": "EVIDENCE",
+      "hint": "What the detective collects at the scene"
+    },
+    {
+      "id": "wordle_detective_003",
+      "difficulty": "hard", 
+      "targetWord": "SUSPECT",
+      "hint": "Who the detective is looking for"
+    }
+  ],
+  "strands": [
+    {
+      "id": "strands_detective_001",
+      "difficulty": "easy",
+      "words": ["CLUE", "LEAD", "TRAIL", "TRACK"],
+      "theme": "Investigation terms",
+      "hint": "Following the evidence"
+    },
+    {
+      "id": "strands_detective_002",
+      "difficulty": "medium", 
+      "words": ["ALIBI", "MOTIVE", "WITNESS", "TESTIMONY"],
+      "theme": "Courtroom terms",
+      "hint": "Legal proceedings"
+    },
+    {
+      "id": "strands_detective_003",
+      "difficulty": "hard",
+      "words": ["FORENSIC", "AUTOPSY", "PATHOLOGY", "TOXICOLOGY"], 
+      "theme": "Medical investigation",
+      "hint": "Science of death"
+    }
+  ],
+  "spelling-bee": [
+    {
+      "id": "spelling_detective_001",
+      "difficulty": "easy",
+      "letters": ["C", "R", "I", "M", "E", "S", "L"],
+      "centerLetter": "E",
+      "pangram": "CRIMES",
+      "hint": "What the detective investigates"
+    },
+    {
+      "id": "spelling_detective_002",
+      "difficulty": "medium",
+      "letters": ["D", "E", "T", "C", "I", "V", "N"],
+      "centerLetter": "T",
+      "pangram": "DETECTIVE",
+      "hint": "The investigator's job title"
+    },
+    {
+      "id": "spelling_detective_003",
+      "difficulty": "hard",
+      "letters": ["A", "L", "I", "B", "S", "M", "O"],
+      "centerLetter": "S",
+      "pangram": "ALIBIS",
+      "hint": "What suspects provide"
+    }
+  ],
+  "letter-boxed": [
+    {
+      "id": "letterbox_detective_001",
+      "difficulty": "easy",
+      "sides": [
+        ["C", "R", "I"],
+        ["M", "E", "S"],
+        ["L", "A", "W"],
+        ["D", "T", "P"]
+      ],
+      "hint": "Legal investigation terms"
+    },
+    {
+      "id": "letterbox_detective_002",
+      "difficulty": "medium",
+      "sides": [
+        ["F", "O", "R"],
+        ["E", "N", "S"],
+        ["I", "C", "A"],
+        ["L", "B", "T"]
+      ],
+      "hint": "Forensic science terms"
+    },
+    {
+      "id": "letterbox_detective_003",
+      "difficulty": "hard",
+      "sides": [
+        ["V", "I", "C"],
+        ["T", "I", "M"],
+        ["W", "I", "T"],
+        ["N", "E", "S"]
+      ],
+      "hint": "Crime scene roles"
+    }
+  ]
+}

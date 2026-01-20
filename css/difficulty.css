@@ -1,0 +1,65 @@
+/* Difficulty Mode CSS */
+
+#difficulty-selection {
+    margin-top: 2rem;
+}
+
+.difficulty-info {
+    background: var(--tape-color);
+    border: var(--tape-border);
+    padding: 1.5rem;
+    max-width: 600px;
+    margin: 1rem auto;
+    text-align: center;
+}
+
+.difficulty-info h2 {
+    color: var(--secondary-accent);
+    margin-bottom: 1rem;
+}
+
+.difficulty-info p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.rewind-indicator {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.rewind-symbol {
+    font-size: 2rem;
+    color: var(--secondary-accent);
+}
+
+.rewind-symbol.active {
+    color: var(--success-color);
+}
+
+.rewind-symbol.lost {
+    color: var(--danger-color);
+}
+
+/* Difficulty-specific styles */
+.easy-mode {
+    --border-color: var(--success-color);
+    --shadow-color: var(--success-color);
+}
+
+.medium-mode {
+    --border-color: var(--warning-color);
+    --shadow-color: var(--warning-color);
+}
+
+.hard-mode {
+    --border-color: var(--danger-color);
+    --shadow-color: var(--danger-color);
+}
+
+.insane-mode {
+    --border-color: #9b59b6;
+    --shadow-color: #9b59b6;
+}

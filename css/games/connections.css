@@ -1,0 +1,319 @@
+/* Connections Game CSS - Detective Footage Aesthetic */
+
+:root {
+    --puzzle-base-size: clamp(2.5rem, 6vw, 4.5rem);
+    --puzzle-header-size: calc(var(--puzzle-base-size) * 0.9);
+    --puzzle-control-size: calc(var(--puzzle-base-size) * 0.5);
+    --puzzle-message-size: calc(var(--puzzle-base-size) * 0.7);
+}
+
+.connections-container {
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #8b0000;
+    padding: 0.8rem;
+    box-shadow: 0 0 20px rgba(139, 0, 0, 0.3);
+    font-family: 'Courier New', monospace;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.connections-header {
+    display: none;
+}
+
+.connections-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    gap: 0.2rem;
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+}
+
+.word-tile {
+    background: #1a1a2e;
+    border: 3px solid #333;
+    padding: 0.15rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: var(--puzzle-base-size);
+    font-family: 'Black Ops One', 'Special Elite', 'Courier New', monospace;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    word-break: break-word;
+    hyphens: auto;
+}
+
+/* Long words get slightly smaller */
+.word-tile[data-word-length="7"],
+.word-tile[data-word-length="8"] {
+    font-size: calc(var(--puzzle-base-size) * 0.9);
+}
+
+.word-tile[data-word-length="9"] {
+    font-size: calc(var(--puzzle-base-size) * 0.8);
+}
+
+.word-tile:hover {
+    border-color: #ff6b35;
+    transform: scale(1.02);
+    box-shadow: 0 0 15px rgba(255, 107, 53, 0.3);
+}
+
+.word-tile.selected {
+    background: #8b0000;
+    border-color: #ff6b35;
+    color: #fff;
+    box-shadow: 0 0 20px rgba(139, 0, 0, 0.6);
+}
+
+.word-tile.solved {
+    background: rgba(139, 0, 0, 0.4);
+    border-color: #333;
+    color: #999;
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.group-container {
+    margin-bottom: 0.4rem;
+    animation: groupReveal 0.5s ease;
+    flex-shrink: 0;
+}
+
+@keyframes groupReveal {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.group-row {
+    background: #1a1a2e;
+    border: 3px solid #ff6b35;
+    margin-bottom: 0.4rem;
+    overflow: hidden;
+}
+
+.group-header {
+    background: rgba(139, 0, 0, 0.4);
+    padding: 0.5rem;
+    text-align: center;
+    font-size: var(--puzzle-header-size);
+    color: #ff6b35;
+    border-bottom: 2px solid #8b0000;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: 'Black Ops One', 'Courier New', monospace;
+}
+
+.group-words {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    padding: 0.5rem;
+    font-size: var(--puzzle-header-size);
+    color: #999;
+    gap: 0.3rem;
+}
+
+.group-row.easy {
+    border-color: var(--success-color);
+}
+
+.group-row.easy .group-header {
+    background: rgba(46, 204, 113, 0.2);
+    color: var(--success-color);
+    border-color: var(--success-color);
+}
+
+.group-row.medium {
+    border-color: var(--warning-color);
+}
+
+.group-row.medium .group-header {
+    background: rgba(243, 156, 18, 0.2);
+    color: var(--warning-color);
+    border-color: var(--warning-color);
+}
+
+.group-row.hard {
+    border-color: var(--danger-color);
+}
+
+.group-row.hard .group-header {
+    background: rgba(231, 76, 60, 0.2);
+    color: var(--danger-color);
+    border-color: var(--danger-color);
+}
+
+.group-row.tricky {
+    border-color: #9b59b6;
+}
+
+.group-row.tricky .group-header {
+    background: rgba(155, 89, 182, 0.2);
+    color: #9b59b6;
+    border-color: #9b59b6;
+}
+
+.connections-controls {
+    display: flex;
+    gap: 0.8rem;
+    justify-content: center;
+    margin-top: 0.8rem;
+    flex-shrink: 0;
+}
+
+.connections-btn {
+    background: #1a1a2e;
+    border: 3px solid #ff6b35;
+    color: #ff6b35;
+    padding: 0.6rem 1.2rem;
+    font-size: var(--puzzle-control-size);
+    font-weight: bold;
+    letter-spacing: 2px;
+    transition: all 0.15s ease;
+    font-family: 'Courier New', monospace;
+}
+
+.connections-btn:hover:not(:disabled) {
+    background: #8b0000;
+    color: #fff;
+    box-shadow: 0 0 15px rgba(255, 107, 53, 0.4);
+}
+
+.connections-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.connections-btn.primary {
+    background: #8b0000;
+    color: #fff;
+    border-color: #ff6b35;
+}
+
+.connections-btn.primary:hover:not(:disabled) {
+    background: #a00000;
+    box-shadow: 0 0 20px rgba(139, 0, 0, 0.6);
+}
+
+.connections-message {
+    text-align: center;
+    margin-top: 0.6rem;
+    padding: 0.6rem;
+    min-height: 2rem;
+    font-size: var(--puzzle-message-size);
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.connections-message.error {
+    color: var(--danger-color);
+    animation: messageShake 0.3s ease;
+}
+
+.connections-message.success {
+    color: var(--success-color);
+}
+
+.connections-message.warning {
+    color: var(--warning-color);
+}
+
+@keyframes messageShake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+}
+
+.character-presence {
+    display: none;
+}
+
+/* Tape quality effects on connections */
+.tape-quality-low .connections-container {
+    filter: blur(1px);
+    opacity: 0.9;
+}
+
+.tape-quality-critical .connections-container {
+    filter: blur(2px) contrast(1.2);
+    animation: containerPulse 0.5s infinite;
+}
+
+@keyframes containerPulse {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    :root {
+        --puzzle-base-size: clamp(2rem, 5vw, 3.5rem);
+        --puzzle-header-size: calc(var(--puzzle-base-size) * 0.85);
+        --puzzle-control-size: calc(var(--puzzle-base-size) * 0.45);
+        --puzzle-message-size: calc(var(--puzzle-base-size) * 0.6);
+    }
+    
+    .connections-grid {
+        gap: 0.3rem;
+    }
+    
+    .word-tile {
+        border-width: 2px;
+        padding: 0.2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --puzzle-base-size: clamp(1.5rem, 4vw, 2.8rem);
+        --puzzle-header-size: calc(var(--puzzle-base-size) * 0.8);
+        --puzzle-control-size: calc(var(--puzzle-base-size) * 0.4);
+        --puzzle-message-size: calc(var(--puzzle-base-size) * 0.5);
+    }
+    
+    .connections-container {
+        padding: 0.5rem;
+    }
+    
+    .connections-grid {
+        gap: 0.2rem;
+    }
+    
+    .word-tile {
+        border-width: 2px;
+        padding: 0.15rem;
+        letter-spacing: 0;
+    }
+    
+    .group-row {
+        border-width: 2px;
+    }
+    
+    .group-header {
+        padding: 0.3rem;
+    }
+    
+    .group-words {
+        padding: 0.3rem;
+    }
+    
+    .connections-btn {
+        padding: 0.4rem 0.8rem;
+        border-width: 2px;
+    }
+}
