@@ -18,7 +18,7 @@ Open http://localhost:8000 in your browser.
 🚧 Spelling Bee - Buzz through letters to build words (Coming Soon)
 🚧 Letter Boxed - Escape the letter prison (Coming Soon)
 
-🎬 Contribute Your Horror Stories
+🎬 Contribute Your Stories
 I want YOUR creative ideas! Whether you're a puzzle master, storyteller, or just have a cool idea - we'll credit you as a Director, Producer, or Actor on the VHS tape covers!
 
 💡 Quick Idea Submission
@@ -29,8 +29,7 @@ Title: [IDEA] Your concept in a few words
 Description:
 - Puzzle type (Connections, Wordle, etc.)
 - Theme/setting (haunted house, abandoned hospital, etc.)
-- Any specific words, categories, or story beats
-- How spooky? (1-10 scale)
+- Any specific words, Character/names, puzzle categories, or story beats
 
 Credit me as: Director/Producer/Actor/Writer
 We'll develop it into a full puzzle/story and you'll see your name on the VHS cover!
