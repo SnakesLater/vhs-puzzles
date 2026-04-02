@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let currentSceneIndex = 0;
     let currentGameType = null;
     let currentConnectionsGame = null; // Scoped to module
+    let currentWordleGame = null; // Scoped to module
 
     // DOM elements
     const screens = {
@@ -175,6 +176,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (gameType === 'connections') {
             const puzzle = puzzleLoader.getRandomPuzzle('connections');
             startSingleGame(puzzle);
+        } else if (gameType === 'wordle') {
+            startSingleGame(null, 'wordle');
         } else {
             alert(`${gameType} is coming soon!`);
         }
@@ -358,14 +361,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         loadScene(currentSceneIndex + 1);
     }
 
-    function startSingleGame(puzzle) {
+    function startSingleGame(puzzle, gameType = 'connections') {
         document.getElementById('game-selection').classList.add('hidden');
         showScreen('gameMode');
         
         const gameContainer = document.getElementById('single-game-container');
         gameContainer.innerHTML = '';
         
-        if (puzzle) {
+        if (gameType === 'connections' && puzzle) {
             tapeQualitySystem.reset();
             currentConnectionsGame = new ConnectionsGame('single-game-container', puzzle);
 
@@ -378,6 +381,25 @@ document.addEventListener('DOMContentLoaded', async () => {
                 } else {
                     setTimeout(() => {
                         alert('Puzzle failed. Try again!');
+                        goBack();
+                    }, 1000);
+                }
+            });
+
+            eventManager.off('rewindRequested'); // Clear previous listeners
+        } else if (gameType === 'wordle') {
+            tapeQualitySystem.reset();
+            currentWordleGame = new WordleGame('single-game-container');
+
+            eventManager.on('gameComplete', (won) => {
+                if (won) {
+                    setTimeout(() => {
+                        alert('Wordle completed! Returning to menu...');
+                        goBack();
+                    }, 1000);
+                } else {
+                    setTimeout(() => {
+                        alert('Wordle failed. Try again!');
                         goBack();
                     }, 1000);
                 }

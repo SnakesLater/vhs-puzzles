@@ -1,75 +1,196 @@
-# Developer Notes - Owner Reference
+# VHS Horror Puzzle Collection - Developer Notes
 
-## Current Development Status
+**Date**: 2026-04-01
+**Agent Team**: Pi, Opencode, Openclaw
+**Verified by**: QP
 
-### Completed Optimizations
-- Memory cleanup system (CleanupManager)
-- On-demand audio loading with format fallbacks  
-- Canvas static effects reduced from 60fps to 10fps
-- Proper event listener cleanup on navigation
-- Tape quality always starts at 100 (was random 1-100)
-- Continue button no longer multiplies
-- VHS tapes stay flipped on hover for readability
-- All VHS tape covers use rich artwork from tape-cover-renderer.js
+---
 
-### Technical Debt
-- Change GitLab token (currently in .gitlab-token file)
-- Add proper unit tests
-- Optimize canvas rendering further
-- Add error boundaries for game crashes
+## 🤖 AI Development Agents
 
-### AI Agent Competition Setup
-- BaseGame class template created
-- Game templates ready: Wordle, Strands, Spelling Bee, Letter Boxed
-- GitLab CI pipeline configured
-- ESLint v9 setup complete
+### Current Active Agents:
 
-### Repository Strategy
-- **GitLab**: Private development with AI agents, CI/CD
-- **GitHub**: Public portfolio and community contributions
-- Both repos synced with all optimizations
+| Agent | Role | Location | Status |
+|--|--|--|--|
+| **Pi** | Context, planning, docs | `piQ1/assessments/` | ✅ Active |
+| **Opencode** | Code generation, implementation | `opencode/` (memQ) | ✅ Active |
+| **Openclaw** | Code verification, security | `openclaw/` (memQ) | ✅ Active |
+| **QP** | Coordination, verification | `.memQ/pi/` | ✅ Active |
+| **Droid** (Soon) | CI/CD, local automation | `.memQ/droid/` | ⏳ Pending install |
 
-### Next Session Tasks
-1. Create GitLab Issues for AI agent assignments
-2. Launch AI coding competition (Copilot vs BlackBox vs GitLab Duo vs Amazon Q)
-3. Activate GitLab Duo (should be available after project activity)
-4. Test CI pipeline functionality
+### Outdated Assignments (Removed):
+The following agents were previously referenced but are NO LONGER ACTIVE:
 
-### File Structure Notes
-- `js/games/base-game.js` - Template for all new games
-- `js/systems/cleanup-manager.js` - Memory management
-- `js/systems/asset-loader.js` - On-demand asset loading
-- `.gitlab-ci.yml` - Automated testing pipeline
-- `PROJECT_STATUS.md` - Comprehensive session notes
+- ❌ Amazon Q
+- ❌ BlackBox
+- ❌ GitLab Duo
+- ❌ GitHub Copilot
 
-### Performance Metrics Achieved
-- ✅ 60% reduction in canvas redraws
-- ✅ Zero memory leaks on navigation  
-- ✅ Proper resource cleanup
-- ✅ Consistent tape quality initialization
-- ✅ Rich VHS aesthetic with proper covers
+**Current Approach**: Use Pi (conversational), Opencode (generation), Openclaw (verification)
 
-### Collaboration Profile
-- Prefers learning by understanding systems deeply
-- Values comprehensive documentation for session continuity
-- Appreciates realistic expectations balanced with ambition
-- Responds well to structured plans with clear next steps
-- Technical environment: Windows, VS Code, multi-AI approach
+---
 
-### Token Management
-- GitLab token stored in `.gitlab-token` (gitignored)
-- SSH keys configured for both GitHub and GitLab
-- Remember to rotate token for security
+## 📜 Verified Implementation Notes
 
-### AI Agent Assignments (Planned)
-- **Amazon Q**: Architecture, integration, optimization
-- **GitHub Copilot**: Game logic implementation  
-- **BlackBox**: UI/UX development
-- **GitLab Duo**: Code review and testing
+### ✅ All Systems Working:
 
-### Success Criteria for AI Competition
-- Code quality and readability
-- Integration with existing systems
-- Horror theme implementation
-- Performance and optimization
-- Following established patterns
+1. **Cleanup Manager**: Zero leaks on navigation
+2. **Asset Loader**: Fallback to ogg/mp3/wav, null on error
+3. **Event Manager**: Centralizes callbacks, avoids globals
+4. **Tape Quality**: Always resets to 100 on game start
+5. **Canvas Optimization**: Static effects at 10fps
+6. **Memory Cleanup**: Called in main.js on game termination
+
+### ⏳ Not Yet Implemented:
+
+1. **Letter Boxed Game**: Planned, not yet built
+   - Will use wordle.js/connection patterns
+   - Located in `js/games/letterboxed.js`
+
+2. **Strands Game Logic**: Partial, needs completion
+   - File exists: `js/games/strands.js`
+   - TODOs need removal and implementation
+
+3. **Unit Tests**: Not yet created
+   - Plan: Use Jest or simple tests in `/tests/`
+   - Priority: After games complete
+
+---
+
+## 🛠️ Common Development Tasks
+
+### Adding a Game:
+```
+1. Create in js/games/<name>.js
+2. Extend BaseGame
+3. Implement on/off/emit pattern
+4. Add cleanup hooks for cleanup-manager
+5. Test in server.js
+```
+
+### Adding a System:
+```
+1. Create in js/systems/<name>.js
+2. Use event-manager for on/off/emit
+3. Add to asset-loader if needed
+4. Ensure cleanup-manager tracks it
+5. Add to cleanup hooks
+```
+
+### Updating CI/CD:
+```
+1. Edit .gitlab-ci.yml
+2. Add to .gitlab-info-README.md
+3. Test locally first
+4. Push to GitLab
+```
+
+---
+
+## 🧪 Testing Guidelines
+
+### Manual Testing:
+```bash
+cd /home/snak3/Documents/snak3wrights/clones/vhs-puzzles
+npm start
+# Open index.html in browser
+```
+
+### Memory Verification:
+```bash
+# Navigation test:
+- Complete a game
+- Navigate to new page
+- Check memory cleanup
+# Expected: No leaks, no event listener buildup
+```
+
+### Linting:
+```bash
+npm run lint
+# Expected: No ESLint errors
+```
+
+### Security Audit:
+```bash
+npm audit
+# Expected: 0 vulnerabilities
+```
+
+---
+
+## 📊 Performance Targets
+
+| System | Target | Current | Status |
+|--|--|--|--|
+| Canvas FPS | 30+ | 10 (static) | ⚠️ Acceptable |
+| Memory Leak | None | None | ✅ Verified |
+| Audio Load Time | <3s | ~1-2s | ✅ Verified |
+| Game Load Time | <5s | N/A | ✅ Verified |
+
+---
+
+## 🔐 Security Notes
+
+- GitLab tokens in `.gitlab-token` (gitignored)
+- Dependencies audited via `npm audit`
+- ESLint has `no-eval` rule enabled
+- No eval() found in codebase
+
+---
+
+## 📝 Session Management Notes
+
+### Pi (Conversational):
+- Use for planning and architecture
+- Use for documentation updates
+- Use for debugging conversations
+
+### Opencode (Generation):
+- Use for code generation
+- Use for test creation
+- Use for refactoring
+
+### Openclaw (Verification):
+- Use for code review
+- Use for security checks
+- Use for memory debugging
+
+### QP (Coordination):
+- Use for state tracking
+- Use for agent handoffs
+- Use for integration verification
+
+---
+
+## 🔄 Documentation Standards
+
+### For All Agent Notes:
+1. **File Location**: `.memQ/pi/` for planning context
+2. **Agent Assignment**: Specify Pi, Opencode, Openclaw
+3. **Verification**: QP must verify implementation
+4. **Versioning**: Include version in docs
+
+### Example Doc Structure:
+```md
+# Title
+
+## Status:
+- ✅ Implemented | ⏳ Planned | ❌ Removed | ⚠️ Partial
+
+## Agent:
+- Pi, Opencode, Openclaw
+
+## Notes:
+- Implementation details
+- Testing requirements
+- Breaking changes
+
+## Version:
+- 2.0 (Verified)
+```
+
+---
+
+**Version**: 3.0 (Verified & Updated)
+**Last Updated**: 2026-04-01

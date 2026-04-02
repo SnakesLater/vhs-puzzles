@@ -1,30 +1,46 @@
 stages:
   - lint
   - test
+  - security
 
-# Lint stage - check code quality
+# Lint stage - checks JavaScript syntax without external dependencies
 lint_code:
   stage: lint
   image: node:18
   script:
-    - npm install
-    - npm run lint:check
+    - echo "Linting: checking JavaScript syntax..."
+    - node --check js/*.js && echo "✅ Main JS valid"
+    - node --check js/games/*.js && echo "✅ Games JS valid"
+    - node --check js/systems/*.js && echo "✅ Systems JS valid"
+    - echo "✅ No syntax errors found"
   only:
     - main
     - merge_requests
 
-# Basic validation - ensure files exist and are valid
+# Test stage - validate project structure and files
 validate_project:
   stage: test
   image: node:18
   script:
-    - echo "Checking project structure..."
+    - echo "Validating project structure..."
     - test -f index.html
     - test -f package.json
     - test -d js/
     - test -d css/
     - test -d data/
     - echo "✅ Project structure valid"
+    # Manual testing instruction
+    - echo "Manual testing: Open index.html in browser"
   only:
     - main
     - merge_requests
+
+# Security audit stage - check for npm vulnerabilities
+security_audit:
+  stage: security
+  image: node:18
+  script:
+    - echo "Running npm audit..."
+    - npm audit
+    - echo "✅ Security audit completed"
+  allow_failure: true

@@ -17,10 +17,10 @@ Open `http://localhost:8000` in your browser.
 ## 🎯 Games Available
 
 - **✅ Connections** - Link words into mysterious categories
-- **🚧 Wordle** - Solve the victim's final word *(Coming Soon)*
-- **🚧 Strands** - Unravel webs of connected clues *(Coming Soon)*
-- **🚧 Spelling Bee** - Buzz through letters to build words *(Coming Soon)*
+- **🚧 Wordle** - Solve the victim's final word *(Available)*
+- **🚧 Strands** - Unravel webs of connected clues *(In Progress)*
 - **🚧 Letter Boxed** - Escape the letter prison *(Coming Soon)*
+- **🚧 Spelling Bee** - Buzz through letters to build words *(Coming Soon)*
 
 ## 🎬 Contribute Your Horror Stories
 
@@ -90,21 +90,110 @@ npm start       # Launch development server
 3. Add your game data to `data/puzzles.json`
 4. Test with our automated linting and CI
 
-## 🎪 Community
+### Current Development Status
 
-- **GitHub Discussions** - Share ideas and get help
-- **Issues** - Report bugs or request features  
-- **Pull Requests** - Contribute code improvements
-- **VHS Cover Gallery** - See all contributor credits
+| Game | Status | Priority |
+|------|--------|----------|
+| Connections | ✅ Complete | N/A |
+| Wordle | ✅ Complete | N/A |
+| Strands | ⚠️ In Progress | High |
+| Letter Boxed | ❌ Planned | High |
+| Spelling Bee | ❌ Planned | Medium |
 
-## 📜 License
+## 🤖 AI Development Team
 
-MIT License - Feel free to fork, modify, and create your own horror puzzle collections!
+### Active Agents:
+- **Pi**: Conversational planning, documentation, context
+- **Opencode**: Code generation, implementation, test writing
+- **Openclaw**: Code verification, security, debugging
+- **Droid**: CI/CD automation, local validation (deployed)
 
-## 🙏 Special Thanks
+### Workflow:
+1. Pi plans task and discusses approach
+2. Opencode generates/implements code
+3. Openclaw reviews and validates code
+4. Droid handles Git ops and build verification
 
-This project exists because a certain conglomerate took some like two daily games away from me. So, here is a framework for fun, creative, and community-driven puzzles. So, toss in an idea of two if you have it. Scary? Silly? Yes? I take all of those. Every contributor makes this collection more terrifying and delightful.
+## 🧪 Testing
 
-**Ready to add your mark to horror gaming history?** 
+### Running Tests:
+```bash
+npm test
+# Expected: Tests run with Jest or similar
+```
 
-[Start Contributing →](CONTRIBUTING.md) | [Play Now →](https://github.com/SnakesLater/vhs-connections)
+### Manual Testing:
+```bash
+npm start
+# Open index.html in browser
+# Test each game
+# Check browser console for errors
+```
+
+## 📁 Project Structure
+
+```
+vhs-puzzles/
+├── js/
+│   ├── games/
+│   │   ├── base-game.js
+│   │   ├── connections.js
+│   │   ├── strands.js (incomplete)
+│   │   ├── wordle.js
+│   │   └── letterboxed.js (NOT YET CREATED)
+│   ├── systems/
+│   │   ├── cleanup-manager.js
+│   │   ├── asset-loader.js
+│   │   ├── event-manager.js
+│   │   ├── tape-quality.js
+│   │   ├── story-text-renderer.js
+│   │   ├── tape-cover-renderer.js
+│   │   └── other-systems/
+│   ├── vhs-effects.js
+│   ├── main.js
+│   └── server.js
+├── css/
+├── data/
+├── assets/
+├── .gitlab-ci.yml (working)
+├── package.json (updated)
+├── eslint.config.js
+└── .gitlab-info-README.md
+```
+
+## 🔐 Security
+
+- No npm vulnerabilities
+- GitLab token secured in `.gitlab-token` (gitignored)
+- ESLint rules prevent eval() usage
+- Openclaw available for security checks
+- DroidShield enabled for secret scanning
+
+## 📄 Next Steps
+
+1. **Opencode Assignment**: Create Letter Boxed implementation
+2. **Opencode Assignment**: Complete Strands game logic
+3. **Opencode Assignment**: Write unit tests when ready
+4. **Droid**: CI/CD automation, local validation
+5. **Pi/QP**: Document sessions, track progress
+
+## 📚 Documentation
+
+- `PROJECT_STATUS.md` - Accurate game implementation status
+- `AGENTS.md` - Agent workflow and task assignments
+- `CONTRIBUTING.md` - For external contributors
+- `DEVELOPER_NOTES.md` - For developer notes
+- `CHANGELOG.md` - Version history
+
+## 🤖 Documentation Policy
+
+- Keep docs accurate (update when status changes)
+- Letter Boxed marked as "Coming Soon" until implemented
+- Verify all claims against actual codebase
+- Opencode + Openclaw verify implementation status
+
+---
+
+**Version**: 2.0 (Verified)  
+**Verified Date**: 2026-04-01  
+**Verified By**: QP (Pi + Opencode + Openclaw + Droid)

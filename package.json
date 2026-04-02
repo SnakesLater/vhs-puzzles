@@ -1,23 +1,21 @@
 {
-  "name": "vhs-horror-puzzles",
+  "name": "vhs-puzzles-server",
   "version": "1.0.0",
-  "description": "A horror-themed puzzle game collection with VHS aesthetic",
-  "main": "index.html",
+  "description": "VHS Horror Puzzle Collection Server",
+  "main": "server.js",
   "scripts": {
-    "start": "python -m http.server 8000",
-    "lint": "eslint js/**/*.js --fix",
-    "lint:check": "eslint js/**/*.js",
-    "test": "echo 'Tests coming soon - placeholder for future test framework'"
+    "start": "node server.js",
+    "lint": "eslint js/",
+    "lint:check": "eslint js/",
+    "test": "echo \"Tests: Use test-connections.html and test-wordle.html for manual testing\" && ls js/games/*.js js/systems/*.js",
+    "test:watch": "node server.js && echo \"Waiting for browser\"",
+    "audit": "npm audit",
+    "build": "echo \"No build scripts needed - vanilla JS\""
   },
-  "keywords": [
-    "puzzle",
-    "horror",
-    "vhs",
-    "game"
-  ],
-  "author": "",
-  "license": "MIT",
-  "devDependencies": {
-    "eslint": "^9.39.2"
+  "dependencies": {
+    "http": "0.0.1-security",
+    "url": "0.11.0",
+    "fs": "0.0.1-security",
+    "path": "0.12.7"
   }
 }
