@@ -178,6 +178,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             startSingleGame(puzzle);
         } else if (gameType === 'wordle') {
             startSingleGame(null, 'wordle');
+        } else if (gameType === 'letter-boxed') {
+            const puzzle = puzzleLoader.getRandomPuzzle('letter-boxed');
+            startSingleGame(puzzle, 'letter-boxed');
         } else {
             alert(`${gameType} is coming soon!`);
         }
@@ -332,6 +335,40 @@ document.addEventListener('DOMContentLoaded', async () => {
                     currentConnectionsGame.startTimer(timer);
                 });
             }
+        } else if (gameType === 'letter-boxed') {
+            currentConnectionsGame = new LetterBoxedGame('game-container', puzzle);
+
+            eventManager.on('gameComplete', async (won) => {
+                if (won) { nextScene(); }
+            });
+
+            if (timer) {
+                showTimer(timer, () => {
+                    currentConnectionsGame.startTimer(timer);
+                });
+            }
+        }
+
+            // Set up event listeners
+            eventManager.on('gameComplete', async (won) => {
+                if (won) {
+                    // Advance to next scene or complete story
+                    nextScene();
+                }
+            });
+
+            eventManager.on('after3', async () => await showAfterNarrative());
+
+            eventManager.on('rewindRequested', () => {
+                rewindScene();
+            });
+            
+            // Start timer if specified
+            if (timer) {
+                showTimer(timer, () => {
+                    currentConnectionsGame.startTimer(timer);
+                });
+            }
         }
     }
 
@@ -406,6 +443,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
             eventManager.off('rewindRequested'); // Clear previous listeners
+        } else if (gameType === 'letter-boxed' && puzzle) {
+            tapeQualitySystem.reset();
+            const lbGame = new LetterBoxedGame('single-game-container', puzzle);
+
+            eventManager.on('gameComplete', (won) => {
+                if (won) {
+                    setTimeout(() => {
+                        alert('Letter Boxed completed! Returning to menu...');
+                        goBack();
+                    }, 1000);
+                }
+            });
+
+            eventManager.off('rewindRequested');
         }
     }
 
