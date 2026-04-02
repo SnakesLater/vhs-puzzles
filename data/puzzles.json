@@ -132,7 +132,102 @@
     }
   ],
   "wordle": [],
-  "strands": [],
-  "spelling-bee": [],
-  "letter-boxed": []
+  "strands": [
+    {
+      "id": "strands_horror_001",
+      "difficulty": "medium",
+      "theme": "Horror Creatures",
+      "grid": [
+        ["S", "H", "A", "D", "O", "W", "S", "E"],
+        ["V", "R", "M", "W", "P", "I", "R", "T"],
+        ["M", "O", "O", "K", "Z", "E", "E", "A"],
+        ["G", "H", "O", "U", "L", "S", "B", "G"],
+        ["W", "E", "R", "E", "W", "O", "L", "F"],
+        ["Z", "O", "M", "B", "I", "E", "D", "X"]
+      ],
+      "answers": ["VAMPIRE", "WEREWOLF", "ZOMBIE", "GHOUL", "MOOK"],
+      "spangram": "SHADOWS",
+      "spangramHint": "Things that lurk in the dark"
+    },
+    {
+      "id": "strands_horror_002",
+      "difficulty": "medium",
+      "theme": "Cabin in the Woods",
+      "grid": [
+        ["C", "R", "A", "B", "I", "N", "S", "T"],
+        ["A", "T", "T", "I", "C", "H", "O", "E"],
+        ["D", "O", "O", "R", "W", "A", "Y", "R"],
+        ["W", "I", "N", "D", "O", "W", "R", "D"],
+        ["P", "O", "R", "C", "H", "D", "A", "R"],
+        ["C", "E", "L", "L", "A", "R", "B", "K"]
+      ],
+      "answers": ["ATTIC", "CABIN", "PORCH", "CELLAR", "WINDOW"],
+      "spangram": "CABINST",
+      "spangramHint": "The whole place"
+    },
+    {
+      "id": "strands_horror_003",
+      "difficulty": "hard",
+      "theme": "Crime Scene Evidence",
+      "grid": [
+        ["B", "L", "O", "O", "D", "S", "P", "T"],
+        ["F", "I", "N", "G", "E", "R", "P", "R"],
+        ["H", "A", "I", "R", "S", "M", "O", "I"],
+        ["D", "U", "S", "T", "W", "R", "N", "N"],
+        ["F", "O", "O", "T", "P", "R", "I", "T"],
+        ["W", "E", "A", "P", "O", "N", "S", "E"]
+      ],
+      "answers": ["BLOOD", "FINGER", "HAIR", "DUST", "FOOTPRINT", "WEAPON"],
+      "spangram": "BLOODS",
+      "spangramHint": "What the killer left behind"
+    }
+  ],
+  "letter-boxed": [
+    {
+      "id": "lb_horror_001",
+      "difficulty": "medium",
+      "theme": "The Investigation",
+      "sides": [
+        ["C", "R", "I"],
+        ["L", "U", "E"],
+        ["S", "A", "T"],
+        ["D", "O", "N"]
+      ],
+      "answers": ["CRUEL", "SLATE", "DRAIN", "CAULDRON"],
+      "minWords": 3
+    },
+    {
+      "id": "lb_horror_002",
+      "difficulty": "medium",
+      "theme": "Dark Woods",
+      "sides": [
+        ["G", "R", "O"],
+        ["V", "E", "S"],
+        ["N", "I", "G"],
+        ["H", "T", "W"]
+      ],
+      "answers": ["GROWN", "VINES", "SWORN", "EIGHT"],
+      "minWords": 3
+    }
+  ],
+  "spelling-bee": [
+    {
+      "id": "sb_horror_001",
+      "centerLetter": "O",
+      "outerLetters": ["B", "D", "G", "H", "M", "R"],
+      "answers": [
+        "BOG", "BOD", "DOG", "DOGO", "HOG", "HOOD", "HOBO", "GOOD", "GOD", "ROOD", "BOGHOG"
+      ],
+      "pangrams": ["BOGHOG", "GOOD"]
+    },
+    {
+      "id": "sb_horror_002",
+      "centerLetter": "A",
+      "outerLetters": ["C", "D", "M", "R", "S", "W"],
+      "answers": [
+        "ARM", "MAD", "RAD", "WAD", "CAM", "DAM", "DRAM", "SCAM", "SWAM", "CRAM", "WASD", "AWARD"
+      ],
+      "pangrams": ["AWARD", "SCARWAD"]
+    }
+  ]
 }
