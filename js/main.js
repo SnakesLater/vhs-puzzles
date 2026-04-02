@@ -342,28 +342,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (won) { nextScene(); }
             });
 
-            if (timer) {
-                showTimer(timer, () => {
-                    currentConnectionsGame.startTimer(timer);
-                });
-            }
-        }
-
-            // Set up event listeners
-            eventManager.on('gameComplete', async (won) => {
-                if (won) {
-                    // Advance to next scene or complete story
-                    nextScene();
-                }
-            });
-
             eventManager.on('after3', async () => await showAfterNarrative());
 
             eventManager.on('rewindRequested', () => {
                 rewindScene();
             });
-            
-            // Start timer if specified
+
             if (timer) {
                 showTimer(timer, () => {
                     currentConnectionsGame.startTimer(timer);
