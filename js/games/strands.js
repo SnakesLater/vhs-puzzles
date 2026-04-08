@@ -3,10 +3,27 @@
 class StrandsGame extends BaseGame {
     constructor(containerId, puzzle) {
         super(containerId, puzzle);
-        this.theme = puzzle.theme;
-        this.answers = puzzle.answers || [];
-        this.spangram = puzzle.spangram;
-        this.grid = puzzle.grid; // 6x8 letter grid
+        
+        // Fallback test puzzle if no puzzle provided
+        if (!puzzle) {
+            this.theme = "TEST PUZZLE";
+            this.answers = ["TEST", "WORD", "GRID", "FIND"];
+            this.spangram = "TESTWORD";
+            this.grid = [
+                ['T', 'E', 'S', 'T', 'W', 'O', 'R', 'D'],
+                ['G', 'R', 'I', 'D', 'F', 'I', 'N', 'D'],
+                ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'],
+                ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'],
+                ['Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X'],
+                ['Y', 'Z', 'A', 'B', 'C', 'D', 'E', 'F']
+            ];
+        } else {
+            this.theme = puzzle.theme;
+            this.answers = puzzle.answers || [];
+            this.spangram = puzzle.spangram;
+            this.grid = puzzle.grid;
+        }
+        
         this.foundWords = [];
         this.selectedPath = [];
         this.currentWord = '';
@@ -48,6 +65,18 @@ class StrandsGame extends BaseGame {
     }
 
     renderLetterGrid() {
+        // SAFETY CHECK: Ensure grid always exists
+        if (!this.grid || !Array.isArray(this.grid) || this.grid.length === 0) {
+            this.grid = [
+                ['T', 'E', 'S', 'T', 'W', 'O', 'R', 'D'],
+                ['G', 'R', 'I', 'D', 'F', 'I', 'N', 'D'],
+                ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'],
+                ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'],
+                ['Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X'],
+                ['Y', 'Z', 'A', 'B', 'C', 'D', 'E', 'F']
+            ];
+        }
+        
         let gridHTML = '';
         for (let row = 0; row < this.grid.length; row++) {
             gridHTML += '<div class="strands-row">';
