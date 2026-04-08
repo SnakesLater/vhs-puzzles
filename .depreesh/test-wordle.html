@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wordle Test</title>
+    <style>
+        .wordle-container {
+            max-width: 400px;
+            margin: 50px auto;
+            font-family: Arial, sans-serif;
+        }
+        .wordle-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .wordle-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 20px;
+        }
+        .wordle-row {
+            display: flex;
+            gap: 5px;
+        }
+        .wordle-tile {
+            width: 40px;
+            height: 40px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            text-align: center;
+            line-height: 40px;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: default;
+        }
+        .green {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .yellow {
+            background-color: #FFEB3B;
+            color: #333;
+        }
+        .gray {
+            background-color: #9E9E9E;
+            color: white;
+        }
+        .wordle-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .wordle-input input {
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+        }
+        .wordle-input button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .wordle-input button:hover {
+            background-color: #45a049;
+        }
+        .wordle-message {
+            text-align: center;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .wordle-message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .wordle-message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div id="wordle-game"></div>
+
+    <script src="js/games/wordle.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            new WordleGame('wordle-game');
+        });
+    </script>
+</body>
+</html>
