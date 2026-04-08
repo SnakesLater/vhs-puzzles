@@ -5,11 +5,13 @@ class LetterBoxedGame {
         this.sides = puzzle.sides;
         this.pool = this.buildPool();
         this.usedWords = [];
+        this.usedLetters = new Set();
         this.currentWord = '';
         this.currentPath = [];
         this.minWords = puzzle.minWords || 3;
         this.maxWords = puzzle.maxWords || null;
         this.solved = false;
+        this.lastLetter = null;
 
         this.render();
         this.setupEventListeners();
@@ -31,29 +33,21 @@ class LetterBoxedGame {
             <div class="letter-boxed-container">
                 <div class="letter-boxed-header">
                     <h2>LETTER BOXED</h2>
-                    <p class="horror-hint">Words must start and end on <em>different</em> sides</p>
+                    <p class="horror-hint">Chain words - each new word must start with the last letter of the previous</p>
                 </div>
 
                 <div class="letter-boxed-sides">
                     ${this.sides.map((side, i) => `
                         <div class="side side-${i}" data-side="${i}">
-                            ${side.map(l => `<span class="pool-letter" data-letter="${l}" data-side="${i}">${l}</span>`).join('')}
+                            ${side.map(l => `<span class="pool-letter ${this.usedLetters.has(l) ? 'used' : ''}" data-letter="${l}" data-side="${i}">${l}</span>`).join('')}
                         </div>
                     `).join('')}
                 </div>
 
-                <div class="letter-boxed-pool">
-                    <div class="pool-ring">
-                        ${this.sides.flat().map(l => `
-                            <button class="pool-btn" data-letter="${l}" data-sides="${this.pool[l].join(',')}">
-                                ${l}
-                            </button>
-                        `).join('')}
-                    </div>
+                <div class="letter-boxed-center">
+                    <div id="current-word" class="current-word">${this.lastLetter ? this.lastLetter + '_' : '_'}</div>
+                    <div id="found-words" class="found-words"></div>
                 </div>
-
-                <div id="current-word" class="current-word">_</div>
-                <div id="found-words" class="found-words"></div>
 
                 <div class="letter-boxed-controls">
                     <button id="lb-clear">CLEAR</button>
@@ -63,7 +57,7 @@ class LetterBoxedGame {
 
                 <div id="lb-message" class="letter-boxed-message"></div>
                 <div class="lb-progress">
-                    <span id="lb-count">0</span> / ${this.minWords}+ words found
+                    <span id="lb-count">0</span> / 12 letters used
                 </div>
             </div>
         `;
@@ -71,8 +65,12 @@ class LetterBoxedGame {
     }
 
     setupEventListeners() {
-        this.container.querySelectorAll('.pool-btn').forEach(btn => {
-            cleanupManager.addListener(btn, 'click', () => this.addLetter(btn.dataset.letter, btn.dataset.sides.split(',').map(Number)));
+        this.container.querySelectorAll('.pool-letter').forEach(el => {
+            cleanupManager.addListener(el, 'click', () => {
+                const letter = el.dataset.letter;
+                const sides = this.pool[letter];
+                this.addLetter(letter, sides);
+            });
         });
 
         cleanupManager.addListener(
@@ -88,7 +86,13 @@ class LetterBoxedGame {
 
     addLetter(letter, sides) {
         if (this.solved) {return;}
-        if (this.currentWord.includes(letter) && letter === this.currentWord.slice(-1)) {return;}
+        
+        if (this.currentWord.length > 0 && letter === this.currentWord.slice(-1)) {return;}
+        
+        if (this.currentWord.length === 0 && this.lastLetter && letter !== this.lastLetter) {
+            this.showMessage(`Start with "${this.lastLetter}"`, 'warning');
+            return;
+        }
 
         this.currentWord += letter;
         this.currentPath.push({ letter, sides });
@@ -125,24 +129,34 @@ class LetterBoxedGame {
             return;
         }
 
+        this.currentWord.split('').forEach(l => this.usedLetters.add(l));
+        
         this.usedWords.push(this.currentWord);
+        this.lastLetter = this.currentWord.slice(-1);
+        
         this.showMessage(`"${this.currentWord}" found!`, 'success');
         tapeQualitySystem.increaseQuality(5);
         vhsEffects.playSuccess();
         vhsEffects.colorShift();
         this.updateDisplay();
-        this.clear();
-
-        if (this.usedWords.length >= this.minWords) {
+        
+        if (this.usedLetters.size >= 12) {
             this.completeGame();
+        } else {
+            this.clear();
         }
     }
 
     isValidWord(word) {
-        if (!this.puzzle.answers) {return false;}
-
-        const valid = this.puzzle.answers.map(w => w.toUpperCase());
-        if (!valid.includes(word)) {return false;}
+        if (!wordDictionary.loaded) {
+            if (!this.puzzle.answers) {return false;}
+            const valid = this.puzzle.answers.map(w => w.toUpperCase());
+            if (!valid.includes(word)) {return false;}
+        } else {
+            if (!wordDictionary.isLetterBoxedAnswer(this.puzzle.id, word)) {
+                return false;
+            }
+        }
 
         if (word.length < 3) {return false;}
 
@@ -158,13 +172,19 @@ class LetterBoxedGame {
     }
 
     updateDisplay() {
-        document.getElementById('current-word').textContent = this.currentWord || '_';
-        document.getElementById('lb-count').textContent = this.usedWords.length;
+        const displayWord = this.lastLetter ? (this.currentWord ? this.lastLetter + this.currentWord : this.lastLetter + '_') : (this.currentWord || '_');
+        document.getElementById('current-word').textContent = displayWord;
+        document.getElementById('lb-count').textContent = this.usedLetters.size;
 
         const foundEl = document.getElementById('found-words');
         foundEl.innerHTML = this.usedWords.map(w =>
             `<span class="found-word">${w}</span>`
         ).join('');
+
+        this.container.querySelectorAll('.pool-letter').forEach(el => {
+            const letter = el.dataset.letter;
+            el.classList.toggle('used', this.usedLetters.has(letter));
+        });
 
         document.getElementById('lb-submit').disabled = this.currentWord.length < 3;
     }

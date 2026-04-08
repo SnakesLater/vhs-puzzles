@@ -14,8 +14,11 @@ class WordleGame {
         this.setupEventListeners();
     }
 
-    // Get a random 5-letter word from our word list
     getRandomWord() {
+        if (wordDictionary.loaded) {
+            return wordDictionary.getRandomWord(5) || "CRANE";
+        }
+        
         const wordList = [
             "CRANE", "SLATE", "CRISP", "PLANT", "CHAIR",
             "TABLE", "HOUSE", "WATER", "MUSIC", "PHONE",
@@ -97,7 +100,15 @@ class WordleGame {
     }
 
     isValidWord(word) {
-        return word.length === this.wordLength && /^[A-Z]+$/.test(word);
+        if (word.length !== this.wordLength || !/^[A-Z]+$/.test(word)) {
+            return false;
+        }
+        
+        if (wordDictionary.loaded) {
+            return wordDictionary.isValidWord(word);
+        }
+        
+        return true;
     }
 
     makeGuess(guess) {
@@ -144,9 +155,9 @@ class WordleGame {
                 const index = tempAnswer.indexOf(guessLetters[i]);
                 if (index !== -1) {
                     feedback[i] = 'Y';
-                    tempAnswer[index] = null; // Mark as used
+                    tempAnswer[index] = null;
                 } else {
-                    feedback[i] = 'G';
+                    feedback[i] = 'X';
                 }
             }
         }
@@ -154,7 +165,7 @@ class WordleGame {
         // Third pass: no matches (gray)
         for (let i = 0; i < guessLetters.length; i++) {
             if (!feedback[i]) {
-                feedback[i] = 'G';
+                feedback[i] = 'X';
             }
         }
         
@@ -175,7 +186,7 @@ class WordleGame {
         const classes = {
             'G': 'green',
             'Y': 'yellow',
-            'G': 'gray'
+            'X': 'gray'
         };
         return classes[feedback] || '';
     }

@@ -837,3 +837,250 @@ button:disabled {
     box-shadow: var(--vhs-border);
 }
 
+/* ============================================
+   STRANDS GAME
+   ============================================ */
+
+.strands-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    color: var(--text-color);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.strands-header {
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.strands-header h2 {
+    font-family: 'Creepster', cursive;
+    font-size: 2rem;
+    color: var(--secondary-accent);
+    text-shadow: 0 0 20px rgba(255, 100, 50, 0.7);
+    letter-spacing: 0.2em;
+    margin-bottom: 4px;
+}
+
+.strands-header .horror-hint {
+    font-size: 0.85rem;
+    color: #888;
+    margin-bottom: 0;
+}
+
+.strands-header .theme-hint {
+    color: var(--accent-color);
+    font-weight: bold;
+}
+
+.strands-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 16px 0;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #333;
+    border-radius: 4px;
+}
+
+.strands-row {
+    display: flex;
+    gap: 4px;
+}
+
+.strands-cell {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Courier New', monospace;
+    font-size: 1.3rem;
+    font-weight: bold;
+    background: #1a1a2e;
+    color: var(--text-color);
+    border: 2px solid #444;
+    border-radius: 4px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.1s ease;
+}
+
+.strands-cell:hover {
+    border-color: var(--secondary-accent);
+    color: var(--secondary-accent);
+}
+
+.strands-cell.selected {
+    background: var(--secondary-accent);
+    color: #000;
+    border-color: var(--secondary-accent);
+    box-shadow: 0 0 8px rgba(255, 107, 53, 0.6);
+}
+
+.strands-cell.selected.first {
+    border-width: 3px;
+    border-color: #fff;
+}
+
+.strands-cell.selected.last {
+    box-shadow: 0 0 12px rgba(255, 107, 53, 0.9);
+}
+
+.strands-cell.found {
+    background: var(--accent-color);
+    color: #fff;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 6px rgba(139, 0, 0, 0.5);
+    pointer-events: none;
+}
+
+.strands-cell.invalid-temp {
+    background: #ff4444;
+    color: #fff;
+    border-color: #ff4444;
+    animation: shake 0.3s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-3px); }
+    75% { transform: translateX(3px); }
+}
+
+.strands-sidebar {
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    margin: 12px 0;
+}
+
+.strands-sidebar .current-word {
+    font-family: 'Creepster', cursive;
+    font-size: 2rem;
+    letter-spacing: 0.3em;
+    color: var(--secondary-accent);
+    text-shadow: 0 0 10px rgba(255, 107, 53, 0.5);
+    min-height: 50px;
+    margin: 8px 0;
+}
+
+.strands-sidebar .found-words {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 12px;
+    min-height: 28px;
+}
+
+.strands-sidebar .found-words h3 {
+    width: 100%;
+    font-size: 0.9rem;
+    color: #888;
+    margin-bottom: 4px;
+}
+
+.strands-sidebar .word-list .found-word {
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    color: var(--accent-color);
+    padding: 2px 8px;
+    border: 1px solid var(--accent-color);
+    border-radius: 2px;
+    letter-spacing: 0.1em;
+}
+
+.strands-controls {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 12px 0;
+}
+
+.strands-controls button {
+    padding: 8px 16px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: #1a1a2e;
+    color: var(--text-color);
+    border: 2px solid #444;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.1s;
+}
+
+.strands-controls button:hover:not(:disabled) {
+    border-color: var(--secondary-accent);
+    color: var(--secondary-accent);
+}
+
+.strands-controls button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.strands-controls button.primary {
+    border-color: var(--secondary-accent);
+    color: var(--secondary-accent);
+    box-shadow: 0 0 8px rgba(255, 107, 53, 0.3);
+}
+
+.strands-btn {
+    padding: 10px 24px;
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    letter-spacing: 0.15em;
+    background: #1a1a2e;
+    color: var(--text-color);
+    border: 2px solid var(--accent-color);
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.strands-btn:hover {
+    background: var(--accent-color);
+    color: #fff;
+}
+
+.strands-btn.primary {
+    border-color: var(--secondary-accent);
+    color: var(--secondary-accent);
+    box-shadow: 0 0 10px rgba(255, 107, 53, 0.4);
+}
+
+.strands-btn.primary:hover {
+    background: var(--secondary-accent);
+    color: #000;
+}
+
+.strands-message {
+    min-height: 24px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    color: #888;
+    letter-spacing: 0.05em;
+    margin: 8px 0;
+    text-align: center;
+}
+
+.strands-message.success {
+    color: var(--secondary-accent);
+    text-shadow: 0 0 8px rgba(255, 107, 53, 0.5);
+}
+
+.strands-message.error {
+    color: #ff4444;
+}
+
+.strands-message.warning {
+    color: #ffaa44;
+}
+

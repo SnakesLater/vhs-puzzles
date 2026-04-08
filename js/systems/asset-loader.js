@@ -36,17 +36,27 @@ class AssetLoader {
         for (const format of formats) {
             try {
                 const audio = new Audio(`${basePath}.${format}`);
-                // Set a reasonable timeout for loading
                 const loadPromise = new Promise((resolve, reject) => {
-                    const timeout = setTimeout(() => reject(new Error('Timeout')), 3000);
-                    audio.addEventListener('canplaythrough', () => {
+                    const timeout = setTimeout(() => {
+                        if (audio.readyState >= 2) {
+                            resolve();
+                        } else {
+                            reject(new Error('Timeout'));
+                        }
+                    }, 3000);
+                    
+                    const onSuccess = () => {
                         clearTimeout(timeout);
                         resolve();
-                    }, { once: true });
+                    };
+                    
+                    audio.addEventListener('canplaythrough', onSuccess, { once: true });
+                    audio.addEventListener('loadeddata', onSuccess, { once: true });
                     audio.addEventListener('error', () => {
                         clearTimeout(timeout);
                         reject(new Error('Load failed'));
                     }, { once: true });
+                    
                     audio.load();
                 });
                 await loadPromise;

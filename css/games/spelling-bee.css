@@ -1,0 +1,198 @@
+/* Spelling Bee Game CSS - NYT Style */
+
+.spelling-bee-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.spelling-bee-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    width: 100%;
+}
+
+.spelling-bee-header h2 {
+    font-family: 'Special Elite', 'VT323', monospace;
+    font-size: 1.8rem;
+    color: #fff;
+    letter-spacing: 4px;
+    margin: 0 0 0.5rem 0;
+}
+
+.bee-score {
+    font-family: 'VT323', monospace;
+    font-size: 1.2rem;
+    color: #b59f3b;
+}
+
+#bee-score {
+    color: #fff;
+    font-weight: bold;
+}
+
+.bee-center-letter {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #b59f3b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    box-shadow: 0 0 15px rgba(181, 159, 59, 0.4);
+}
+
+.center-letter {
+    font-family: 'Special Elite', 'VT323', monospace;
+    font-size: 2.5rem;
+    color: #1a1a1b;
+    font-weight: bold;
+}
+
+.bee-outer-ring {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    max-width: 200px;
+    margin-bottom: 1.5rem;
+}
+
+.bee-letter {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #1a1a1b;
+    border: 2px solid #565758;
+    color: #fff;
+    font-family: 'Special Elite', 'VT323', monospace;
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.bee-letter:hover {
+    background: #3a3a3c;
+    border-color: #818384;
+    transform: scale(1.05);
+}
+
+.bee-input-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.bee-current-word {
+    font-family: 'Special Elite', 'VT323', monospace;
+    font-size: 2rem;
+    letter-spacing: 0.3em;
+    color: #fff;
+    min-height: 2.5rem;
+    text-align: center;
+}
+
+.bee-controls {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.bee-controls button {
+    padding: 0.6rem 1.2rem;
+    font-family: 'VT323', monospace;
+    font-size: 1rem;
+    background: #1a1a1b;
+    border: 2px solid #565758;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.bee-controls button:hover:not(:disabled) {
+    background: #3a3a3c;
+    border-color: #818384;
+}
+
+.bee-controls button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.bee-message {
+    min-height: 1.5rem;
+    font-family: 'VT323', monospace;
+    font-size: 1rem;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.bee-message.success {
+    color: #538d4e;
+}
+
+.bee-message.error {
+    color: #ff4444;
+}
+
+.bee-message.warning {
+    color: #b59f3b;
+}
+
+.bee-progress {
+    text-align: center;
+    font-family: 'VT323', monospace;
+    font-size: 1rem;
+    color: #818384;
+}
+
+#bee-found-count {
+    color: #fff;
+    font-weight: bold;
+}
+
+.bee-found-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 0.75rem;
+    max-width: 250px;
+}
+
+.found-bee-word {
+    font-size: 0.85rem;
+    padding: 2px 6px;
+    background: #3a3a3c;
+    color: #fff;
+    border-radius: 3px;
+}
+
+.bee-info {
+    margin-top: 1rem;
+    font-family: 'VT323', monospace;
+    font-size: 0.9rem;
+    color: #888;
+    text-align: center;
+}
+
+.bee-info strong {
+    color: #b59f3b;
+}
+
+.bee-continue {
+    background: #538d4e !important;
+    border-color: #538d4e !important;
+    font-size: 1.2rem !important;
+    padding: 0.8rem 2rem !important;
+}
+
+.bee-continue:hover {
+    background: #6aaa64 !important;
+    border-color: #6aaa64 !important;
+}
