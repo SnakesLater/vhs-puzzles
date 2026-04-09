@@ -4,25 +4,11 @@ class StrandsGame extends BaseGame {
     constructor(containerId, puzzle) {
         super(containerId, puzzle);
         
-        // Fallback test puzzle if no puzzle provided
-        if (!puzzle) {
-            this.theme = "TEST PUZZLE";
-            this.answers = ["TEST", "WORD", "GRID", "FIND"];
-            this.spangram = "TESTWORD";
-            this.grid = [
-                ['T', 'E', 'S', 'T', 'W', 'O', 'R', 'D'],
-                ['G', 'R', 'I', 'D', 'F', 'I', 'N', 'D'],
-                ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'],
-                ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'],
-                ['Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X'],
-                ['Y', 'Z', 'A', 'B', 'C', 'D', 'E', 'F']
-            ];
-        } else {
-            this.theme = puzzle.theme;
-            this.answers = puzzle.answers || [];
-            this.spangram = puzzle.spangram;
-            this.grid = puzzle.grid;
-        }
+        // Always use actual puzzle data
+        this.theme = puzzle.theme;
+        this.answers = puzzle.answers || [];
+        this.spangram = puzzle.spangram;
+        this.grid = puzzle.grid;
         
         this.foundWords = [];
         this.selectedPath = [];
@@ -65,15 +51,17 @@ class StrandsGame extends BaseGame {
     }
 
     renderLetterGrid() {
-        // SAFETY CHECK: Ensure grid always exists
+        // Ensure grid always exists
         if (!this.grid || !Array.isArray(this.grid) || this.grid.length === 0) {
+            console.error('Strands puzzle missing grid data! Loading default puzzle.');
+            // Use actual valid puzzle grid as fallback
             this.grid = [
-                ['T', 'E', 'S', 'T', 'W', 'O', 'R', 'D'],
-                ['G', 'R', 'I', 'D', 'F', 'I', 'N', 'D'],
-                ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'],
-                ['I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'],
-                ['Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X'],
-                ['Y', 'Z', 'A', 'B', 'C', 'D', 'E', 'F']
+                ['C', 'R', 'A', 'B', 'I', 'N', 'S', 'T'],
+                ['A', 'T', 'T', 'I', 'C', 'H', 'O', 'E'],
+                ['D', 'O', 'O', 'R', 'W', 'A', 'Y', 'R'],
+                ['W', 'I', 'N', 'D', 'O', 'W', 'R', 'D'],
+                ['P', 'O', 'R', 'C', 'H', 'D', 'A', 'R'],
+                ['C', 'E', 'L', 'L', 'A', 'R', 'B', 'K']
             ];
         }
         

@@ -86,6 +86,12 @@ class AssetLoader {
         });
         
         await Promise.allSettled(promises);
+        
+        // Add safety check to ensure grid exists for Strands
+        if (typeof window.StrandsGame !== 'undefined') {
+            const testGame = new window.StrandsGame('test-container', null);
+            testGame.cleanup();
+        }
     }
 
     // Get cached asset

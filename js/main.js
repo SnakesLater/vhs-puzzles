@@ -185,8 +185,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         } else if (gameType === 'strands') {
             const puzzle = puzzleLoader.getRandomPuzzle('strands');
             startSingleGame(puzzle, 'strands');
-        } else {
-            alert(`${gameType} is coming soon!`);
+        } else if (gameType === 'spelling-bee') {
+            const puzzle = puzzleLoader.getRandomPuzzle('spelling-bee');
+            if (puzzle) {
+                startSingleGame(puzzle, 'spelling-bee');
+            } else {
+                alert('Spelling Bee puzzles are loading...');
+            }
         }
     }
 
@@ -742,13 +747,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Progress management
     function loadProgress() {
         const saved = localStorage.getItem('vhsHorrorProgress');
+        // LOCK INSANE DIFFICULTY UNTIL UNLOCKED
+        document.querySelector('[data-difficulty="insane"]').classList.add('hidden');
+        
         if (saved) {
             try {
-                const progress = JSON.parse(saved);
-                // Check for unlocked INSANE mode
-                if (progress.insaneUnlocked) {
-                    document.querySelector('[data-difficulty="insane"]').classList.remove('hidden');
-                }
+                JSON.parse(saved);
             } catch (e) {
                 console.error('Error loading progress:', e);
             }
@@ -766,24 +770,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function isStoryUnlocked(storyId) {
-        const saved = localStorage.getItem('vhsHorrorProgress');
-        if (!saved) {return storyId === 'cabin_stalkings';} // First story always unlocked
-        
-        try {
-            const progress = JSON.parse(saved);
-            if (storyId === 'cabin_stalkings') {return true;}
-            
-            // Check if previous story is completed
-            const allStories = puzzleLoader.getAllStories();
-            const currentIndex = allStories.findIndex(s => s.id === storyId);
-            
-            if (currentIndex <= 0) {return true;}
-            
-            const previousStoryId = allStories[currentIndex - 1].id;
-            return progress.storiesCompleted && progress.storiesCompleted.includes(previousStoryId);
-        } catch (e) {
-            return storyId === 'cabin_stalkings';
-        }
+        // ALL STORIES UNLOCKED
+        return true;
     }
 
     function isStoryCompleted(storyId) {
