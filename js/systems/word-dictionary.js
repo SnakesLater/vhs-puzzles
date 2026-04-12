@@ -30,11 +30,11 @@ const WORD_LIST = [
     "AFOUL",
     // ... (full word list in file)
     "youth",
-    "yummy",
-    "zebra",
-    "zeros",
-    "zones",
-    "zorro",
+    "YUMMY",
+    "ZEBRA",
+    "ZEROS",
+    "ZONES",
+    "ZORRO",
 ];
 
 // WordDictionary class - browser-compatible object
