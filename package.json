@@ -5,17 +5,32 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "lint": "eslint js/",
-    "lint:check": "eslint js/",
-    "test": "echo \"Tests: Use test-connections.html and test-wordle.html for manual testing\" && ls js/games/*.js js/systems/*.js",
+    "lint": "npx eslint --config eslint.config.mjs js/",
+    "lint:check": "npx eslint --config eslint.config.mjs js/",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:watch": "node server.js && echo \"Waiting for browser\"",
     "audit": "npm audit",
     "build": "echo \"No build scripts needed - vanilla JS\""
   },
   "dependencies": {
-    "http": "0.0.1-security",
-    "url": "0.11.0",
     "fs": "0.0.1-security",
-    "path": "0.12.7"
+    "http": "0.0.1-security",
+    "path": "0.12.7",
+    "url": "0.11.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://Snakeslater@github.com/Snakeslater/vhs-puzzles.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Snakeslater/vhs-puzzles/issues"
+  },
+  "homepage": "https://github.com/Snakeslater/vhs-puzzles#readme",
+  "devDependencies": {
+    "jest": "^30.3.0"
   }
 }

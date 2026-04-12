@@ -114,7 +114,7 @@ class StrandsGame extends BaseGame {
         }, { passive: false });
 
         this.container.addEventListener('touchmove', (e) => {
-            if (!this.isDragging) return;
+            if (!this.isDragging) {return;}
             e.preventDefault();
             const touch = e.touches[0];
             const cell = document.elementFromPoint(touch.clientX, touch.clientY);
@@ -211,8 +211,8 @@ class StrandsGame extends BaseGame {
             );
             if (cell) {
                 cell.classList.add('selected');
-                if (index === 0) cell.classList.add('first');
-                if (index === this.selectedPath.length - 1) cell.classList.add('last');
+                if (index === 0) {cell.classList.add('first');}
+                if (index === this.selectedPath.length - 1) {cell.classList.add('last');}
             }
         });
     }
@@ -248,7 +248,7 @@ class StrandsGame extends BaseGame {
                 const cell = this.container.querySelector(
                     `[data-row="${pos.row}"][data-col="${pos.col}"]`
                 );
-                if (cell) cell.classList.add('found');
+                if (cell) {cell.classList.add('found');}
             });
             
             // Check spangram
@@ -315,7 +315,7 @@ class StrandsGame extends BaseGame {
         this.stopTimer();
         
         const controls = this.container.querySelector('.strands-controls');
-        if (controls) controls.innerHTML = '';
+        if (controls) {controls.innerHTML = '';}
         
         if (won) {
             tapeQualitySystem.increaseQuality(10);

@@ -5,7 +5,7 @@ class WordleGame {
         this.container = document.getElementById(containerId);
         this.wordLength = options.wordLength || 5;
         this.maxGuesses = options.maxGuesses || 6;
-        this.answer = this.getRandomWord();
+        this.answer = this.getRandomAnswer();
         this.guesses = [];
         this.gameOver = false;
         this.won = false;
@@ -14,16 +14,21 @@ class WordleGame {
         this.setupEventListeners();
     }
 
-    getRandomWord() {
+    // Get a random 5-letter word from the dictionary each time - no puzzle data needed!
+    getRandomAnswer() {
+        // Try wordDictionary first (has thousands of words)
         if (wordDictionary.loaded) {
-            return wordDictionary.getRandomWord(5) || "CRANE";
+            const word = wordDictionary.getRandomWord(5);
+            if (word) return word;
         }
         
+        // Fallback to hardcoded list
         const wordList = [
             "CRANE", "SLATE", "CRISP", "PLANT", "CHAIR",
             "TABLE", "HOUSE", "WATER", "MUSIC", "PHONE",
             "VIDEO", "MOVIE", "BOOKS", "PAPER", "PENCIL",
-            "WINDOW", "DOOR", "LIGHT", "DARK", "SHADOW"
+            "WINDOW", "DOOR", "LIGHT", "DARK", "SHADOW",
+            "GHOST", "BLOOD", "KNIFE", "SCARE", "DREAD"
         ];
         return wordList[Math.floor(Math.random() * wordList.length)];
     }
@@ -82,7 +87,7 @@ class WordleGame {
     }
 
     handleSubmit() {
-        if (this.gameOver) return;
+        if (this.gameOver) {return;}
         
         const guess = this.input.value.toUpperCase().trim();
         

@@ -131,7 +131,58 @@
       ]
     }
   ],
-  "wordle": [],
+  "wordle": [
+    {
+      "id": "wordle_horror_001",
+      "answer": "GHOST",
+      "difficulty": "easy"
+    },
+    {
+      "id": "wordle_horror_002",
+      "answer": "SHADE",
+      "difficulty": "easy"
+    },
+    {
+      "id": "wordle_horror_003",
+      "answer": "BLOOD",
+      "difficulty": "medium"
+    },
+    {
+      "id": "wordle_horror_004",
+      "answer": "KNIFE",
+      "difficulty": "medium"
+    },
+    {
+      "id": "wordle_horror_005",
+      "answer": "CRUEL",
+      "difficulty": "medium"
+    },
+    {
+      "id": "wordle_horror_006",
+      "answer": "DREAD",
+      "difficulty": "hard"
+    },
+    {
+      "id": "wordle_horror_007",
+      "answer": "SCARE",
+      "difficulty": "easy"
+    },
+    {
+      "id": "wordle_horror_008",
+      "answer": "DRAWN",
+      "difficulty": "medium"
+    },
+    {
+      "id": "wordle_horror_009",
+      "answer": "STALK",
+      "difficulty": "hard"
+    },
+    {
+      "id": "wordle_horror_010",
+      "answer": "EVILS",
+      "difficulty": "hard"
+    }
+  ],
   "strands": [
     {
       "id": "strands_horror_001",

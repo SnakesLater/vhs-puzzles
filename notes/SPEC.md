@@ -3,7 +3,7 @@
 **Project Name:** VHS Horror Puzzle Collection
 **Type:** Web game (Vanilla JS)
 **Status:** Active development
-**Last Updated:** 2026-04-06
+**Last Updated:** 2026-04-12
 
 ---
 
@@ -20,18 +20,16 @@ A retro horror-themed puzzle game collection that brings classic word games into
 ### Implemented ✅
 - [x] Connections game - fully functional
 - [x] Wordle game - fully functional
+- [x] Strands game - fully functional
+- [x] Letter Boxed game - fully functional
+- [x] Spelling Bee game - fully functional
 - [x] Core VHS systems (effects, tape quality, story renderer)
 - [x] Shared systems (CleanupManager, AssetLoader, EventManager)
 - [x] VHS aesthetic (CRT scanlines, static, horror theme)
 
-### In Progress ⚠️
-- [ ] Strands game - partial implementation (9 TODOs)
+### Planned 📩
 - [ ] Unit tests - not yet implemented
-
-### Planned 🚧
-- [ ] Letter Boxed game - needs full implementation
-- [ ] Spelling Bee - planned
-- [ ] Error boundaries - optional
+- [ ] GitHub Pages deployment
 
 ---
 
@@ -52,15 +50,20 @@ vhs-puzzles/
 │   │   ├── base-game.js
 │   │   ├── connections.js
 │   │   ├── wordle.js
-│   │   ├── strands.js    # Partial
-│   │   └── letterboxed.js # Not started
+│   │   ├── strands.js
+│   │   ├── letter-boxed.js
+│   │   └── spelling-bee.js
 │   ├── systems/         # Shared systems
 │   │   ├── cleanup-manager.js
 │   │   ├── asset-loader.js
 │   │   ├── event-manager.js
 │   │   ├── tape-quality.js
 │   │   ├── story-text-renderer.js
-│   │   └── tape-cover-renderer.js
+│   │   ├── tape-cover-renderer.js
+│   │   ├── counter-renderer.js
+│   │   ├── puzzle-loader.js
+│   │   ├── word-dictionary.js
+│   │   └── vhs-tape-renderer.js
 │   ├── vhs-effects.js   # Canvas effects
 │   └── main.js          # Entry point
 ├── css/
@@ -110,14 +113,19 @@ vhs-puzzles/
 - **Feedback:** Green (correct), Yellow (wrong position), Gray (not in word)
 
 ### Strands
-- **Status:** ⚠️ Partial (~40%)
+- **Status:** ✅ Complete
 - **Mechanic:** Connect letters in a grid to form words
-- **TODOs:** selectLetter, isAdjacent, validatePath, submitWord, checkWord, highlightFoundWord, updateFoundWords, checkSpangram, showHint
+- **Implementation:** strands.js (360 lines, no TODOs)
 
 ### Letter Boxed
-- **Status:** ❌ Not started
+- **Status:** ✅ Complete
 - **Mechanic:** Form words using letters from a square
-- **File needed:** `js/games/letterboxed.js`
+- **Implementation:** letter-boxed.js (225 lines)
+
+### Spelling Bee
+- **Status:** ✅ Complete
+- **Mechanic:** Build words from 7 letters, must include center letter
+- **Implementation:** spelling-bee.js (234 lines, ESLint clean)
 
 ---
 
@@ -148,8 +156,9 @@ node server.js  # Start local server
 ## Success Criteria
 - [x] Connections functional
 - [x] Wordle functional
-- [ ] Strands complete
-- [ ] Letter Boxed implemented
-- [ ] VHS aesthetic consistent across games
-- [ ] Memory cleanup working
-- [ ] No lint errors
+- [x] Strands complete
+- [x] Letter Boxed implemented
+- [x] Spelling Bee implemented
+- [x] VHS aesthetic consistent across games
+- [x] Memory cleanup working
+- [x] No lint errors (ESLint clean, only harmless unused-var warnings)

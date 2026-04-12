@@ -16,11 +16,11 @@ Open `http://localhost:8000` in your browser.
 
 ## 🎯 Games Available
 
-- **✅ Connections** - Link words into mysterious categories
-- **🚧 Wordle** - Solve the victim's final word *(Available)*
-- **🚧 Strands** - Unravel webs of connected clues *(In Progress)*
-- **🚧 Letter Boxed** - Escape the letter prison *(Coming Soon)*
-- **🚧 Spelling Bee** - Buzz through letters to build words *(Coming Soon)*
+- **✅ Connections** - Link words into mysterious categories *(Available)*
+- **✅ Wordle** - Solve the victim's final word *(Available)*
+- **✅ Strands** - Unravel webs of connected clues *(Available)*
+- **✅ Letter Boxed** - Escape the letter prison *(Available)*
+- **✅ Spelling Bee** - Buzz through letters to build words *(Available)*
 
 ## 🎬 Contribute Your Horror Stories
 
@@ -96,9 +96,9 @@ npm start       # Launch development server
 |------|--------|----------|
 | Connections | ✅ Complete | N/A |
 | Wordle | ✅ Complete | N/A |
-| Strands | ⚠️ In Progress | High |
-| Letter Boxed | ❌ Planned | High |
-| Spelling Bee | ❌ Planned | Medium |
+| Strands | ✅ Complete | N/A |
+| Letter Boxed | ✅ Complete | N/A |
+| Spelling Bee | ✅ Complete | N/A |
 
 ## 🤖 AI Development Team
 
@@ -138,9 +138,10 @@ vhs-puzzles/
 │   ├── games/
 │   │   ├── base-game.js
 │   │   ├── connections.js
-│   │   ├── strands.js (incomplete)
+│   │   ├── strands.js
 │   │   ├── wordle.js
-│   │   └── letterboxed.js (NOT YET CREATED)
+│   │   ├── letter-boxed.js
+│   │   └── spelling-bee.js
 │   ├── systems/
 │   │   ├── cleanup-manager.js
 │   │   ├── asset-loader.js
@@ -148,7 +149,10 @@ vhs-puzzles/
 │   │   ├── tape-quality.js
 │   │   ├── story-text-renderer.js
 │   │   ├── tape-cover-renderer.js
-│   │   └── other-systems/
+│   │   ├── counter-renderer.js
+│   │   ├── puzzle-loader.js
+│   │   ├── word-dictionary.js
+│   │   └── vhs-tape-renderer.js
 │   ├── vhs-effects.js
 │   ├── main.js
 │   └── server.js
@@ -169,13 +173,12 @@ vhs-puzzles/
 - Openclaw available for security checks
 - DroidShield enabled for secret scanning
 
-## 📄 Next Steps
+## 📋 Next Steps
 
-1. **Opencode Assignment**: Create Letter Boxed implementation
-2. **Opencode Assignment**: Complete Strands game logic
-3. **Opencode Assignment**: Write unit tests when ready
+1. **Add unit tests** — set up Jest or similar test framework
+2. **GitHub Pages deployment** — publish live demo
+3. **New puzzle content** — expand puzzle data for all games
 4. **Droid**: CI/CD automation, local validation
-5. **Pi/QP**: Document sessions, track progress
 
 ## 📚 Documentation
 
@@ -185,15 +188,14 @@ vhs-puzzles/
 - `DEVELOPER_NOTES.md` - For developer notes
 - `CHANGELOG.md` - Version history
 
-## 🤖 Documentation Policy
+## 📋 Documentation Policy
 
 - Keep docs accurate (update when status changes)
-- Letter Boxed marked as "Coming Soon" until implemented
 - Verify all claims against actual codebase
 - Opencode + Openclaw verify implementation status
 
 ---
 
-**Version**: 2.0 (Verified)  
-**Verified Date**: 2026-04-01  
-**Verified By**: QP (Pi + Opencode + Openclaw + Droid)
+**Version**: 3.0 (Updated — all games implemented)
+**Verified Date**: 2026-04-12
+**Verified By**: Hermes Agent

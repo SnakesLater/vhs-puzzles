@@ -154,7 +154,7 @@ class WordDictionary {
 
     isLetterBoxedAnswer(puzzleId, word) {
         const puzzleAnswers = this.letterBoxedAnswers.get(puzzleId);
-        if (!puzzleAnswers) return false;
+        if (!puzzleAnswers) {return false;}
         return puzzleAnswers.has(word.toUpperCase());
     }
 
@@ -190,7 +190,7 @@ class WordDictionary {
 
     getLetterBoxedWords(puzzleId, startLetter = null, minLength = 3) {
         const answers = this.letterBoxedAnswers.get(puzzleId);
-        if (!answers) return [];
+        if (!answers) {return [];}
         
         let words = Array.from(answers).filter(w => w.length >= minLength);
         
@@ -203,7 +203,7 @@ class WordDictionary {
 
     getRandomWord(length = 5) {
         const words = this.getWordsByLength(length);
-        if (words.length === 0) return null;
+        if (words.length === 0) {return null;}
         return words[Math.floor(Math.random() * words.length)];
     }
 
