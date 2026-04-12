@@ -33,7 +33,11 @@ const server = http.createServer((req, res) => {
                         ".js": "application/javascript",
                         ".png": "image/png",
                         ".jpg": "image/jpeg",
-                        ".gif": "image/gif"
+                        ".gif": "image/gif",
+                        ".mp4": "video/mp4",
+                        ".mp3": "audio/mpeg",
+                        ".ogg": "audio/ogg",
+                        ".wav": "audio/wav"
                     };
                     const mimeType = mimeTypes[ext] || "application/octet-stream";
                     res.writeHead(200, {"Content-Type": mimeType});

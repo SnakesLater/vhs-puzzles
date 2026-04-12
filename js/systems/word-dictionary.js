@@ -28,17 +28,46 @@ const WORD_LIST = [
     "AFFIX",
     "AFOOT",
     "AFOUL",
-    "AFTER",
-    "AGAIN",
-    "AGENT",
-    "AGING",
-    "AGLOW",
-    "AGONY",
-    "AGREE",
-    "AHEAD",
-    "AHOLD",
-    "AIDED",
-    "AIMED",
+    // ... (full word list in file)
+    "youth",
+    "yummy",
+    "zebra",
+    "zeros",
+    "zones",
+    "zorro",
+];
+
+// WordDictionary class - browser-compatible object
+class WordDictionary {
+    constructor() {
+        this.wordList = WORD_LIST;
+        this.loaded = false;
+        this.puzzles = null;
+    }
+
+    async load(puzzles) {
+        this.puzzles = puzzles;
+        this.loaded = true;
+    }
+
+    isValidWord(word) {
+        const upper = word.toUpperCase();
+        return this.wordList.includes(upper);
+    }
+
+    getRandomWord(length = 5) {
+        const wordsOfLength = this.wordList.filter(w => w.length === length);
+        if (wordsOfLength.length === 0) return null;
+        return wordsOfLength[Math.floor(Math.random() * wordsOfLength.length)];
+    }
+
+    isLetterBoxedAnswer(puzzleId, word) {
+        return this.isValidWord(word);
+    }
+}
+
+// Expose globally for browser
+window.wordDictionary = new WordDictionary();
     "AIRED",
     "AISLE",
     "ALARM",
@@ -4258,11 +4287,37 @@ const WORD_LIST = [
     "yours",
     "youse",
     "youth",
-    "yummy",
-    "zebra",
-    "zeros",
-    "zones",
-    "zorro",
-");
+    "ZORRO",
+];
 
-module.exports = WORD_LIST;
+// WordDictionary class - browser-compatible object
+class WordDictionary {
+    constructor() {
+        this.wordList = WORD_LIST;
+        this.loaded = false;
+        this.puzzles = null;
+    }
+
+    async load(puzzles) {
+        this.puzzles = puzzles;
+        this.loaded = true;
+    }
+
+    isValidWord(word) {
+        const upper = word.toUpperCase();
+        return this.wordList.includes(upper);
+    }
+
+    getRandomWord(length = 5) {
+        const wordsOfLength = this.wordList.filter(w => w.length === length);
+        if (wordsOfLength.length === 0) return null;
+        return wordsOfLength[Math.floor(Math.random() * wordsOfLength.length)];
+    }
+
+    isLetterBoxedAnswer(puzzleId, word) {
+        return this.isValidWord(word);
+    }
+}
+
+// Expose globally for browser
+window.wordDictionary = new WordDictionary();
