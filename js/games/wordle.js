@@ -82,7 +82,7 @@ class WordleGame {
     }
 
     handleSubmit() {
-        if (this.gameOver) return;
+        if (this.gameOver) {return;}
         
         const guess = this.input.value.toUpperCase().trim();
         

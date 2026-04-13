@@ -47,7 +47,14 @@ const server = http.createServer((req, res) => {
             body += chunk.toString();
         });
         req.on("end", () => {
-            const parsedBody = JSON.parse(body);
+            let parsedBody;
+            try {
+                parsedBody = JSON.parse(body);
+            } catch (e) {
+                res.writeHead(400, {"Content-Type": "application/json"});
+                res.end(JSON.stringify({success: false, error: "Invalid JSON"}));
+                return;
+            }
             if (parsedBody.action === "selectGame") {
                 const response = {
                     success: true,

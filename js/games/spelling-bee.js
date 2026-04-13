@@ -74,7 +74,7 @@ class SpellingBeeGame {
         );
 
         document.addEventListener('keydown', this.handleKeydown = (e) => {
-            if (this.gameOver) return;
+            if (this.gameOver) {return;}
             
             if (e.key === 'Enter') {
                 this.submitWord();
@@ -87,8 +87,8 @@ class SpellingBeeGame {
     }
 
     addLetter(letter) {
-        if (this.gameOver) return;
-        if (!this.allLetters.includes(letter)) return;
+        if (this.gameOver) {return;}
+        if (!this.allLetters.includes(letter)) {return;}
         
         this.currentWord += letter;
         this.updateDisplay();
@@ -96,8 +96,8 @@ class SpellingBeeGame {
     }
 
     deleteLetter() {
-        if (this.gameOver) return;
-        if (this.currentWord.length === 0) return;
+        if (this.gameOver) {return;}
+        if (this.currentWord.length === 0) {return;}
         
         this.currentWord = this.currentWord.slice(0, -1);
         this.updateDisplay();
@@ -110,7 +110,7 @@ class SpellingBeeGame {
     }
 
     submitWord() {
-        if (this.gameOver) return;
+        if (this.gameOver) {return;}
         if (this.currentWord.length < 4) {
             this.showMessage('Too short', 'error');
             return;
@@ -154,7 +154,7 @@ class SpellingBeeGame {
     }
 
     isValidWord(word) {
-        if (!this.validAnswers.has(word)) return false;
+        if (!this.validAnswers.has(word)) {return false;}
         
         if (!word.includes(this.centerLetter)) {
             this.showMessage(`Must include ${this.centerLetter}`, 'error');
