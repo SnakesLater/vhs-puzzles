@@ -51,18 +51,10 @@ class StrandsGame extends BaseGame {
     }
 
     renderLetterGrid() {
-        // Ensure grid always exists
+        // Grid data must be provided by puzzle - no fallback
         if (!this.grid || !Array.isArray(this.grid) || this.grid.length === 0) {
-            console.error('Strands puzzle missing grid data! Loading default puzzle.');
-            // Use actual valid puzzle grid as fallback
-            this.grid = [
-                ['C', 'R', 'A', 'B', 'I', 'N', 'S', 'T'],
-                ['A', 'T', 'T', 'I', 'C', 'H', 'O', 'E'],
-                ['D', 'O', 'O', 'R', 'W', 'A', 'Y', 'R'],
-                ['W', 'I', 'N', 'D', 'O', 'W', 'R', 'D'],
-                ['P', 'O', 'R', 'C', 'H', 'D', 'A', 'R'],
-                ['C', 'E', 'L', 'L', 'A', 'R', 'B', 'K']
-            ];
+            console.error('Strands puzzle missing grid data! Puzzle data required.');
+            return '<div class="strands-error">Error: Puzzle not loaded correctly</div>';
         }
         
         let gridHTML = '';
