@@ -43,17 +43,9 @@ The following agents were previously referenced but are NO LONGER ACTIVE:
 
 ### ⏳ Not Yet Implemented:
 
-1. **Letter Boxed Game**: Planned, not yet built
-   - Will use wordle.js/connection patterns
-   - Located in `js/games/letterboxed.js`
-
-2. **Strands Game Logic**: Partial, needs completion
-   - File exists: `js/games/strands.js`
-   - TODOs need removal and implementation
-
-3. **Unit Tests**: Not yet created
-   - Plan: Use Jest or simple tests in `/tests/`
-   - Priority: After games complete
+1. **Unit Tests**: Not yet implemented
+   - Plan: Set up Jest or similar in `/tests/`
+   - Priority: Medium after games done
 
 ---
 
@@ -192,5 +184,6 @@ npm audit
 
 ---
 
-**Version**: 3.0 (Verified & Updated)
-**Last Updated**: 2026-04-01
+**Version**: 4.0 (All games implemented, ESLint clean)
+**Last Updated**: 2026-04-12
+**Verified By**: Hermes Agent

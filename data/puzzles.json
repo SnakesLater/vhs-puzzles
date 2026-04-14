@@ -131,55 +131,106 @@
       ]
     }
   ],
-  "wordle": [],
+  "wordle": [
+    {
+      "id": "wordle_horror_001",
+      "answer": "GHOST",
+      "difficulty": "easy"
+    },
+    {
+      "id": "wordle_horror_002",
+      "answer": "SHADE",
+      "difficulty": "easy"
+    },
+    {
+      "id": "wordle_horror_003",
+      "answer": "BLOOD",
+      "difficulty": "medium"
+    },
+    {
+      "id": "wordle_horror_004",
+      "answer": "KNIFE",
+      "difficulty": "medium"
+    },
+    {
+      "id": "wordle_horror_005",
+      "answer": "CRUEL",
+      "difficulty": "medium"
+    },
+    {
+      "id": "wordle_horror_006",
+      "answer": "DREAD",
+      "difficulty": "hard"
+    },
+    {
+      "id": "wordle_horror_007",
+      "answer": "SCARE",
+      "difficulty": "easy"
+    },
+    {
+      "id": "wordle_horror_008",
+      "answer": "DRAWN",
+      "difficulty": "medium"
+    },
+    {
+      "id": "wordle_horror_009",
+      "answer": "STALK",
+      "difficulty": "hard"
+    },
+    {
+      "id": "wordle_horror_010",
+      "answer": "EVILS",
+      "difficulty": "hard"
+    }
+  ],
   "strands": [
     {
-      "id": "strands_horror_001",
-      "difficulty": "medium",
-      "theme": "Horror Creatures",
+      "id": "strands_game_001",
+      "difficulty": "easy",
+      "theme": "Gardening",
       "grid": [
-        ["S", "H", "A", "D", "O", "W", "S", "E"],
-        ["V", "R", "M", "W", "P", "I", "R", "T"],
-        ["M", "O", "O", "K", "Z", "E", "E", "A"],
-        ["G", "H", "O", "U", "L", "S", "B", "G"],
-        ["W", "E", "R", "E", "W", "O", "L", "F"],
-        ["Z", "O", "M", "B", "I", "E", "D", "X"]
+        ["P", "L", "A", "N", "T", "I", "N", "G"],
+        ["R", "O", "S", "E", "S", "O", "I", "L"],
+        ["S", "E", "E", "D", "G", "R", "O", "W"],
+        ["T", "R", "A", "N", "S", "T", "E", "M"],
+        ["B", "U", "D", "S", "P", "E", "T", "A"],
+        ["F", "L", "O", "W", "T", "R", "S", "L"]
       ],
-      "answers": ["VAMPIRE", "WEREWOLF", "ZOMBIE", "GHOUL", "MOOK"],
-      "spangram": "SHADOWS",
-      "spangramHint": "Things that lurk in the dark"
+      "answers": ["ROSES", "SEEDS", "TREE", "BUDS", "SOIL", "GROW", "STEM", "PETAL", "FLOW", "REST"],
+      "spangram": "PLANTING",
+      "spangramHint": "Growing things"
     },
     {
-      "id": "strands_horror_002",
-      "difficulty": "medium",
-      "theme": "Cabin in the Woods",
+      "id": "strands_game_002",
+      "difficulty": "easy",
+      "theme": "Space",
       "grid": [
-        ["C", "R", "A", "B", "I", "N", "S", "T"],
-        ["A", "T", "T", "I", "C", "H", "O", "E"],
-        ["D", "O", "O", "R", "W", "A", "Y", "R"],
-        ["W", "I", "N", "D", "O", "W", "R", "D"],
-        ["P", "O", "R", "C", "H", "D", "A", "R"],
-        ["C", "E", "L", "L", "A", "R", "B", "K"]
+        ["G", "A", "L", "A", "X", "I", "E", "S"],
+        ["P", "L", "A", "N", "E", "T", "S", "R"],
+        ["S", "T", "A", "R", "S", "M", "O", "O"],
+        ["M", "O", "O", "N", "C", "O", "M", "E"],
+        ["C", "O", "M", "E", "T", "U", "S", "N"],
+        ["A", "S", "T", "R", "O", "N", "A", "U"]
       ],
-      "answers": ["ATTIC", "CABIN", "PORCH", "CELLAR", "WINDOW"],
-      "spangram": "CABINST",
-      "spangramHint": "The whole place"
+      "answers": ["PLANETS", "MOON", "COMET", "ASTRO", "STARS"],
+      "spangram": "GALAXIES",
+      "spangramHint": "Out of this world"
     },
     {
-      "id": "strands_horror_003",
-      "difficulty": "hard",
-      "theme": "Crime Scene Evidence",
+      "id": "strands_game_003",
+      "difficulty": "easy",
+      "theme": "Colors",
       "grid": [
-        ["B", "L", "O", "O", "D", "S", "P", "T"],
-        ["F", "I", "N", "G", "E", "R", "P", "R"],
-        ["H", "A", "I", "R", "S", "M", "O", "I"],
-        ["D", "U", "S", "T", "W", "R", "N", "N"],
-        ["F", "O", "O", "T", "P", "R", "I", "T"],
-        ["W", "E", "A", "P", "O", "N", "S", "E"]
+        ["R", "A", "I", "N", "B", "O", "W", "S"],
+        ["B", "L", "U", "E", "R", "E", "D", "V"],
+        ["G", "R", "E", "E", "N", "Y", "L", "W"],
+        ["P", "U", "R", "P", "L", "E", "O", "R"],
+        ["O", "R", "A", "N", "G", "E", "A", "P"],
+        ["P", "I", "N", "K", "C", "Y", "A", "N"]
       ],
-      "answers": ["BLOOD", "FINGER", "HAIR", "DUST", "FOOTPRINT", "WEAPON"],
-      "spangram": "BLOODS",
-      "spangramHint": "What the killer left behind"
+      "answers": ["BLUE", "GREEN", "PURPLE", "ORANGE", "PINK", "CYAN", "RED"],
+      "spangram": "RAINBOWS",
+      "spangramHint": "Every color"
     }
   ],
   "letter-boxed": [
