@@ -82,6 +82,7 @@ class LetterBoxedGame {
         cleanupManager.addListener(
             document.getElementById('lb-submit'), 'click', () => this.submit()
         );
+        this.setupKeyboardNavigation();
     }
 
     addLetter(letter, sides) {
@@ -98,6 +99,42 @@ class LetterBoxedGame {
         this.currentPath.push({ letter, sides });
         this.updateDisplay();
         vhsEffects.playClick();
+    }
+
+    setupKeyboardNavigation() {
+        const letters = this.container.querySelectorAll('.pool-letter');
+        letters.forEach(el => {
+            el.setAttribute('tabindex', '0');
+            el.setAttribute('role', 'button');
+        });
+
+        letters.forEach(el => {
+            cleanupManager.addListener(el, 'click', () => {
+                const letter = el.dataset.letter;
+                const sides = this.pool[letter];
+                this.addLetter(letter, sides);
+            });
+            
+            cleanupManager.addListener(el, 'keydown', (e) => {
+                if (e.key === ' ' || e.key === 'Enter') {
+                    e.preventDefault();
+                    this.addLetter(el.dataset.letter, this.pool[el.dataset.letter]);
+                }
+            });
+        });
+
+        const container = this.container.querySelector('.letter-boxed-container');
+        cleanupManager.addListener(container, 'keydown', (e) => {
+            if (e.key === 'Backspace' && this.currentWord.length > 0 && !e.target.matches('button')) {
+                e.preventDefault();
+                this.currentWord = this.currentWord.slice(0, -1);
+                this.currentPath.pop();
+                this.updateDisplay();
+            } else if (e.key === 'Escape' && this.currentWord.length > 0 && !e.target.matches('button')) {
+                e.preventDefault();
+                this.clear();
+            }
+        });
     }
 
     clear() {
