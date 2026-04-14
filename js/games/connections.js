@@ -75,29 +75,79 @@ class ConnectionsGame {
         cleanupManager.addListener(deselectBtn, 'click', this.handlers.deselect);
         cleanupManager.addListener(submitBtn, 'click', this.handlers.submit);
         cleanupManager.addListener(shuffleBtn, 'click', this.handlers.shuffle);
+
+        // Keyboard navigation
+        this.setupKeyboardNavigation();
+    }
+
+    setupKeyboardNavigation() {
+        // Make word tiles focusable
+        const wordTiles = this.container.querySelectorAll('.word-tile');
+        wordTiles.forEach(tile => {
+            tile.setAttribute('tabindex', '0');
+            tile.setAttribute('role', 'button');
+            tile.setAttribute('aria-pressed', 'false');
+
+            cleanupManager.addListener(tile, 'keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.toggleWord(tile);
+                }
+            });
+        });
+
+        // Global keyboard shortcuts for buttons
+        cleanupManager.addListener(document, 'keydown', (e) => {
+            // Escape to deselect all
+            if (e.key === 'Escape') {
+                this.deselectAll();
+                return;
+            }
+
+            // Enter to submit (when tiles selected AND submit is enabled)
+            if (e.key === 'Enter' && this.selectedWords.length === 4 && e.target.classList.contains('word-tile')) {
+                e.preventDefault();
+                this.submitGuess();
+                return;
+            }
+
+            // S to shuffle (when no tiles selected)
+            if (e.key === 's' || e.key === 'S') {
+                if (this.selectedWords.length === 0) {
+                    this.shuffleWords();
+                }
+            }
+        });
     }
 
     toggleWord(tile) {
-        if (this.isComplete || tile.classList.contains('solved')) {return;}
-        
+        if (this.isComplete || tile.classList.contains('solved')) {
+            return;
+        }
+
         const word = tile.dataset.word;
-        
+
         if (this.selectedWords.includes(word)) {
             this.selectedWords = this.selectedWords.filter(w => w !== word);
             tile.classList.remove('selected');
+            tile.setAttribute('aria-pressed', 'false');
         } else if (this.selectedWords.length < 4) {
             this.selectedWords.push(word);
             tile.classList.add('selected');
+            tile.setAttribute('aria-pressed', 'true');
             vhsEffects.playClick();
         }
-        
+
         this.updateButtons();
     }
 
     deselectAll() {
         this.selectedWords = [];
         const tiles = this.container.querySelectorAll('.word-tile');
-        tiles.forEach(tile => tile.classList.remove('selected'));
+        tiles.forEach(tile => {
+            tile.classList.remove('selected');
+            tile.setAttribute('aria-pressed', 'false');
+        });
         this.updateButtons();
     }
 
