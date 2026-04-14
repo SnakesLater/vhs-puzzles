@@ -19,7 +19,7 @@ class WordleGame {
         // Try wordDictionary first (has thousands of words)
         if (wordDictionary.loaded) {
             const word = wordDictionary.getRandomWord(5);
-            if (word) return word;
+            if (word) {return word;}
         }
         
         // Fallback to hardcoded list

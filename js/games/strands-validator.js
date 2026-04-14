@@ -96,13 +96,13 @@ class StrandsValidator {
             }
             
             // Bounds check
-            if (row < 0 || row >= rows || col < 0 || col >= cols) return;
+            if (row < 0 || row >= rows || col < 0 || col >= cols) {return;}
             
             // Check if already in path (no self-crossing)
-            if (path.some(p => p.row === row && p.col === col)) return;
+            if (path.some(p => p.row === row && p.col === col)) {return;}
             
             // Check if letter matches
-            if (grid[row][col] !== word[index]) return;
+            if (grid[row][col] !== word[index]) {return;}
             
             // Check adjacency to previous cell
             if (path.length > 0) {
@@ -110,7 +110,7 @@ class StrandsValidator {
                 const rowDiff = Math.abs(row - last.row);
                 const colDiff = Math.abs(col - last.col);
                 // Must be adjacent (max 1 step in each direction)
-                if (rowDiff > 1 || colDiff > 1) return;
+                if (rowDiff > 1 || colDiff > 1) {return;}
             }
             
             path.push({row, col});
@@ -118,7 +118,7 @@ class StrandsValidator {
             // Explore all 8 directions
             for (let dr = -1; dr <= 1; dr++) {
                 for (let dc = -1; dc <= 1; dc++) {
-                    if (dr === 0 && dc === 0) continue;
+                    if (dr === 0 && dc === 0) {continue;}
                     search(row + dr, col + dc, index + 1, path);
                 }
             }
@@ -141,7 +141,7 @@ class StrandsValidator {
      * Edges: top row (row 0), bottom row (row 5), left col (col 0), right col (col 7)
      */
     connectsOppositeEdges(path, rows, cols) {
-        if (!path || path.length < 2) return false;
+        if (!path || path.length < 2) {return false;}
         
         const first = path[0];
         const last = path[path.length - 1];
