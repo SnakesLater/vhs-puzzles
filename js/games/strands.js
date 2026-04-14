@@ -133,6 +133,80 @@ class StrandsGame extends BaseGame {
         this.highlightSelectedPath();
     }
 
+    setupKeyboardNavigation() {
+        // Make cells focusable
+        const cells = this.container.querySelectorAll('.strands-cell');
+        cells.forEach(cell => {
+            cell.setAttribute('tabindex', '0');
+            cell.setAttribute('role', 'button');
+            cell.setAttribute('aria-pressed', 'false');
+        });
+
+        // Add keyboard handlers to cells
+        cells.forEach(cell => {
+            cleanupManager.addListener(cell, 'keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    // Toggle selection on Enter or Space
+                    if (this.selectedPath.length === 0) {
+                        this.startSelection(cell);
+                    } else {
+                        // Check if clicking the previously selected cell
+                        if (this.selectedPath[0].row === parseInt(cell.dataset.row) &&
+                            this.selectedPath[0].col === parseInt(cell.dataset.col)) {
+                            // Deselect
+                            this.clearSelection();
+                        } else {
+                            // Start new selection (replaces old)
+                            this.startSelection(cell);
+                        }
+                    }
+                }
+            });
+        });
+
+        // Global keyboard shortcuts
+        cleanupManager.addListener(document, 'keydown', (e) => {
+            // Enter to submit word (when a word is selected and cell is focusable)
+            if (e.key === 'Enter' && e.target.classList.contains('strands-cell')) {
+                if (this.selectedPath.length > 0) {
+                    e.preventDefault();
+                    this.submitWord();
+                }
+            }
+
+            // Escape to clear selection
+            if (e.key === 'Escape' && this.selectedPath.length > 0) {
+                this.clearSelection();
+                return;
+            }
+
+            // Arrow key navigation
+            if (this.selectedPath.length > 0 && e.target.classList.contains('strands-cell')) {
+                const currentRow = parseInt(e.target.dataset.row);
+                const currentCol = parseInt(e.target.dataset.col);
+                let newRow = currentRow;
+                let newCol = currentCol;
+
+                if (e.key === 'ArrowUp') {newRow = Math.max(0, currentRow - 1);}
+                if (e.key === 'ArrowDown') {newRow = Math.min(this.grid.length - 1, currentRow + 1);}
+                if (e.key === 'ArrowLeft') {newCol = Math.max(0, currentCol - 1);}
+                if (e.key === 'ArrowRight') {newCol = Math.min(this.grid[0].length - 1, currentCol + 1);}
+
+                if (newRow !== currentRow && newCol !== currentCol) {
+                    e.preventDefault();
+                    const newCell = this.container.querySelector(
+                        `[data-row="${newRow}"][data-col="${newCol}"]`
+                    );
+                    if (newCell) {
+                        e.target = newCell;
+                        newCell.focus();
+                    }
+                }
+            }
+        });
+    }
+
     continueSelection(cell) {
         const row = parseInt(cell.dataset.row);
         const col = parseInt(cell.dataset.col);

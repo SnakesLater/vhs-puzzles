@@ -27,6 +27,29 @@ document.addEventListener('DOMContentLoaded', async () => {
         gameModeBack: document.getElementById('game-mode-back')
     };
 
+    // Setup sound toggle button
+    const soundToggle = document.getElementById('sound-toggle');
+    if (soundToggle) {
+        // Set initial state
+        soundToggle.textContent = audioController.isMuted() ? '🔇' : '🔊';
+        if (audioController.isMuted()) {
+            soundToggle.classList.add('muted');
+        }
+
+        soundToggle.addEventListener('click', () => {
+            const isMuted = audioController.toggleMute();
+            soundToggle.textContent = isMuted ? '🔇' : '🔊';
+            soundToggle.classList.toggle('muted', isMuted);
+
+            // Save preference
+            try {
+                localStorage.setItem('vhsAudioMuted', isMuted);
+            } catch (e) {
+                console.warn('Could not save audio preference');
+            }
+        });
+    }
+
     // Initialize tape renderer
     const tapeRenderer = new VHSTapeRenderer();
     tapeRenderer.initialize();

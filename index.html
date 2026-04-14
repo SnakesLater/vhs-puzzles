@@ -29,6 +29,9 @@
             <div class="vhs-header">
                 <h1 class="glitch-text">VHS HORROR PUZZLE COLLECTION</h1>
                 <p class="tape-counter">TAPE INSERTED: <span id="tape-number">--</span></p>
+                <button id="sound-toggle" class="sound-btn" aria-label="Toggle sound" title="Toggle sound">
+                    🔊
+                </button>
             </div>
             <div id="mode-selection" class="mode-grid">
                 <button class="mode-btn tape-btn" data-mode="story">
@@ -219,6 +222,7 @@
 
     <script src="js/systems/cleanup-manager.js"></script>
     <script src="js/systems/asset-loader.js"></script>
+    <script src="js/systems/audio-controller.js"></script>
     <script src="js/systems/puzzle-loader.js"></script>
     <script src="js/systems/tape-quality.js"></script>
     <script src="js/systems/event-manager.js"></script>
