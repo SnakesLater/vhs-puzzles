@@ -17,6 +17,23 @@ class StrandsGame extends BaseGame {
         this.mistakes = 0;
         this.maxMistakes = 4;
         this.isDragging = false;
+        
+        // Hint system: track non-theme words found
+        this.nonThemeWords = [];
+        this.hintRevealedWords = [];
+        this.hintPending = false;
+    }
+
+    init() {
+        // BaseGame constructor calls init() before StrandsGame constructor finishes.
+        // If grid isn't ready yet, defer until constructor completes.
+        if (!this.grid) {
+            setTimeout(() => this.init(), 0);
+            return;
+        }
+        this.render();
+        this.setupEventListeners();
+        this.setupKeyboardNavigation();
     }
 
     render() {
@@ -37,6 +54,7 @@ class StrandsGame extends BaseGame {
                         <h3>Found Words:</h3>
                         <div class="word-list"></div>
                     </div>
+                    <div id="hint-counter" class="hint-counter"></div>
                     <div class="strands-controls">
                         <button id="clear-selection">Clear</button>
                         <button id="submit-word" disabled>Submit</button>
@@ -48,6 +66,7 @@ class StrandsGame extends BaseGame {
         `;
         
         this.container.innerHTML = html;
+        this.updateHintDisplay();
     }
 
     renderLetterGrid() {
@@ -94,8 +113,8 @@ class StrandsGame extends BaseGame {
             this.isDragging = false;
         });
 
-        // Touch support
-        this.container.addEventListener('touchstart', (e) => {
+        // Touch support - registered with cleanupManager
+        const touchStartHandler = (e) => {
             const touch = e.touches[0];
             const cell = document.elementFromPoint(touch.clientX, touch.clientY);
             if (cell && cell.classList.contains('strands-cell')) {
@@ -103,9 +122,9 @@ class StrandsGame extends BaseGame {
                 this.isDragging = true;
                 this.startSelection(cell);
             }
-        }, { passive: false });
-
-        this.container.addEventListener('touchmove', (e) => {
+        };
+        
+        const touchMoveHandler = (e) => {
             if (!this.isDragging) {return;}
             e.preventDefault();
             const touch = e.touches[0];
@@ -113,11 +132,23 @@ class StrandsGame extends BaseGame {
             if (cell && cell.classList.contains('strands-cell')) {
                 this.continueSelection(cell);
             }
-        }, { passive: false });
-
-        this.container.addEventListener('touchend', () => {
+        };
+        
+        const touchEndHandler = () => {
             this.isDragging = false;
-        });
+        };
+
+        this.container.addEventListener('touchstart', touchStartHandler, { passive: false });
+        this.container.addEventListener('touchmove', touchMoveHandler, { passive: false });
+        this.container.addEventListener('touchend', touchEndHandler);
+
+        // Track for cleanup
+        if (!this._touchListeners) {this._touchListeners = [];}
+        this._touchListeners.push(
+            {element: this.container, event: 'touchstart', handler: touchStartHandler},
+            {element: this.container, event: 'touchmove', handler: touchMoveHandler},
+            {element: this.container, event: 'touchend', handler: touchEndHandler}
+        );
 
         // Button handlers
         cleanupManager.addListener(clearBtn, 'click', () => this.clearSelection());
@@ -193,13 +224,13 @@ class StrandsGame extends BaseGame {
                 if (e.key === 'ArrowLeft') {newCol = Math.max(0, currentCol - 1);}
                 if (e.key === 'ArrowRight') {newCol = Math.min(this.grid[0].length - 1, currentCol + 1);}
 
-                if (newRow !== currentRow && newCol !== currentCol) {
+                // FIX #4: Use || instead of && to allow cardinal directions
+                if (newRow !== currentRow || newCol !== currentCol) {
                     e.preventDefault();
                     const newCell = this.container.querySelector(
                         `[data-row="${newRow}"][data-col="${newCol}"]`
                     );
                     if (newCell) {
-                        e.target = newCell;
                         newCell.focus();
                     }
                 }
@@ -260,7 +291,8 @@ class StrandsGame extends BaseGame {
         
         const submitBtn = document.getElementById('submit-word');
         if (submitBtn) {
-            submitBtn.disabled = this.currentWord.length < 3;
+            // FIX #6: Minimum word length is 4, not 3
+            submitBtn.disabled = this.currentWord.length < 4;
         }
     }
 
@@ -291,8 +323,9 @@ class StrandsGame extends BaseGame {
     }
 
     submitWord() {
-        if (this.currentWord.length < 3) {
-            this.showMessage('Word must be at least 3 letters', 'error');
+        // FIX #6: Minimum word length is 4
+        if (this.currentWord.length < 4) {
+            this.showMessage('Word must be at least 4 letters', 'error');
             return;
         }
 
@@ -302,7 +335,15 @@ class StrandsGame extends BaseGame {
             return;
         }
 
-        if (this.answers.includes(this.currentWord)) {
+        // Check if it's a theme word (answer or spangram)
+        const isThemeWord = this.answers.includes(this.currentWord) || this.currentWord === this.spangram;
+        
+        // Check if it's a valid dictionary word (for hint system)
+        const isValidDictWord = wordDictionary && wordDictionary.isValidWord(this.currentWord);
+        const isTraceable = this.isWordTraceable(this.currentWord);
+
+        if (isThemeWord) {
+            // Found a correct theme word
             this.foundWords.push(this.currentWord);
             this.showMessage(`"${this.currentWord}" found!`, 'success');
             vhsEffects.playSuccess();
@@ -326,10 +367,18 @@ class StrandsGame extends BaseGame {
             this.updateFoundWordsDisplay();
             this.clearSelection();
             
-            // Check win condition
-            if (this.foundWords.length >= 3) {
+            // FIX #1 & #7: Win only when ALL answers AND spangram are found
+            const allAnswersFound = this.answers.every(word => this.foundWords.includes(word));
+            if (allAnswersFound && this.spangramFound) {
                 this.completeGame(true);
             }
+        } else if (isValidDictWord && isTraceable) {
+            // Valid non-theme word - count toward hints
+            this.nonThemeWords.push(this.currentWord);
+            this.showMessage(`"${this.currentWord}" - Valid word!`, 'success');
+            vhsEffects.playSuccess();
+            this.clearSelection();
+            this.checkHintSystem();
         } else {
             this.mistakes++;
             this.showMessage(`"${this.currentWord}" not found`, 'error');
@@ -353,6 +402,77 @@ class StrandsGame extends BaseGame {
             } else {
                 setTimeout(() => this.clearSelection(), 800);
             }
+        }
+    }
+
+    /**
+     * Check if the current selected path traces a valid word on the grid
+     */
+    isWordTraceable(word) {
+        // The current selected path already traces the word
+        const pathWord = this.selectedPath.map(pos => this.grid[pos.row][pos.col]).join('');
+        return pathWord === word;
+    }
+
+    /**
+     * Hint system: Every 3 valid non-theme words reveals a hint
+     * FIX #7: Added hint system
+     */
+    checkHintSystem() {
+        const hintCount = Math.floor(this.nonThemeWords.length / 3);
+        const revealedCount = this.hintRevealedWords.length;
+        
+        if (hintCount > revealedCount) {
+            // Reveal a new hint word
+            const unrevealedAnswers = this.answers.filter(word => 
+                !this.foundWords.includes(word) && !this.hintRevealedWords.includes(word)
+            );
+            
+            if (unrevealedAnswers.length > 0) {
+                // Pick first unrevealed answer as hint
+                const hintWord = unrevealedAnswers[0];
+                this.hintRevealedWords.push(hintWord);
+                this.revealHintWord(hintWord);
+                this.showMessage(`HINT: "${hintWord}" revealed!`, 'warning');
+            }
+        }
+        
+        this.updateHintDisplay();
+    }
+
+    /**
+     * Visually reveal a hint word on the grid
+     */
+    revealHintWord(word) {
+        // Find the word path using the validator logic
+        const validator = new StrandsValidator();
+        const paths = validator.findAllPaths(this.grid, word);
+        
+        if (paths.length > 0) {
+            const path = paths[0];
+            path.forEach(pos => {
+                const cell = this.container.querySelector(
+                    `[data-row="${pos.row}"][data-col="${pos.col}"]`
+                );
+                if (cell) {
+                    cell.classList.add('hint-revealed');
+                }
+            });
+        }
+    }
+
+    /**
+     * Update hint counter display
+     */
+    updateHintDisplay() {
+        const hintEl = document.getElementById('hint-counter');
+        if (hintEl) {
+            const progress = this.nonThemeWords.length % 3;
+            const hintsEarned = Math.floor(this.nonThemeWords.length / 3);
+            const hintText = hintsEarned > 0 
+                ? `Hints: ${hintsEarned} | Next hint: ${progress}/3`
+                : `Next hint: ${progress}/3`;
+            hintEl.textContent = hintText;
         }
     }
 
@@ -416,6 +536,15 @@ class StrandsGame extends BaseGame {
         this.isDragging = false;
         this.selectedPath = [];
         this.currentWord = '';
+        
+        // Clean up touch listeners
+        if (this._touchListeners) {
+            this._touchListeners.forEach(({element, event, handler}) => {
+                element.removeEventListener(event, handler);
+            });
+            this._touchListeners = [];
+        }
+        
         cleanupManager.cleanupAll();
     }
 }
@@ -424,3 +553,4 @@ class StrandsGame extends BaseGame {
 if (typeof window !== 'undefined') {
     window.StrandsGame = StrandsGame;
 }
+

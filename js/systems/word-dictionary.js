@@ -57,6 +57,22 @@ class WordDictionary {
                 }
             });
         }
+
+        if (data.strands) {
+            data.strands.forEach(puzzle => {
+                if (puzzle.answers) {
+                    puzzle.answers.forEach(word => {
+                        this.addWord(word.toUpperCase());
+                        this.answers.add(word.toUpperCase());
+                    });
+                }
+                if (puzzle.spangram) {
+                    this.addWord(puzzle.spangram.toUpperCase());
+                    this.spangrams.add(puzzle.spangram.toUpperCase());
+                    this.answers.add(puzzle.spangram.toUpperCase());
+                }
+            });
+        }
     }
 
     async loadExternalWordLists() {

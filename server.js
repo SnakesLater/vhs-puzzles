@@ -40,7 +40,12 @@ const server = http.createServer((req, res) => {
                         ".wav": "audio/wav"
                     };
                     const mimeType = mimeTypes[ext] || "application/octet-stream";
-                    res.writeHead(200, {"Content-Type": mimeType});
+                    res.writeHead(200, {
+                        "Content-Type": mimeType,
+                        "Cache-Control": "no-cache, no-store, must-revalidate",
+                        "Pragma": "no-cache",
+                        "Expires": "0"
+                    });
                     res.end(data);
                 }
             });
