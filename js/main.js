@@ -60,8 +60,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function initializeGame() {
         const loaded = await puzzleLoader.loadAll();
         
-        await wordDictionary.load(puzzleLoader.puzzles);
-        await strandsDictionary.load(); // broad 4-10 letter list for Strands hints
+        await unifiedDictionary.load(puzzleLoader.puzzles);
         
         tapeRenderer.renderMenuButtons();
         

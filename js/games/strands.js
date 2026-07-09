@@ -408,7 +408,7 @@ class StrandsGame extends BaseGame {
         // Check if it's a valid dictionary word (for hint system)
         // Use the broad Strands dictionary (4-10 letter English), NOT the
         // 5-letter Wordle list, so any real traced word counts toward hints.
-        const isValidDictWord = strandsDictionary && strandsDictionary.isValidWord(this.currentWord);
+        const isValidDictWord = unifiedDictionary && unifiedDictionary.isValidWord(this.currentWord);
         const isTraceable = this.isWordTraceable(this.currentWord);
 
         if (isThemeWord) {

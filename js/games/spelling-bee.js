@@ -6,7 +6,13 @@ class SpellingBeeGame {
         this.centerLetter = puzzle.centerLetter.toUpperCase();
         this.outerLetters = puzzle.outerLetters.map(l => l.toUpperCase());
         this.allLetters = [...this.outerLetters, this.centerLetter];
+        // Official target list (from puzzle data) drives progress + rank.
         this.validAnswers = new Set(puzzle.answers.map(w => w.toUpperCase()));
+        // Every real word formable from the 7-letter set (the logical score
+        // base). Validated words are scored against THIS, not the closed list.
+        this.formableWords = unifiedDictionary.loaded
+            ? unifiedDictionary.getSpellingBeeWords(puzzle.id, this.centerLetter, this.outerLetters)
+            : this.validAnswers;
         this.foundWords = [];
         this.currentWord = '';
         this.score = 0;
@@ -150,7 +156,7 @@ class SpellingBeeGame {
         this.showMessage(`${word} (+${wordScore})`, 'success');
         this.updateScore();
         
-        if (this.foundWords.length === this.validAnswers.size) {
+        if (this.officialFound() === this.validAnswers.size) {
             this.completeGame();
         }
 
@@ -163,7 +169,7 @@ class SpellingBeeGame {
     }
 
     isValidWord(word) {
-        if (!this.validAnswers.has(word)) { return 'not-in-list'; }
+        if (!this.formableWords.has(word)) { return 'not-in-list'; }
         if (!word.includes(this.centerLetter)) { return 'needs-center'; }
         for (const letter of word.split('')) {
             if (!this.allLetters.includes(letter)) { return 'bad-letter'; }
@@ -195,9 +201,15 @@ class SpellingBeeGame {
         return total;
     }
 
+    officialFound() {
+        // Count only curated-target words toward completion/progress;
+        // bonus formable words still score but don't complete the puzzle.
+        return this.foundWords.filter(w => this.validAnswers.has(w)).length;
+    }
+
     updateScore() {
         document.getElementById('bee-score').textContent = this.score;
-        document.getElementById('bee-found-count').textContent = this.foundWords.length;
+        document.getElementById('bee-found-count').textContent = this.officialFound();
         const rankEl = document.getElementById('bee-rank');
         if (rankEl) { rankEl.textContent = this.getRank(); }
         const fill = document.getElementById('bee-progress-fill');
