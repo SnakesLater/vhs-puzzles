@@ -15,7 +15,9 @@ class StrandsGame extends BaseGame {
         this.currentWord = '';
         this.spangramFound = false;
         this.mistakes = 0;
-        this.maxMistakes = 4;
+        // NYT-style: mistakes are non-fatal — they fill a meter but never
+        // lock the grid. Kept only for display/progress, not game-over.
+        this.maxMistakes = Infinity;
         this.isDragging = false;
         
         // Hint system: track non-theme words found
@@ -100,12 +102,30 @@ class StrandsGame extends BaseGame {
                 this.isDragging = true;
                 this.startSelection(cell);
             });
-            
+
+            // Fallback: enter-driven. Steps ONE cell via continueSelection,
+            // which itself walks a shortest adjacent path if >1 cell apart.
             cleanupManager.addListener(cell, 'mouseenter', () => {
                 if (this.isDragging) {
                     this.continueSelection(cell);
                 }
             });
+        });
+
+        // Hit-test the cell literally under the pointer and step toward it.
+        // Coalesced events recover the intermediate points a fast drag skips,
+        // so diagonals no longer jump past cells.
+        const moveHandler = (clientX, clientY) => {
+            if (!this.isDragging) {return;}
+            const el = document.elementFromPoint(clientX, clientY);
+            if (el && el.classList.contains('strands-cell')) {
+                this.continueSelection(el);
+            }
+        };
+
+        cleanupManager.addListener(this.container, 'mousemove', (e) => {
+            const events = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
+            for (const ev of events) { moveHandler(ev.clientX, ev.clientY); }
         });
 
         // Global mouse up to end drag
@@ -116,24 +136,21 @@ class StrandsGame extends BaseGame {
         // Touch support - registered with cleanupManager
         const touchStartHandler = (e) => {
             const touch = e.touches[0];
-            const cell = document.elementFromPoint(touch.clientX, touch.clientY);
-            if (cell && cell.classList.contains('strands-cell')) {
+            const el = document.elementFromPoint(touch.clientX, touch.clientY);
+            if (el && el.classList.contains('strands-cell')) {
                 e.preventDefault();
                 this.isDragging = true;
-                this.startSelection(cell);
+                this.startSelection(el);
             }
         };
-        
+
         const touchMoveHandler = (e) => {
             if (!this.isDragging) {return;}
             e.preventDefault();
             const touch = e.touches[0];
-            const cell = document.elementFromPoint(touch.clientX, touch.clientY);
-            if (cell && cell.classList.contains('strands-cell')) {
-                this.continueSelection(cell);
-            }
+            moveHandler(touch.clientX, touch.clientY);
         };
-        
+
         const touchEndHandler = () => {
             this.isDragging = false;
         };
@@ -260,15 +277,65 @@ class StrandsGame extends BaseGame {
             return;
         }
         
-        // Check adjacency to last selected cell
+        // If not adjacent to the last cell, walk a shortest 8-dir adjacent
+        // path from the last cell to this one (covers skipped cells on fast
+        // or diagonal drags) instead of dropping the selection.
         if (this.selectedPath.length > 0) {
             const lastPos = this.selectedPath[this.selectedPath.length - 1];
             if (!this.isAdjacent({row, col}, lastPos)) {
+                this.walkTo(lastPos, {row, col});
                 return;
             }
         }
-        
+
         this.selectedPath.push({row, col});
+        this.updateCurrentWord();
+        this.highlightSelectedPath();
+    }
+
+    /**
+     * Append a shortest 8-directional adjacent path from `a` to `b`, stepping
+     * through real grid cells (BFS). Used when a drag skips cells, so fast or
+     * diagonal moves connect smoothly without dropping the selection.
+     */
+    walkTo(a, b) {
+        const rows = this.grid.length, cols = this.grid[0].length;
+        const key = (r, c) => r * cols + c;
+        const prev = new Map();
+        const q = [a];
+        const seen = new Set([key(a.row, a.col)]);
+        while (q.length) {
+            const cur = q.shift();
+            if (cur.row === b.row && cur.col === b.col) { break; }
+            for (let dr = -1; dr <= 1; dr++) {
+                for (let dc = -1; dc <= 1; dc++) {
+                    if (!dr && !dc) { continue; }
+                    const nr = cur.row + dr, nc = cur.col + dc;
+                    if (nr < 0 || nr >= rows || nc < 0 || nc >= cols) { continue; }
+                    const k = key(nr, nc);
+                    if (seen.has(k)) { continue; }
+                    seen.add(k);
+                    prev.set(k, cur);
+                    q.push({row: nr, col: nc});
+                }
+            }
+        }
+        // Reconstruct b -> a, then append a -> b (minus the start cell)
+        const path = [];
+        let cur = b;
+        while (cur && !(cur.row === a.row && cur.col === a.col)) {
+            path.push(cur);
+            cur = prev.get(key(cur.row, cur.col));
+        }
+        path.reverse();
+        for (const pos of path) {
+            const idx = this.selectedPath.findIndex(p => p.row === pos.row && p.col === pos.col);
+            if (idx !== -1) {
+                this.selectedPath = this.selectedPath.slice(0, idx + 1);
+                break;
+            }
+            this.selectedPath.push({row: pos.row, col: pos.col});
+        }
         this.updateCurrentWord();
         this.highlightSelectedPath();
     }
@@ -339,7 +406,9 @@ class StrandsGame extends BaseGame {
         const isThemeWord = this.answers.includes(this.currentWord) || this.currentWord === this.spangram;
         
         // Check if it's a valid dictionary word (for hint system)
-        const isValidDictWord = wordDictionary && wordDictionary.isValidWord(this.currentWord);
+        // Use the broad Strands dictionary (4-10 letter English), NOT the
+        // 5-letter Wordle list, so any real traced word counts toward hints.
+        const isValidDictWord = unifiedDictionary && unifiedDictionary.isValidWord(this.currentWord);
         const isTraceable = this.isWordTraceable(this.currentWord);
 
         if (isThemeWord) {
@@ -349,25 +418,33 @@ class StrandsGame extends BaseGame {
             vhsEffects.playSuccess();
             vhsEffects.colorShift();
             tapeQualitySystem.increaseQuality(5);
-            
-            // Mark cells as found
+
+            // Mark cells as found — with the keyword's own color, and clear any
+            // prior hint highlight so a solved hint square takes the keyword color.
+            // Spangram gets its own gold slot (index === answers.length).
+            const colorIndex = this.answers.includes(this.currentWord)
+                ? this.answers.indexOf(this.currentWord)
+                : 'spangram';
             this.selectedPath.forEach(pos => {
                 const cell = this.container.querySelector(
                     `[data-row="${pos.row}"][data-col="${pos.col}"]`
                 );
-                if (cell) {cell.classList.add('found');}
+                if (cell) {
+                    cell.classList.remove('hint-revealed');
+                    cell.classList.add('found', `found-${colorIndex}`);
+                }
             });
-            
+
             // Check spangram
             if (this.currentWord === this.spangram) {
                 this.spangramFound = true;
                 this.showMessage('SPANGRAM FOUND!', 'success');
             }
-            
+
             this.updateFoundWordsDisplay();
             this.clearSelection();
-            
-            // FIX #1 & #7: Win only when ALL answers AND spangram are found
+
+            // Win only when ALL answers AND spangram are found
             const allAnswersFound = this.answers.every(word => this.foundWords.includes(word));
             if (allAnswersFound && this.spangramFound) {
                 this.completeGame(true);
@@ -379,13 +456,21 @@ class StrandsGame extends BaseGame {
             vhsEffects.playSuccess();
             this.clearSelection();
             this.checkHintSystem();
+        } else if (isValidDictWord && !isTraceable) {
+            // Real English word, but those exact letters aren't adjacent on
+            // THIS board (easy to misread one cell on a scrambled grid).
+            // Echo the traced letters so a near-miss is obvious, give no hint
+            // (not placeable), and never burn a mistake.
+            this.showMessage(`"${this.currentWord}" is a word, but not on this board`, 'warning');
+            this.clearSelection();
         } else {
+            // Non-fatal: a wrong/non-word trace never locks the grid.
             this.mistakes++;
             this.showMessage(`"${this.currentWord}" not found`, 'error');
             vhsEffects.playError();
             vhsEffects.shake();
             tapeQualitySystem.decreaseQuality(10);
-            
+
             // Show invalid feedback
             this.selectedPath.forEach(pos => {
                 const cell = this.container.querySelector(
@@ -396,12 +481,8 @@ class StrandsGame extends BaseGame {
                     setTimeout(() => cell.classList.remove('invalid-temp'), 600);
                 }
             });
-            
-            if (this.mistakes >= this.maxMistakes) {
-                this.completeGame(false);
-            } else {
-                setTimeout(() => this.clearSelection(), 800);
-            }
+
+            setTimeout(() => this.clearSelection(), 800);
         }
     }
 
@@ -415,61 +496,53 @@ class StrandsGame extends BaseGame {
     }
 
     /**
-     * Hint system: Every 3 valid non-theme words reveals a hint
-     * FIX #7: Added hint system
+     * Hint system: every 3 valid non-theme words auto-reveals the
+     * next unrevealed theme word by highlighting its path on the grid.
      */
     checkHintSystem() {
         const hintCount = Math.floor(this.nonThemeWords.length / 3);
         const revealedCount = this.hintRevealedWords.length;
-        
+
         if (hintCount > revealedCount) {
-            // Reveal a new hint word
-            const unrevealedAnswers = this.answers.filter(word => 
+            const unrevealed = this.answers.filter(word =>
                 !this.foundWords.includes(word) && !this.hintRevealedWords.includes(word)
             );
-            
-            if (unrevealedAnswers.length > 0) {
-                // Pick first unrevealed answer as hint
-                const hintWord = unrevealedAnswers[0];
+            if (unrevealed.length > 0) {
+                const hintWord = unrevealed[0];
                 this.hintRevealedWords.push(hintWord);
                 this.revealHintWord(hintWord);
                 this.showMessage(`HINT: "${hintWord}" revealed!`, 'warning');
             }
         }
-        
+
         this.updateHintDisplay();
     }
 
     /**
-     * Visually reveal a hint word on the grid
+     * Visually reveal a hint word on the grid by highlighting its path.
      */
     revealHintWord(word) {
-        // Find the word path using the validator logic
         const validator = new StrandsValidator();
         const paths = validator.findAllPaths(this.grid, word);
-        
         if (paths.length > 0) {
-            const path = paths[0];
-            path.forEach(pos => {
+            paths[0].forEach(pos => {
                 const cell = this.container.querySelector(
                     `[data-row="${pos.row}"][data-col="${pos.col}"]`
                 );
-                if (cell) {
-                    cell.classList.add('hint-revealed');
-                }
+                if (cell) { cell.classList.add('hint-revealed'); }
             });
         }
     }
 
     /**
-     * Update hint counter display
+     * Update hint counter display (reset on a fresh game).
      */
     updateHintDisplay() {
         const hintEl = document.getElementById('hint-counter');
         if (hintEl) {
             const progress = this.nonThemeWords.length % 3;
             const hintsEarned = Math.floor(this.nonThemeWords.length / 3);
-            const hintText = hintsEarned > 0 
+            const hintText = hintsEarned > 0
                 ? `Hints: ${hintsEarned} | Next hint: ${progress}/3`
                 : `Next hint: ${progress}/3`;
             hintEl.textContent = hintText;
@@ -479,9 +552,11 @@ class StrandsGame extends BaseGame {
     updateFoundWordsDisplay() {
         const wordListEl = this.container.querySelector('.word-list');
         if (wordListEl) {
-            wordListEl.innerHTML = this.foundWords.map(word => 
-                `<span class="found-word">${word}</span>`
-            ).join('');
+            wordListEl.innerHTML = this.foundWords.map(word => {
+                const idx = this.answers.indexOf(word);
+                const colorClass = idx >= 0 ? `found-word-${idx}` : 'found-word-spangram';
+                return `<span class="found-word ${colorClass}">${word}</span>`;
+            }).join('');
         }
     }
 

@@ -6,7 +6,13 @@ class SpellingBeeGame {
         this.centerLetter = puzzle.centerLetter.toUpperCase();
         this.outerLetters = puzzle.outerLetters.map(l => l.toUpperCase());
         this.allLetters = [...this.outerLetters, this.centerLetter];
+        // Official target list (from puzzle data) drives progress + rank.
         this.validAnswers = new Set(puzzle.answers.map(w => w.toUpperCase()));
+        // Every real word formable from the 7-letter set (the logical score
+        // base). Validated words are scored against THIS, not the closed list.
+        this.formableWords = unifiedDictionary.loaded
+            ? unifiedDictionary.getSpellingBeeWords(puzzle.id, this.centerLetter, this.outerLetters)
+            : this.validAnswers;
         this.foundWords = [];
         this.currentWord = '';
         this.score = 0;
@@ -24,13 +30,16 @@ class SpellingBeeGame {
                     <div class="bee-score">
                         SCORE: <span id="bee-score">0</span>
                     </div>
-                </div>
-
-                <div class="bee-center-letter">
-                    <div class="center-letter">${this.centerLetter}</div>
+                    <div class="bee-rank">RANK: <span id="bee-rank">Beginner</span></div>
+                    <div class="bee-progress-bar">
+                        <div id="bee-progress-fill" class="bee-progress-fill"></div>
+                    </div>
                 </div>
 
                 <div class="bee-outer-ring">
+                    <div class="bee-center-letter">
+                        <div class="center-letter">${this.centerLetter}</div>
+                    </div>
                     ${this.outerLetters.map(l => `
                         <button class="bee-letter" data-letter="${l}">${l}</button>
                     `).join('')}
@@ -118,8 +127,14 @@ class SpellingBeeGame {
 
         const word = this.currentWord.toUpperCase();
 
-        if (!this.isValidWord(word)) {
-            this.showMessage('Not in word list', 'error');
+        const invalid = this.isValidWord(word);
+        if (invalid) {
+            const msg = invalid === 'needs-center'
+                ? `Must include ${this.centerLetter}`
+                : invalid === 'bad-letter'
+                    ? 'Invalid letter'
+                    : 'Not in word list';
+            this.showMessage(msg, 'error');
             this.shake();
             tapeQualitySystem.decreaseQuality(3);
             this.currentWord = '';
@@ -141,7 +156,7 @@ class SpellingBeeGame {
         this.showMessage(`${word} (+${wordScore})`, 'success');
         this.updateScore();
         
-        if (this.foundWords.length === this.validAnswers.size) {
+        if (this.officialFound() === this.validAnswers.size) {
             this.completeGame();
         }
 
@@ -154,41 +169,60 @@ class SpellingBeeGame {
     }
 
     isValidWord(word) {
-        if (!this.validAnswers.has(word)) {return false;}
-        
-        if (!word.includes(this.centerLetter)) {
-            this.showMessage(`Must include ${this.centerLetter}`, 'error');
-            return false;
+        // Valid if it's formable from the 7-letter set (4+, NYT min) OR it's
+        // one of the puzzle's official answers (which may include 3-letter
+        // words from the curated data). Either way it scores.
+        if (!this.formableWords.has(word) && !this.validAnswers.has(word)) {
+            return 'not-in-list';
         }
-
+        if (!word.includes(this.centerLetter)) { return 'needs-center'; }
         for (const letter of word.split('')) {
-            if (!this.allLetters.includes(letter)) {
-                this.showMessage('Invalid letter', 'error');
-                return false;
-            }
+            if (!this.allLetters.includes(letter)) { return 'bad-letter'; }
         }
-
-        return true;
+        return null; // valid
     }
 
     calculateScore(word) {
-        let score = word.length;
-        
+        let score = word.length; // 1 point per letter (NYT)
         const uniqueLetters = new Set(word.split('')).size;
-        if (uniqueLetters === 7) {
-            score += 7;
-        }
-        
-        if (word.length >= 7) {
-            score += word.length;
-        }
-        
+        if (uniqueLetters === 7) { score += 7; } // pangram bonus
         return score;
+    }
+
+    getRank() {
+        // NYT-style rank tiers by share of total possible score.
+        const pct = this.totalPossibleScore() === 0 ? 0 : this.score / this.totalPossibleScore();
+        if (pct === 0) { return 'Beginner'; }
+        if (pct < 0.25) { return 'Good Start'; }
+        if (pct < 0.5) { return 'Moving Up'; }
+        if (pct < 0.75) { return 'Good'; }
+        if (pct < 1) { return 'Amazing'; }
+        return 'Genius';
+    }
+
+    totalPossibleScore() {
+        let total = 0;
+        this.validAnswers.forEach(w => { total += this.calculateScore(w); });
+        return total;
+    }
+
+    officialFound() {
+        // Count only curated-target words toward completion/progress;
+        // bonus formable words still score but don't complete the puzzle.
+        return this.foundWords.filter(w => this.validAnswers.has(w)).length;
     }
 
     updateScore() {
         document.getElementById('bee-score').textContent = this.score;
-        document.getElementById('bee-found-count').textContent = this.foundWords.length;
+        document.getElementById('bee-found-count').textContent = this.officialFound();
+        const rankEl = document.getElementById('bee-rank');
+        if (rankEl) { rankEl.textContent = this.getRank(); }
+        const fill = document.getElementById('bee-progress-fill');
+        if (fill) {
+            const pct = this.totalPossibleScore() === 0 ? 0
+                : Math.round((this.score / this.totalPossibleScore()) * 100);
+            fill.style.width = pct + '%';
+        }
     }
 
     updateFoundWords() {

@@ -41,20 +41,18 @@ class StrandsValidator {
             this.errors.push('Spangram does not connect two opposite edges');
         }
         
-        // 4. Track all used cells
+        // 4. Track all used cells (union ALL edge paths for the spangram)
         const usedCells = new Set();
-        if (edgePaths.length > 0) {
-            edgePaths[0].forEach(pos => usedCells.add(pos.row + ',' + pos.col));
-        }
-        
-        // 5. Validate all answers are traceable
+        edgePaths.forEach(p => p.forEach(pos => usedCells.add(pos.row + ',' + pos.col)));
+
+        // 5. Validate all answers are traceable (union ALL found paths for coverage)
         if (puzzle.answers) {
             puzzle.answers.forEach(answer => {
                 const paths = this.findAllPaths(grid, answer);
                 if (paths.length === 0) {
                     this.errors.push(`Answer "${answer}" cannot be traced through adjacent cells`);
                 } else {
-                    paths[0].forEach(pos => usedCells.add(pos.row + ',' + pos.col));
+                    paths.forEach(p => p.forEach(pos => usedCells.add(pos.row + ',' + pos.col)));
                 }
             });
         }

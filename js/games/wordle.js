@@ -16,9 +16,9 @@ class WordleGame {
 
     // Get a random 5-letter word from the dictionary each time - no puzzle data needed!
     getRandomAnswer() {
-        // Try wordDictionary first (has thousands of words)
-        if (wordDictionary.loaded) {
-            const word = wordDictionary.getRandomWord(5);
+        // Try unifiedDictionary first (broad 4-10 letter list)
+        if (unifiedDictionary.loaded) {
+            const word = unifiedDictionary.getRandomWord(5);
             if (word) {return word;}
         }
         
@@ -109,8 +109,8 @@ class WordleGame {
             return false;
         }
         
-        if (wordDictionary.loaded) {
-            return wordDictionary.isValidWord(word);
+        if (unifiedDictionary.loaded) {
+            return unifiedDictionary.isValidWord(word);
         }
         
         return true;

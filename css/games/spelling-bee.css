@@ -36,7 +36,7 @@
 
 .bee-center-letter {
     position: absolute;
-    top: 43%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 80px;
@@ -62,6 +62,8 @@
     width: 200px;
     height: 200px;
     margin-bottom: 1.5rem;
+    border-radius: 50%;
+    border: 1px dashed rgba(181, 159, 59, 0.25);
 }
 
 .bee-letter {
@@ -79,12 +81,12 @@
     transform: translate(-50%, -50%);
 }
 
-.bee-letter:nth-child(1) { top: 0; left: 50%; }
-.bee-letter:nth-child(2) { top: 25%; left: 100%; }
-.bee-letter:nth-child(3) { top: 75%; left: 100%; }
-.bee-letter:nth-child(4) { top: 100%; left: 50%; }
-.bee-letter:nth-child(5) { top: 75%; left: 0; }
-.bee-letter:nth-child(6) { top: 25%; left: 0; }
+.bee-letter:nth-of-type(1) { top: 0; left: 50%; }
+.bee-letter:nth-of-type(2) { top: 25%; left: 100%; }
+.bee-letter:nth-of-type(3) { top: 75%; left: 100%; }
+.bee-letter:nth-of-type(4) { top: 100%; left: 50%; }
+.bee-letter:nth-of-type(5) { top: 75%; left: 0; }
+.bee-letter:nth-of-type(6) { top: 25%; left: 0; }
 
 .bee-letter:hover {
     background: #3a3a3c;
@@ -194,6 +196,35 @@
 
 .bee-info strong {
     color: #b59f3b;
+}
+
+.bee-rank {
+    font-family: 'VT323', monospace;
+    font-size: 1rem;
+    color: #b59f3b;
+    margin-top: 0.25rem;
+}
+
+.bee-rank span {
+    color: #fff;
+    font-weight: bold;
+}
+
+.bee-progress-bar {
+    width: 100%;
+    max-width: 280px;
+    height: 8px;
+    background: #2a2a2b;
+    border-radius: 4px;
+    margin: 0.6rem auto 0;
+    overflow: hidden;
+}
+
+.bee-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #b59f3b, #e8c95a);
+    transition: width 0.3s ease;
 }
 
 .bee-continue {

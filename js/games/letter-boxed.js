@@ -148,12 +148,12 @@ class LetterBoxedGame {
     }
 
     isValidWord(word) {
-        if (!wordDictionary.loaded) {
+        if (!unifiedDictionary.loaded) {
             if (!this.puzzle.answers) {return false;}
             const valid = this.puzzle.answers.map(w => w.toUpperCase());
             if (!valid.includes(word)) {return false;}
         } else {
-            if (!wordDictionary.isLetterBoxedAnswer(this.puzzle.id, word)) {
+            if (!unifiedDictionary.isLetterBoxedAnswer(this.puzzle.id, word)) {
                 return false;
             }
         }

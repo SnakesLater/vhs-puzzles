@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function initializeGame() {
         const loaded = await puzzleLoader.loadAll();
         
-        await wordDictionary.load(puzzleLoader.puzzles);
+        await unifiedDictionary.load(puzzleLoader.puzzles);
         
         tapeRenderer.renderMenuButtons();
         
