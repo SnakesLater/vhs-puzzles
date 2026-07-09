@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VHS HORROR PUZZLE COLLECTION</title>
-    <link rel="stylesheet" href="css/main.css?v=20260709d">
+    <link rel="stylesheet" href="css/main.css?v=20260709e">
     <link rel="stylesheet" href="css/vhs-effects.css?v=20260708a">
     <link rel="stylesheet" href="css/difficulty.css?v=20260708a">
     <link rel="stylesheet" href="css/games/connections.css?v=20260708a">
@@ -22,7 +22,21 @@
     </div>
 
     <div id="main-container" class="tape-quality-100">
-        
+
+        <!-- MOBILE TAPE CAROUSEL (pointer:coarse / narrow screens only; desktop hidden) -->
+        <div id="mobile-tape-carousel" class="screen hidden" aria-hidden="true">
+            <div class="mtc-header">
+                <h1 class="glitch-text mtc-title">VHS HORROR</h1>
+                <button id="mtc-sound" class="sound-btn" aria-label="Toggle sound">🔊</button>
+            </div>
+
+            <div id="mtc-stage" class="mtc-stage">
+                <!-- tape rendered here by mobile-tape-controller.js -->
+            </div>
+
+            <div class="mtc-hint" id="mtc-hint">SWIPE ↕ TAPE · ↔ FLIP · TAP OPEN</div>
+        </div>
+
         <!-- Main Menu: Tape Selection -->
         <div id="tape-selection" class="screen">
             <div class="vhs-header">
@@ -239,6 +253,7 @@
     <script src="js/games/strands-validator.js?v=20260708a"></script>
     <script src="js/games/strands.js?v=20260708a"></script>
     <script src="js/avatar-controller.js?v=20260708a"></script>
-    <script src="js/main.js?v=20260708a"></script>
+    <script src="js/systems/mobile-tape-controller.js?v=20260709b"></script>
+    <script src="js/main.js?v=20260709a"></script>
 </body>
 </html>
