@@ -752,9 +752,9 @@ button:disabled {
 }
 
 .side-0 { top: -1px; left: 50%; transform: translateX(-50%); border-radius: 4px 4px 0 0; }
-.side-1 { right: -1px; top: 50%; transform: translateY(-50%); border-radius: 0 4px 4px 0; }
+.side-1 { right: -1px; top: 50%; transform: translateY(-50%); border-radius: 0 4px 4px 0; flex-direction: column; }
 .side-2 { bottom: -1px; left: 50%; transform: translateX(-50%); border-radius: 0 0 4px 4px; }
-.side-3 { left: -1px; top: 50%; transform: translateY(-50%); border-radius: 4px 0 0 4px; }
+.side-3 { left: -1px; top: 50%; transform: translateY(-50%); border-radius: 4px 0 0 4px; flex-direction: column; }
 
 .pool-letter {
     display: inline-block;
