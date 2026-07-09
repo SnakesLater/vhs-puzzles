@@ -102,12 +102,27 @@ class StrandsGame extends BaseGame {
                 this.isDragging = true;
                 this.startSelection(cell);
             });
-            
+
+            // Fallback: enter-driven (still works if move events are missed)
             cleanupManager.addListener(cell, 'mouseenter', () => {
                 if (this.isDragging) {
                     this.continueSelection(cell);
                 }
             });
+        });
+
+        // Center-distance selection: on move, pick the cell whose CENTER is
+        // nearest the pointer and route it through continueSelection (which
+        // line-fills any skipped cells). This kills diagonal corner-precision
+        // — you just drag toward the next cell, no need to thread its corner.
+        const moveHandler = (clientX, clientY) => {
+            if (!this.isDragging) {return;}
+            const cell = this.cellNearestCenter(clientX, clientY);
+            if (cell) { this.continueSelection(cell); }
+        };
+
+        cleanupManager.addListener(this.container, 'mousemove', (e) => {
+            moveHandler(e.clientX, e.clientY);
         });
 
         // Global mouse up to end drag
@@ -118,24 +133,21 @@ class StrandsGame extends BaseGame {
         // Touch support - registered with cleanupManager
         const touchStartHandler = (e) => {
             const touch = e.touches[0];
-            const cell = document.elementFromPoint(touch.clientX, touch.clientY);
-            if (cell && cell.classList.contains('strands-cell')) {
+            const cell = this.cellNearestCenter(touch.clientX, touch.clientY);
+            if (cell) {
                 e.preventDefault();
                 this.isDragging = true;
                 this.startSelection(cell);
             }
         };
-        
+
         const touchMoveHandler = (e) => {
             if (!this.isDragging) {return;}
             e.preventDefault();
             const touch = e.touches[0];
-            const cell = document.elementFromPoint(touch.clientX, touch.clientY);
-            if (cell && cell.classList.contains('strands-cell')) {
-                this.continueSelection(cell);
-            }
+            moveHandler(touch.clientX, touch.clientY);
         };
-        
+
         const touchEndHandler = () => {
             this.isDragging = false;
         };
@@ -155,6 +167,22 @@ class StrandsGame extends BaseGame {
         // Button handlers
         cleanupManager.addListener(clearBtn, 'click', () => this.clearSelection());
         cleanupManager.addListener(submitBtn, 'click', () => this.submitWord());
+    }
+
+    /**
+     * Return the .strands-cell whose center is closest to (x, y) in viewport
+     * coords. Used for forgiving pointer-based selection (no corner precision).
+     */
+    cellNearestCenter(clientX, clientY) {
+        let best = null, bestDist = Infinity;
+        this.container.querySelectorAll('.strands-cell').forEach(cell => {
+            const r = cell.getBoundingClientRect();
+            const cx = r.left + r.width / 2;
+            const cy = r.top + r.height / 2;
+            const d = (cx - clientX) ** 2 + (cy - clientY) ** 2;
+            if (d < bestDist) { bestDist = d; best = cell; }
+        });
+        return best;
     }
 
     startSelection(cell) {
