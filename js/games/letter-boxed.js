@@ -65,6 +65,8 @@ class LetterBoxedGame {
                 <div id="lb-message" class="letter-boxed-message"></div>
                 <div class="lb-progress">
                     <span id="lb-count">0</span> / 12 letters used
+                    &nbsp;·&nbsp;
+                    <span id="lb-words">0</span> words
                 </div>
             </div>
         `;
@@ -274,27 +276,18 @@ class LetterBoxedGame {
     }
 
     isValidWord(word) {
+        // Open-ended: Letter Boxed accepts ANY real English word that follows
+        // the box rules (chain + alternate sides), not a curated answer set.
+        // So validity = present in the broad dictionary (length >= 3).
+        if (word.length < 3) { return false; }
+
         if (!unifiedDictionary.loaded) {
-            if (!this.puzzle.answers) {return false;}
-            const valid = this.puzzle.answers.map(w => w.toUpperCase());
-            if (!valid.includes(word)) {return false;}
-        } else {
-            if (!unifiedDictionary.isLetterBoxedAnswer(this.puzzle.id, word)) {
-                return false;
-            }
+            // Dictionary not ready yet — fall back to the puzzle's curated
+            // answers only if present, else reject (don't guess-accept).
+            if (!this.puzzle.answers) { return false; }
+            return this.puzzle.answers.map(w => w.toUpperCase()).includes(word);
         }
-
-        if (word.length < 3) {return false;}
-
-        const first = word[0];
-        const last = word.slice(-1);
-        const firstSides = this.pool[first] || [];
-        const lastSides = this.pool[last] || [];
-        const startSide = firstSides[0];
-        const endSide = lastSides[0];
-        if (startSide === endSide) {return false;}
-
-        return true;
+        return unifiedDictionary.isValidWord(word);
     }
 
     updateDisplay() {
@@ -310,6 +303,8 @@ class LetterBoxedGame {
                 : '_';
         }
         document.getElementById('lb-count').textContent = this.usedLetters.size;
+        const wordsEl = document.getElementById('lb-words');
+        if (wordsEl) { wordsEl.textContent = this.usedWords.length; }
 
         const foundEl = document.getElementById('found-words');
         foundEl.innerHTML = this.usedWords.map(w =>
@@ -339,7 +334,8 @@ class LetterBoxedGame {
 
     completeGame() {
         this.solved = true;
-        this.showMessage('All words found! The message is clear.', 'success');
+        const n = this.usedWords.length;
+        this.showMessage(`Solved in ${n} word${n === 1 ? '' : 's'} — every letter used!`, 'success');
         tapeQualitySystem.increaseQuality(15);
 
         if (window.avatarController && typeof window.avatarController.onCorrectGuess === 'function') {

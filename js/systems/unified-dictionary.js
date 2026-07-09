@@ -1,7 +1,9 @@
 // Unified dictionary for the whole collection. ONE word source:
 //   - Broad English list loaded async from /data/strands-dictionary.txt
-//     (dwyl/english-words, filtered 4-10 letters). Used by Strands hints,
+//     (dwyl/english-words, filtered 3-10 letters). Used by Strands hints,
 //     Wordle answers, and as the base for Spelling Bee letter-set scoring.
+//     Letter Boxed validates against this broad list (open-ended: any real
+//     English word that follows the box rules counts, not a curated set).
 //   - Puzzle-registered answers (Connections / Letter-Boxed / Spelling-Bee /
 //     Strands) layered on top so curated solution sets are always valid.
 //
@@ -31,7 +33,7 @@ class UnifiedDictionary {
             const text = await res.text();
             text.split('\n').forEach(line => {
                 const w = line.trim().toUpperCase();
-                if (w.length >= 4 && w.length <= 10 && /^[A-Z]+$/.test(w)) {
+                if (w.length >= 3 && w.length <= 10 && /^[A-Z]+$/.test(w)) {
                     this.words.add(w);
                 }
             });
