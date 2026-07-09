@@ -786,6 +786,36 @@ button:disabled {
     text-align: center;
 }
 
+/* Letter Boxed typebox: replaces the tab/Enter tile flow. Looks like the VHS
+   readout but is a real, autofocused <input> — letters route here on entry. */
+.lb-typebox {
+    font-family: var(--vhs-title);
+    font-size: 2.5rem;
+    letter-spacing: 0.3em;
+    color: var(--vhs-bright);
+    text-shadow: var(--vhs-glow-bright);
+    text-align: center;
+    text-transform: uppercase;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid var(--vhs-accent, #7a1f1f);
+    outline: none;
+    width: 90%;
+    max-width: 440px;
+    padding: 4px 0;
+    caret-color: var(--vhs-bright);
+}
+.lb-typebox::placeholder {
+    color: rgba(255, 255, 255, 0.22);
+    text-shadow: none;
+}
+.lb-hint {
+    font-size: 0.8rem;
+    color: var(--text-muted, #8a8a9a);
+    margin: 8px 0 4px;
+    letter-spacing: 0.04em;
+}
+
 .found-words {
     display: flex;
     flex-wrap: wrap;

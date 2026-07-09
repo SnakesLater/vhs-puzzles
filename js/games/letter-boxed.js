@@ -13,6 +13,7 @@ class LetterBoxedGame {
         this.solved = false;
         this.lastLetter = null;
         this.lastSide = null;
+        this.typebox = null;
 
         this.render();
         this.setupEventListeners();
@@ -46,7 +47,11 @@ class LetterBoxedGame {
                 </div>
 
                 <div class="letter-boxed-center">
-                    <div id="current-word" class="current-word">${this.lastLetter ? this.lastLetter + '_' : '_'}</div>
+                    <input id="lb-typebox" class="lb-typebox" type="text"
+                           autocomplete="off" autocorrect="off" autocapitalize="characters"
+                           spellcheck="false" maxlength="24" placeholder="_"
+                           aria-label="Type your word" />
+                    <div class="lb-hint">Type or tap letters — each word must start with the last letter of the previous and alternate sides</div>
                     <div id="found-words" class="found-words"></div>
                 </div>
 
@@ -66,46 +71,44 @@ class LetterBoxedGame {
     }
 
     setupEventListeners() {
+        this.typebox = this.container.querySelector('#lb-typebox');
+        if (this.typebox) { this.typebox.focus(); }
+
         const tiles = this.container.querySelectorAll('.pool-letter');
         tiles.forEach(el => {
-            el.setAttribute('tabindex', '0');
-            el.setAttribute('role', 'button');
             cleanupManager.addListener(el, 'click', () => {
-                const letter = el.dataset.letter;
-                const sides = this.pool[letter];
-                this.addLetter(letter, sides);
-            });
-            cleanupManager.addListener(el, 'keydown', (e) => {
-                if (e.key === ' ' || e.key === 'Enter') {
-                    e.preventDefault();
-                    this.addLetter(el.dataset.letter, this.pool[el.dataset.letter]);
-                }
+                this.appendLetter(el.dataset.letter);
             });
         });
 
+        // Typebox is the single source of truth: live validation on every keystroke.
+        cleanupManager.addListener(this.typebox, 'input', () => this.applyTypebox());
+        cleanupManager.addListener(this.typebox, 'keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                if (this.currentWord.length >= 3) { this.submit(); }
+            } else if (e.key === 'Escape') {
+                e.preventDefault();
+                this.clear();
+            }
+        });
+
+        // Global free-typing: if focus is elsewhere (e.g. after a tile click),
+        // route physical letter keys into the typebox so typing still works.
         const container = this.container.querySelector('.letter-boxed-container');
         cleanupManager.addListener(container, 'keydown', (e) => {
-            if (!e.target.matches('button')) {
-                if (e.key === 'Backspace' && this.currentWord.length > 0) {
-                    e.preventDefault();
-                    this.currentWord = this.currentWord.slice(0, -1);
-                    this.currentPath.pop();
-                    // Recompute lastSide from the shortened path
-                    if (this.currentPath.length > 0) {
-                        this.lastSide = this.currentPath[this.currentPath.length - 1].sides[0];
-                    } else {
-                        this.lastSide = null;
-                    }
-                    this.updateDisplay();
-                } else if (e.key === 'Escape' && this.currentWord.length > 0) {
-                    e.preventDefault();
-                    this.clear();
-                } else if (/^[a-zA-Z]$/.test(e.key)) {
-                    e.preventDefault();
-                    const letter = e.key.toUpperCase();
-                    const sides = this.pool[letter];
-                    if (sides) { this.addLetter(letter, sides); }
-                }
+            if (document.activeElement === this.typebox) { return; }
+            if (e.target.matches('button')) { return; }
+            if (/^[a-zA-Z]$/.test(e.key)) {
+                e.preventDefault();
+                this.appendLetter(e.key.toUpperCase());
+            } else if (e.key === 'Backspace' && this.currentWord.length > 0) {
+                e.preventDefault();
+                this.typebox.value = this.currentWord.slice(0, -1);
+                this.applyTypebox();
+            } else if (e.key === 'Escape') {
+                e.preventDefault();
+                this.clear();
             }
         });
 
@@ -120,38 +123,49 @@ class LetterBoxedGame {
         );
     }
 
-    addLetter(letter, sides) {
-        if (this.solved) {return;}
+    // Append a letter (from a tile click or a physical key) and re-validate.
+    appendLetter(letter) {
+        if (this.solved) { return; }
+        if (!this.pool[letter]) { return; }
+        this.typebox.value += letter;
+        this.applyTypebox();
+        this.typebox.focus();
+    }
 
-        if (this.currentWord.length > 0 && letter === this.currentWord.slice(-1)) {return;}
-
-        if (this.currentWord.length === 0 && this.lastLetter && letter !== this.lastLetter) {
-            this.showMessage(`Start with "${this.lastLetter}"`, 'warning');
-            return;
+    // Re-derive currentWord from the typebox, enforcing LB rules:
+    //  - first char must equal lastLetter (carry-over from previous word)
+    //  - no two consecutive identical letters
+    //  - consecutive letters must come from different sides
+    // Invalid tail chars are dropped (the box reverts to the valid prefix).
+    applyTypebox() {
+        if (this.solved) { return; }
+        const raw = this.typebox.value.toUpperCase().replace(/[^A-Z]/g, '');
+        let word = '';
+        let lastSide = null;
+        for (let i = 0; i < raw.length; i++) {
+            const ch = raw[i];
+            const sides = this.pool[ch];
+            if (!sides) { break; }
+            if (i === 0 && this.lastLetter && ch !== this.lastLetter) { break; }
+            if (word.length > 0 && ch === word.slice(-1)) { break; }
+            const eligible = sides.filter(s => s !== lastSide);
+            if (lastSide !== null && eligible.length === 0) { break; }
+            word += ch;
+            lastSide = eligible.length ? eligible[0] : sides[0];
         }
-
-        // Side-alternation rule: the chosen letter must be placeable on a side
-        // different from the side of the previous letter. A corner letter that
-        // exists on multiple sides may use any non-lastSide side.
-        const eligible = sides.filter(s => s !== this.lastSide);
-        if (this.lastSide !== null && eligible.length === 0) {
-            this.showMessage('Letters must alternate sides', 'warning');
-            return;
-        }
-        const chosenSide = eligible.length > 0 ? eligible[0] : sides[0];
-
-        this.currentWord += letter;
-        this.currentPath.push({ letter, sides });
-        this.lastSide = chosenSide;
+        if (word !== raw) { this.typebox.value = word; }
+        this.currentWord = word;
+        this.lastSide = lastSide;
         this.updateDisplay();
-        vhsEffects.playClick();
     }
 
     clear() {
         this.currentWord = '';
         this.currentPath = [];
         this.lastSide = null;
+        if (this.typebox) { this.typebox.value = ''; }
         this.updateDisplay();
+        if (this.typebox) { this.typebox.focus(); }
     }
 
     shuffle() {
@@ -225,8 +239,17 @@ class LetterBoxedGame {
     }
 
     updateDisplay() {
-        const displayWord = this.lastLetter ? (this.currentWord ? this.lastLetter + this.currentWord : this.lastLetter + '_') : (this.currentWord || '_');
-        document.getElementById('current-word').textContent = displayWord;
+        // While the user is actively typing, don't fight the caret — applyTypebox
+        // already keeps the box in sync. Otherwise reflect currentWord (e.g. after
+        // clear/submit). The placeholder shows the required starting letter.
+        if (this.typebox && document.activeElement !== this.typebox) {
+            this.typebox.value = this.currentWord;
+        }
+        if (this.typebox) {
+            this.typebox.placeholder = this.lastLetter
+                ? `${this.lastLetter}_`
+                : '_';
+        }
         document.getElementById('lb-count').textContent = this.usedLetters.size;
 
         const foundEl = document.getElementById('found-words');
