@@ -1,0 +1,7 @@
+services:
+  vhs-puzzles:
+    build: .
+    container_name: vhs-puzzles
+    ports:
+      - "8080:8000"
+    restart: unless-stopped
