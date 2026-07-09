@@ -611,12 +611,13 @@
         "GOOD",
         "GOD",
         "ROOD",
-        "BOGHOG"
-      ],
-      "pangrams": [
         "BOGHOG",
-        "GOOD"
-      ]
+        "MOOR",
+        "ROOM",
+        "BOOM",
+        "BROOM"
+      ],
+      "pangrams": []
     },
     {
       "id": "sb_horror_002",
@@ -643,10 +644,7 @@
         "WASD",
         "AWARD"
       ],
-      "pangrams": [
-        "AWARD",
-        "SCARWAD"
-      ]
+      "pangrams": []
     }
   ]
 }
