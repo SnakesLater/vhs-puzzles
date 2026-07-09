@@ -7,7 +7,6 @@ class LetterBoxedGame {
         this.usedWords = [];
         this.usedLetters = new Set();
         this.currentWord = '';
-        this.currentPath = [];
         this.minWords = puzzle.minWords || 3;
         this.maxWords = puzzle.maxWords || null;
         this.solved = false;
@@ -52,7 +51,7 @@ class LetterBoxedGame {
                            autocomplete="off" autocorrect="off" autocapitalize="characters"
                            spellcheck="false" maxlength="24" placeholder="_"
                            aria-label="Type your word" />
-                    <div class="lb-hint">Type or tap letters — each word must start with the last letter of the previous and alternate sides</div>
+                    <div class="lb-hint">Type a word, press Enter to add it. Backspace on an empty box pulls the last word back to edit — unwind all the way to restart. Use every letter in as few words as you can.</div>
                     <div id="found-words" class="found-words"></div>
                 </div>
 
@@ -91,7 +90,15 @@ class LetterBoxedGame {
         cleanupManager.addListener(this.typebox, 'keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                if (this.currentWord.length >= 3) { this.submit(); }
+                if (this.currentWord.length >= 3) { this.commitWord(); }
+            } else if (e.key === 'Backspace') {
+                // Empty draft -> pull the previous committed word back as an
+                // editable draft (one step of undo). Non-empty -> let the input
+                // delete a char natively (fires 'input' -> applyTypebox).
+                if (this.currentWord.length === 0) {
+                    e.preventDefault();
+                    this.uncommitLastWord();
+                }
             } else if (e.key === 'Escape') {
                 e.preventDefault();
                 this.clear();
@@ -107,10 +114,14 @@ class LetterBoxedGame {
             if (/^[a-zA-Z]$/.test(e.key)) {
                 e.preventDefault();
                 this.appendLetter(e.key.toUpperCase());
-            } else if (e.key === 'Backspace' && this.currentWord.length > 0) {
+            } else if (e.key === 'Backspace') {
                 e.preventDefault();
-                this.typebox.value = this.currentWord.slice(0, -1);
-                this.applyTypebox();
+                if (this.currentWord.length > 0) {
+                    this.typebox.value = this.currentWord.slice(0, -1);
+                    this.applyTypebox();
+                } else {
+                    this.uncommitLastWord();
+                }
             } else if (e.key === 'Escape') {
                 e.preventDefault();
                 this.clear();
@@ -124,13 +135,12 @@ class LetterBoxedGame {
             document.getElementById('lb-shuffle'), 'click', () => this.shuffle()
         );
         cleanupManager.addListener(
-            document.getElementById('lb-submit'), 'click', () => this.submit()
+            document.getElementById('lb-submit'), 'click', () => this.commitWord()
         );
     }
 
     // Append a letter (from a tile click or a physical key) and re-validate.
     appendLetter(letter) {
-        if (this.solved) { return; }
         if (!this.pool[letter]) { return; }
         this.typebox.value += letter;
         this.applyTypebox();
@@ -143,7 +153,6 @@ class LetterBoxedGame {
     //  - consecutive letters must come from different sides
     // Invalid tail chars are dropped (the box reverts to the valid prefix).
     applyTypebox() {
-        if (this.solved) { return; }
         const raw = this.typebox.value.toUpperCase().replace(/[^A-Z]/g, '');
         let word = '';
         let lastSide = null;
@@ -220,10 +229,25 @@ class LetterBoxedGame {
     }
 
     clear() {
+        this.usedWords = [];
         this.currentWord = '';
-        this.currentPath = [];
         this.lastSide = null;
+        this.lastLetter = null;
         if (this.typebox) { this.typebox.value = ''; }
+        this.updateDisplay();
+        if (this.typebox) { this.typebox.focus(); }
+    }
+
+    // Pull the last committed word back into the typebox as an editable draft,
+    // one step of undo. The whole board (letters used, lastLetter) is then
+    // recomputed from the remaining committed words via updateDisplay().
+    uncommitLastWord() {
+        if (this.solved) { return; }
+        if (this.usedWords.length === 0) { return; }
+        const w = this.usedWords.pop();
+        // Restart the draft with the reclaimed word.
+        this.currentWord = w;
+        this.typebox.value = w;
         this.updateDisplay();
         if (this.typebox) { this.typebox.focus(); }
     }
@@ -240,38 +264,42 @@ class LetterBoxedGame {
         vhsEffects.playClick();
     }
 
-    submit() {
-        if (!this.currentWord || this.currentWord.length < 3) {return;}
+    // Enter: commit the current word into the player's progress sequence.
+    // This is REVERSIBLE — it never locks the board. The word is appended to
+    // usedWords only if it's a real, box-legal word; otherwise it stays in the
+    // typebox as an editable draft. Letters-used is always derived live from
+    // the full sequence, so backspacing a word (via uncommitLastWord) rewinds
+    // the whole board. Solve is reported but play continues until CONTINUE.
+    commitWord() {
+        if (!this.currentWord || this.currentWord.length < 3) { return; }
 
         if (this.usedWords.includes(this.currentWord)) {
-            this.showMessage('Already found!', 'warning');
-            this.clear();
+            this.showMessage('Already used!', 'warning');
+            this.currentWord = '';
+            this.typebox.value = '';
+            this.updateDisplay();
             return;
         }
 
         if (!this.isValidWord(this.currentWord)) {
             this.shake();
-            this.showMessage('Not in puzzle word list', 'error');
+            this.showMessage('Not a real word', 'error');
             tapeQualitySystem.decreaseQuality(5);
-            this.clear();
             return;
         }
 
-        this.currentWord.split('').forEach(l => this.usedLetters.add(l));
-        
         this.usedWords.push(this.currentWord);
         this.lastLetter = this.currentWord.slice(-1);
-        
-        this.showMessage(`"${this.currentWord}" found!`, 'success');
+        this.currentWord = '';
+        this.typebox.value = '';
+        this.showMessage(`"${this.usedWords[this.usedWords.length - 1]}" added`, 'success');
         tapeQualitySystem.increaseQuality(5);
         vhsEffects.playSuccess();
         vhsEffects.colorShift();
         this.updateDisplay();
-        
+
         if (this.usedLetters.size >= 12) {
             this.completeGame();
-        } else {
-            this.clear();
         }
     }
 
@@ -291,9 +319,20 @@ class LetterBoxedGame {
     }
 
     updateDisplay() {
+        // The board state is DERIVED from the committed sequence, so that
+        // unwinding a word (uncommitLastWord) rewinds letters-used and the
+        // chain automatically.
+        this.usedLetters = new Set();
+        this.usedWords.forEach(w => w.split('').forEach(l => this.usedLetters.add(l)));
+        if (this.usedWords.length) {
+            this.lastLetter = this.usedWords[this.usedWords.length - 1].slice(-1);
+        } else {
+            this.lastLetter = null;
+        }
+
         // While the user is actively typing, don't fight the caret — applyTypebox
         // already keeps the box in sync. Otherwise reflect currentWord (e.g. after
-        // clear/submit). The placeholder shows the required starting letter.
+        // commit/uncommit). The placeholder shows the required starting letter.
         if (this.typebox && document.activeElement !== this.typebox) {
             this.typebox.value = this.currentWord;
         }
