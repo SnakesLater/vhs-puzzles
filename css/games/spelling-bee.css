@@ -62,6 +62,8 @@
     width: 200px;
     height: 200px;
     margin-bottom: 1.5rem;
+    border-radius: 50%;
+    border: 1px dashed rgba(181, 159, 59, 0.25);
 }
 
 .bee-letter {
