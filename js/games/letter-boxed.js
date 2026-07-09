@@ -39,6 +39,7 @@ class LetterBoxedGame {
                 </div>
 
                 <div class="letter-boxed-sides">
+                    <svg class="lb-path"></svg>
                     ${this.sides.map((side, i) => `
                         <div class="side side-${i}" data-side="${i}">
                             ${side.map(l => `<span class="pool-letter ${this.usedLetters.has(l) ? 'used' : ''}" data-letter="${l}" data-side="${i}">${l}</span>`).join('')}
@@ -72,6 +73,8 @@ class LetterBoxedGame {
 
     setupEventListeners() {
         this.typebox = this.container.querySelector('#lb-typebox');
+        this.boxEl = this.container.querySelector('.letter-boxed-sides');
+        this.pathSvg = this.container.querySelector('.lb-path');
         if (this.typebox) { this.typebox.focus(); }
 
         const tiles = this.container.querySelectorAll('.pool-letter');
@@ -157,6 +160,61 @@ class LetterBoxedGame {
         this.currentWord = word;
         this.lastSide = lastSide;
         this.updateDisplay();
+        this.drawPath();
+    }
+
+    // Center of a letter's DOM node in box-relative coordinates.
+    letterCenter(letter, side) {
+        const el = this.container.querySelector(
+            `.pool-letter[data-letter="${letter}"][data-side="${side}"]`
+        );
+        if (!el) { return null; }
+        const box = this.boxEl.getBoundingClientRect();
+        const r = el.getBoundingClientRect();
+        return { x: r.left + r.width / 2 - box.left, y: r.top + r.height / 2 - box.top };
+    }
+
+    // Draw letter-to-letter lines across the box (NYT style):
+    //  - live lines for the in-progress word (bright cyan)
+    //  - persistent lines for every submitted word (dimmer, per-word hue)
+    drawPath() {
+        const svg = this.pathSvg;
+        if (!svg) { return; }
+        const box = this.boxEl.getBoundingClientRect();
+        svg.setAttribute('viewBox', `0 0 ${box.width} ${box.height}`);
+
+        let svgInner = '';
+
+        // Persistent (submitted) words
+        this.usedWords.forEach((w, wi) => {
+            const pts = this.wordPoints(w);
+            if (pts.length >= 2) {
+                svgInner += `<polyline points="${pts.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ')}" `
+                    + `fill="none" stroke="var(--vhs-accent)" stroke-width="2.5" `
+                    + `stroke-linecap="round" stroke-linejoin="round" opacity="0.45"/>`;
+            }
+        });
+
+        // Live (in-progress) word
+        const live = this.wordPoints(this.currentWord);
+        if (live.length >= 2) {
+            svgInner += `<polyline points="${live.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ')}" `
+                + `fill="none" stroke="var(--vhs-bright)" stroke-width="3" `
+                + `stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>`;
+        }
+
+        svg.innerHTML = svgInner;
+    }
+
+    // Build box-relative points for a word's letters (first side slot each).
+    wordPoints(word) {
+        const pts = [];
+        for (const ch of word) {
+            const side = this.pool[ch] ? this.pool[ch][0] : 0;
+            const c = this.letterCenter(ch, side);
+            if (c) { pts.push(c); }
+        }
+        return pts;
     }
 
     clear() {
@@ -176,6 +234,7 @@ class LetterBoxedGame {
                 side.insertBefore(letters[j], letters[i]);
             }
         });
+        this.drawPath();
         vhsEffects.playClick();
     }
 
@@ -263,6 +322,7 @@ class LetterBoxedGame {
         });
 
         document.getElementById('lb-submit').disabled = this.currentWord.length < 3;
+        this.drawPath();
     }
 
     showMessage(text, type) {

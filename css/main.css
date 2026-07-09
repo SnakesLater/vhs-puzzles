@@ -699,16 +699,29 @@ button:disabled {
 
 .letter-boxed-sides {
     position: relative;
-    width: 280px;
-    height: 280px;
-    margin: 0 auto 20px;
+    width: 380px;
+    height: 380px;
+    margin: 0 auto 28px;
     border: 3px solid var(--vhs-accent);
     border-radius: 50%;
     box-shadow: var(--vhs-border), inset 0 0 20px rgba(0,255,136,0.05);
 }
 
+/* Path overlay: NYT-style letter-to-letter lines. Sits above the tiles,
+   pointer-transparent, scaled to the box via viewBox. */
+.lb-path {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: visible;
+    z-index: 2;
+}
+
 .side {
     position: absolute;
+    z-index: 3;
     display: flex;
     gap: 4px;
     padding: 6px 8px;
@@ -787,7 +800,16 @@ button:disabled {
 }
 
 /* Letter Boxed typebox: replaces the tab/Enter tile flow. Looks like the VHS
-   readout but is a real, autofocused <input> — letters route here on entry. */
+   readout but is a real, autofocused <input> — letters route here on entry.
+   Flows in normal order BELOW the box (overrides the old absolute-centered rule). */
+.letter-boxed-center {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    margin-top: 24px;
+    text-align: center;
+}
 .lb-typebox {
     font-family: var(--vhs-title);
     font-size: 2.5rem;
