@@ -19,6 +19,10 @@ class StrandsGame extends BaseGame {
         // lock the grid. Kept only for display/progress, not game-over.
         this.maxMistakes = Infinity;
         this.isDragging = false;
+        // Gravity dot-to-dot: a letter only commits when the pointer is within
+        // this radius (px) of its CENTER. Prevents eager/wrong-letter commits
+        // (the old "nearest neighbor always wins" bug that blocked L->E).
+        this.snapRadius = 30;
         
         // Hint system: track non-theme words found
         this.nonThemeWords = [];
@@ -48,6 +52,7 @@ class StrandsGame extends BaseGame {
                 
                 <div id="strands-grid" class="strands-grid">
                     ${this.renderLetterGrid()}
+                    <svg class="strands-thread"></svg>
                 </div>
                 
                 <div class="strands-sidebar">
@@ -100,12 +105,27 @@ class StrandsGame extends BaseGame {
             cleanupManager.addListener(cell, 'mousedown', (e) => {
                 e.preventDefault();
                 this.isDragging = true;
+                const row = parseInt(cell.dataset.row);
+                const col = parseInt(cell.dataset.col);
+                // Click-to-trace: if a path exists and this cell is a legal
+                // neighbor of the last, append it (dot-to-dot, bulletproof
+                // per-letter check-in). Otherwise start a fresh selection.
+                if (this.selectedPath.length > 0) {
+                    const last = this.selectedPath[this.selectedPath.length - 1];
+                    if (this.isAdjacent({row, col}, last)) {
+                        this.continueSelection(cell);
+                        return;
+                    }
+                    // clicked a non-neighbor -> start fresh from here
+                    this.startSelection(cell);
+                    return;
+                }
                 this.startSelection(cell);
             });
 
             // NOTE: no mouseenter fallback — gravity (nearestNeighborCell in
-            // moveHandler) is the single selection source, so the pointer can
-            // never land on a non-adjacent cell.
+            // moveHandler) is the single drag source; it only commits a letter
+            // when the pointer is within snapRadius of that letter's center.
         });
 
         // Hit-test the cell literally under the pointer and step toward it.
@@ -348,16 +368,17 @@ class StrandsGame extends BaseGame {
         return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
     }
 
-    // Gravity selection: from the last selected cell, find the LEGAL neighbor
-    // (orth/diag) whose center is closest to the pointer. Returns the nearest
-    // neighbor cell element, or null before any selection. Constrained to
-    // neighbors only -> a non-adjacent cell is never chosen, so the grid (and
-    // thus puzzle validity) stays intact. Diagonals become the natural nearest
-    // step because gesturing toward them puts their center closest.
+    // Gravity dot-to-dot: from the last selected cell, find the LEGAL neighbor
+    // (orth/diag) whose center is within snapRadius of the pointer. Returns that
+    // neighbor cell, or null if the pointer isn't near any neighbor's center yet
+    // (so a letter only "checks in" when you actually reach its anchor point —
+    // no eager/wrong commits). Constrained to neighbors -> never a non-adjacent
+    // jump, so the grid + puzzle validity stay intact.
     nearestNeighborCell(clientX, clientY) {
         if (this.selectedPath.length === 0) { return null; }
         const last = this.selectedPath[this.selectedPath.length - 1];
-        let best = null, bestDist = Infinity;
+        const r2 = this.snapRadius * this.snapRadius;
+        let best = null, bestDist = r2;
         for (let dr = -1; dr <= 1; dr++) {
             for (let dc = -1; dc <= 1; dc++) {
                 if (!dr && !dc) { continue; }
@@ -367,10 +388,27 @@ class StrandsGame extends BaseGame {
                 if (!cell) { continue; }
                 const c = this.getCellCenter(cell);
                 const d = (c.x - clientX) ** 2 + (c.y - clientY) ** 2;
-                if (d < bestDist) { bestDist = d; best = cell; }
+                if (d <= bestDist) { bestDist = d; best = cell; }
             }
         }
         return best;
+    }
+
+    // Draw the connecting "thread" through committed letter centers (dot-to-dot).
+    // SVG overlay sits above the floating letters; coords are relative to the grid.
+    drawThread() {
+        const svg = this.container.querySelector('.strands-thread');
+        if (!svg) { return; }
+        const grid = this.container.querySelector('#strands-grid');
+        if (!grid) { return; }
+        const gb = grid.getBoundingClientRect();
+        const pts = this.selectedPath.map(pos => {
+            const cell = grid.querySelector(`[data-row="${pos.row}"][data-col="${pos.col}"]`);
+            const c = this.getCellCenter(cell);
+            return `${(c.x - gb.left).toFixed(1)},${(c.y - gb.top).toFixed(1)}`;
+        }).join(' ');
+        svg.setAttribute('viewBox', `0 0 ${gb.width} ${gb.height}`);
+        svg.innerHTML = pts ? `<polyline points="${pts}" fill="none" stroke="#19c3d6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"/>` : '';
     }
 
     updateCurrentWord() {
@@ -407,6 +445,7 @@ class StrandsGame extends BaseGame {
                 if (index === this.selectedPath.length - 1) {cell.classList.add('last');}
             }
         });
+        this.drawThread();
     }
 
     clearSelection() {
@@ -414,6 +453,8 @@ class StrandsGame extends BaseGame {
         this.currentWord = '';
         this.updateCurrentWord();
         this.highlightSelectedPath();
+        const svg = this.container.querySelector('.strands-thread');
+        if (svg) { svg.innerHTML = ''; }
     }
 
     submitWord() {
