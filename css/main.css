@@ -959,22 +959,6 @@ button:disabled {
     color: var(--secondary-accent);
 }
 
-.strands-cell.selected {
-    background: var(--secondary-accent);
-    color: #000;
-    border-color: var(--secondary-accent);
-    box-shadow: 0 0 8px rgba(255, 107, 53, 0.6);
-}
-
-.strands-cell.selected.first {
-    border-width: 3px;
-    border-color: #fff;
-}
-
-.strands-cell.selected.last {
-    box-shadow: 0 0 12px rgba(255, 107, 53, 0.9);
-}
-
 /* Each found keyword gets its own stable color (index = position in puzzle.answers).
    pointer-events kept active so solved squares stay re-selectable (no grid lock). */
 .strands-cell.found {
@@ -1147,6 +1131,23 @@ button:disabled {
 @keyframes hint-pulse {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.6; }
+}
+
+/* Selection highlight MUST win over solved (.found-N) and hint (.hint-revealed)
+   colors so the player can see exactly which cells are in the current drag —
+   including letters pulled from already-solved words. Placed last on purpose. */
+.strands-cell.selected {
+    background: var(--secondary-accent) !important;
+    color: #000 !important;
+    border-color: var(--secondary-accent) !important;
+    box-shadow: 0 0 8px rgba(255, 107, 53, 0.6) !important;
+}
+.strands-cell.selected.first {
+    border-width: 3px !important;
+    border-color: #fff !important;
+}
+.strands-cell.selected.last {
+    box-shadow: 0 0 12px rgba(255, 107, 53, 0.9) !important;
 }
 
 .hint-counter {

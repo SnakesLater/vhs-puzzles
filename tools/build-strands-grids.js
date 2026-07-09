@@ -93,11 +93,13 @@ function placeSpangram(grid, word) {
 function build(p) {
   const answers = pickAnswers(p.spangram.length, p.candidates);
   if (!answers) { console.error(`  ! ${p.theme}: no answer subset sums to ${CAP - p.spangram.length}`); return null; }
+  let best = null, bestScore = Infinity;
   for (let attempt = 0; attempt < 3000; attempt++) {
     const grid = Array.from({ length: ROWS }, () => Array(COLS).fill(' '));
     const sp = placeSpangram(grid, p.spangram);
     if (!sp) continue;
     let ok = true;
+    const answerCells = []; // own-cell set per answer, for interference check
     for (const w of answers) {
       // pick a random empty start cell
       const empties = [];
@@ -107,9 +109,23 @@ function build(p) {
       const wp = walk(grid, start, w.length);
       if (!wp) { ok = false; break; }
       wp.forEach(([r, c], i) => grid[r][c] = w[i]);
+      answerCells.push({ word: w, cells: new Set(wp.map(([r,c]) => key(r,c))) });
     }
-    if (ok) { return { grid, answers }; }
+    if (!ok) continue;
+    // Interference score: count answers that have a traceable path BORROWING
+    // another word's letters (coincidental). METEOR is weighted heavily
+    // (user-flagged) so the kept layout cleans it first. Lower is better.
+    let score = 0;
+    for (const { word, cells } of answerCells) {
+      const paths = v.findAllPaths(grid, word);
+      if (paths.some(path => path.some(pos => !cells.has(key(pos.row, pos.col))))) {
+        score += (word === 'METEOR') ? 10 : 1;
+      }
+    }
+    if (score < bestScore) { bestScore = score; best = { grid, answers }; }
+    if (score === 0) { return { grid, answers }; } // perfect: no interference
   }
+  if (best) { console.log(`  (kept best layout, interference score=${bestScore})`); return best; }
   console.error(`  ! ${p.theme}: layout failed after retries`);
   return null;
 }
