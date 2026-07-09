@@ -103,7 +103,8 @@ class StrandsGame extends BaseGame {
                 this.startSelection(cell);
             });
 
-            // Fallback: enter-driven (still works if move events are missed)
+            // Fallback: enter-driven. Steps ONE cell via continueSelection,
+            // which itself walks a shortest adjacent path if >1 cell apart.
             cleanupManager.addListener(cell, 'mouseenter', () => {
                 if (this.isDragging) {
                     this.continueSelection(cell);
@@ -111,18 +112,20 @@ class StrandsGame extends BaseGame {
             });
         });
 
-        // Center-distance selection: on move, pick the cell whose CENTER is
-        // nearest the pointer and route it through continueSelection (which
-        // line-fills any skipped cells). This kills diagonal corner-precision
-        // — you just drag toward the next cell, no need to thread its corner.
+        // Hit-test the cell literally under the pointer and step toward it.
+        // Coalesced events recover the intermediate points a fast drag skips,
+        // so diagonals no longer jump past cells.
         const moveHandler = (clientX, clientY) => {
             if (!this.isDragging) {return;}
-            const cell = this.cellNearestCenter(clientX, clientY);
-            if (cell) { this.continueSelection(cell); }
+            const el = document.elementFromPoint(clientX, clientY);
+            if (el && el.classList.contains('strands-cell')) {
+                this.continueSelection(el);
+            }
         };
 
         cleanupManager.addListener(this.container, 'mousemove', (e) => {
-            moveHandler(e.clientX, e.clientY);
+            const events = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
+            for (const ev of events) { moveHandler(ev.clientX, ev.clientY); }
         });
 
         // Global mouse up to end drag
@@ -133,11 +136,11 @@ class StrandsGame extends BaseGame {
         // Touch support - registered with cleanupManager
         const touchStartHandler = (e) => {
             const touch = e.touches[0];
-            const cell = this.cellNearestCenter(touch.clientX, touch.clientY);
-            if (cell) {
+            const el = document.elementFromPoint(touch.clientX, touch.clientY);
+            if (el && el.classList.contains('strands-cell')) {
                 e.preventDefault();
                 this.isDragging = true;
-                this.startSelection(cell);
+                this.startSelection(el);
             }
         };
 
@@ -167,22 +170,6 @@ class StrandsGame extends BaseGame {
         // Button handlers
         cleanupManager.addListener(clearBtn, 'click', () => this.clearSelection());
         cleanupManager.addListener(submitBtn, 'click', () => this.submitWord());
-    }
-
-    /**
-     * Return the .strands-cell whose center is closest to (x, y) in viewport
-     * coords. Used for forgiving pointer-based selection (no corner precision).
-     */
-    cellNearestCenter(clientX, clientY) {
-        let best = null, bestDist = Infinity;
-        this.container.querySelectorAll('.strands-cell').forEach(cell => {
-            const r = cell.getBoundingClientRect();
-            const cx = r.left + r.width / 2;
-            const cy = r.top + r.height / 2;
-            const d = (cx - clientX) ** 2 + (cy - clientY) ** 2;
-            if (d < bestDist) { bestDist = d; best = cell; }
-        });
-        return best;
     }
 
     startSelection(cell) {
@@ -290,14 +277,13 @@ class StrandsGame extends BaseGame {
             return;
         }
         
-        // Check adjacency to last selected cell. Fast/skipped drags (esp.
-        // diagonals) often jump past an intermediate cell, so instead of
-        // dropping the selection we interpolate a contiguous 8-dir line
-        // from the last cell to the newly entered one and fill it in.
+        // If not adjacent to the last cell, walk a shortest 8-dir adjacent
+        // path from the last cell to this one (covers skipped cells on fast
+        // or diagonal drags) instead of dropping the selection.
         if (this.selectedPath.length > 0) {
             const lastPos = this.selectedPath[this.selectedPath.length - 1];
             if (!this.isAdjacent({row, col}, lastPos)) {
-                this.fillLine(lastPos, {row, col});
+                this.walkTo(lastPos, {row, col});
                 return;
             }
         }
@@ -308,26 +294,47 @@ class StrandsGame extends BaseGame {
     }
 
     /**
-     * Walk a contiguous 8-directional line from `a` to `b` (one step of ±1 in
-     * each axis per cell) and append every intermediate cell to the path.
-     * Makes diagonal / fast drags forgiving instead of dropping the selection.
+     * Append a shortest 8-directional adjacent path from `a` to `b`, stepping
+     * through real grid cells (BFS). Used when a drag skips cells, so fast or
+     * diagonal moves connect smoothly without dropping the selection.
      */
-    fillLine(a, b) {
-        let r = a.row, c = a.col;
-        const dr = Math.sign(b.row - r);
-        const dc = Math.sign(b.col - c);
-        while (r !== b.row || c !== b.col) {
-            r += dr;
-            c += dc;
-            // clamp to grid bounds (defensive)
-            if (r < 0 || r >= this.grid.length || c < 0 || c >= this.grid[0].length) { break; }
-            const idx = this.selectedPath.findIndex(p => p.row === r && p.col === c);
+    walkTo(a, b) {
+        const rows = this.grid.length, cols = this.grid[0].length;
+        const key = (r, c) => r * cols + c;
+        const prev = new Map();
+        const q = [a];
+        const seen = new Set([key(a.row, a.col)]);
+        while (q.length) {
+            const cur = q.shift();
+            if (cur.row === b.row && cur.col === b.col) { break; }
+            for (let dr = -1; dr <= 1; dr++) {
+                for (let dc = -1; dc <= 1; dc++) {
+                    if (!dr && !dc) { continue; }
+                    const nr = cur.row + dr, nc = cur.col + dc;
+                    if (nr < 0 || nr >= rows || nc < 0 || nc >= cols) { continue; }
+                    const k = key(nr, nc);
+                    if (seen.has(k)) { continue; }
+                    seen.add(k);
+                    prev.set(k, cur);
+                    q.push({row: nr, col: nc});
+                }
+            }
+        }
+        // Reconstruct b -> a, then append a -> b (minus the start cell)
+        const path = [];
+        let cur = b;
+        while (cur && !(cur.row === a.row && cur.col === a.col)) {
+            path.push(cur);
+            cur = prev.get(key(cur.row, cur.col));
+        }
+        path.reverse();
+        for (const pos of path) {
+            const idx = this.selectedPath.findIndex(p => p.row === pos.row && p.col === pos.col);
             if (idx !== -1) {
-                // hit an already-selected cell — truncate back to it
                 this.selectedPath = this.selectedPath.slice(0, idx + 1);
                 break;
             }
-            this.selectedPath.push({row: r, col: c});
+            this.selectedPath.push({row: pos.row, col: pos.col});
         }
         this.updateCurrentWord();
         this.highlightSelectedPath();
