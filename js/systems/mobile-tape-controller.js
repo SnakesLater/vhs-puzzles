@@ -26,7 +26,7 @@
 
         const renderer = (window.tapeRenderer && window.tapeRenderer.coverRenderer)
             ? window.tapeRenderer.coverRenderer
-            : (function () { try { return (new VHSTapeRenderer()).coverRenderer; } catch (e) { return null; } })();
+            : (function () { try { return (new VHSTapeRenderer()).coverRenderer; } catch { return null; } })();
 
         const TAPE_W = 300, TAPE_H = 420;
 
@@ -97,7 +97,6 @@
                 else if (s === 'the_archive') { renderer.drawArchiveCover(fctx2, TAPE_W, TAPE_H, backLines); }
             } else if (level === 2) {
                 const label = topIndex === 0 ? 'START ' + DIFFS[chooserIndex].toUpperCase() : 'PLAY STORY';
-                const backLines = [label, 'TAP TO BEGIN', 'Rating: R', 'Genre: Horror', 'Good luck.', 'the tape is loaded'];
                 fctx2.fillStyle = '#8b0000'; fctx2.fillRect(0, 0, TAPE_W, TAPE_H);
                 fctx2.fillStyle = '#fff'; fctx2.font = 'bold 28px "Courier New"'; fctx2.textAlign = 'center';
                 fctx2.fillText(label, TAPE_W / 2, TAPE_H / 2);
@@ -107,9 +106,13 @@
         }
 
         function setHint() {
-            if (level === 0) hintEl.textContent = '↕ SWITCH TAPE · ↔ FLIP · TAP OPEN';
-            else if (level === 1) hintEl.textContent = (topIndex === 0 ? '↕ DIFFICULTY' : '↕ STORY') + ' · ↔ FLIP · TAP NEXT';
-            else hintEl.textContent = 'TAP TO START ▶';
+            if (level === 0) {
+                hintEl.textContent = '↕ SWITCH TAPE · ↔ FLIP · TAP OPEN';
+            } else if (level === 1) {
+                hintEl.textContent = (topIndex === 0 ? '↕ DIFFICULTY' : '↕ STORY') + ' · ↔ FLIP · TAP NEXT';
+            } else {
+                hintEl.textContent = 'TAP TO START ▶';
+            }
         }
 
         function render() {
@@ -185,10 +188,10 @@
         }
 
         // ---- Gesture handling (pointer events) ----
-        let sx = 0, sy = 0, tracking = false, moved = false;
+        let sx = 0, sy = 0, tracking = false;
         const THRESH = 30;
         stage.addEventListener('pointerdown', (e) => {
-            tracking = true; moved = false; sx = e.clientX; sy = e.clientY;
+            tracking = true; sx = e.clientX; sy = e.clientY;
         });
         stage.addEventListener('pointerup', (e) => {
             if (!tracking) { return; }
@@ -201,9 +204,10 @@
             }
             if (Math.abs(dx) > Math.abs(dy)) {
                 flip();                 // horizontal -> flip
-            } else {
-                if (level === 0) switchTape(dy < 0 ? 1 : -1);       // vertical -> tape
-                else if (level === 1) cycleChooser(dy < 0 ? 1 : -1); // vertical -> chooser
+            } else if (level === 0) {
+                switchTape(dy < 0 ? 1 : -1);       // vertical -> tape
+            } else if (level === 1) {
+                cycleChooser(dy < 0 ? 1 : -1); // vertical -> chooser
             }
         });
         stage.addEventListener('pointermove', (e) => {
