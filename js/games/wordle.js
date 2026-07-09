@@ -77,13 +77,16 @@ class WordleGame {
         this.input = document.getElementById('wordle-input');
         this.submitBtn = document.getElementById('wordle-submit');
         this.message = document.getElementById('wordle-message');
-        
-        this.submitBtn.addEventListener('click', () => this.handleSubmit());
-        this.input.addEventListener('keypress', (e) => {
+
+        this._onClick = () => this.handleSubmit();
+        this._onKeypress = (e) => {
             if (e.key === 'Enter') {
                 this.handleSubmit();
             }
-        });
+        };
+
+        this.submitBtn.addEventListener('click', this._onClick);
+        this.input.addEventListener('keypress', this._onKeypress);
     }
 
     handleSubmit() {
@@ -238,8 +241,8 @@ class WordleGame {
 
     // Cleanup method for proper resource disposal
     cleanup() {
-        this.submitBtn.removeEventListener('click', this.handleSubmit);
-        this.input.removeEventListener('keypress', this.handleKeyPress);
+        this.submitBtn.removeEventListener('click', this._onClick);
+        this.input.removeEventListener('keypress', this._onKeypress);
     }
 }
 

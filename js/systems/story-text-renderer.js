@@ -8,8 +8,21 @@ class StoryTextRenderer {
     this.typewriterIndex = 0;
     this.isTyping = false;
     this.timerDisplay = '';
-    // Keep the typewriter/renderer refreshing for caret blink
-    setInterval(() => this.renderStoryText(), 500);
+    this._blinkTimer = null;
+    // Keep the caret blinking while there is text on screen; stops when idle.
+    this.startBlink();
+  }
+
+  startBlink() {
+    this.stopBlink();
+    this._blinkTimer = setInterval(() => this.renderStoryText(), 500);
+  }
+
+  stopBlink() {
+    if (this._blinkTimer) {
+      clearInterval(this._blinkTimer);
+      this._blinkTimer = null;
+    }
   }
 
   wrapText(ctx, text, maxWidth, fontSize) {
@@ -101,6 +114,7 @@ class StoryTextRenderer {
     this.typewriterIndex = 0;
     this.currentText = '';
     this.isTyping = true;
+    this.startBlink();
     this.startTypewriter();
   }
 
@@ -123,11 +137,17 @@ class StoryTextRenderer {
     this.isTyping = false;
     this.timerDisplay = '';
     this.renderStoryText();
+    this.stopBlink();
   }
 
   setTimer(displayText) {
     this.timerDisplay = displayText;
+    this.startBlink();
     this.renderStoryText();
+  }
+
+  cleanup() {
+    this.stopBlink();
   }
 
   renderStoryText() {

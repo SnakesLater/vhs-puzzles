@@ -61,7 +61,7 @@ class StrandsValidator {
         for (let r = 0; r < rows; r++) {
             for (let c = 0; c < cols; c++) {
                 if (!usedCells.has(r + ',' + c)) {
-                    this.warnings.push(`Cell (${r},${c}) = "${grid[r][c]}" is unused`);
+                    this.errors.push(`Cell (${r},${c}) = "${grid[r][c]}" is unused`);
                 }
             }
         }

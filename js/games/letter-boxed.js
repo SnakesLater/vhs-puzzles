@@ -12,6 +12,7 @@ class LetterBoxedGame {
         this.maxWords = puzzle.maxWords || null;
         this.solved = false;
         this.lastLetter = null;
+        this.lastSide = null;
 
         this.render();
         this.setupEventListeners();
@@ -33,7 +34,7 @@ class LetterBoxedGame {
             <div class="letter-boxed-container">
                 <div class="letter-boxed-header">
                     <h2>LETTER BOXED</h2>
-                    <p class="horror-hint">Chain words - each new word must start with the last letter of the previous</p>
+                    <p class="horror-hint">Chain words - each new word must start with the last letter of the previous. Type or click letters; consecutive letters must come from different sides of the box.</p>
                 </div>
 
                 <div class="letter-boxed-sides">
@@ -84,14 +85,27 @@ class LetterBoxedGame {
 
         const container = this.container.querySelector('.letter-boxed-container');
         cleanupManager.addListener(container, 'keydown', (e) => {
-            if (e.key === 'Backspace' && this.currentWord.length > 0 && !e.target.matches('button')) {
-                e.preventDefault();
-                this.currentWord = this.currentWord.slice(0, -1);
-                this.currentPath.pop();
-                this.updateDisplay();
-            } else if (e.key === 'Escape' && this.currentWord.length > 0 && !e.target.matches('button')) {
-                e.preventDefault();
-                this.clear();
+            if (!e.target.matches('button')) {
+                if (e.key === 'Backspace' && this.currentWord.length > 0) {
+                    e.preventDefault();
+                    this.currentWord = this.currentWord.slice(0, -1);
+                    this.currentPath.pop();
+                    // Recompute lastSide from the shortened path
+                    if (this.currentPath.length > 0) {
+                        this.lastSide = this.currentPath[this.currentPath.length - 1].sides[0];
+                    } else {
+                        this.lastSide = null;
+                    }
+                    this.updateDisplay();
+                } else if (e.key === 'Escape' && this.currentWord.length > 0) {
+                    e.preventDefault();
+                    this.clear();
+                } else if (/^[a-zA-Z]$/.test(e.key)) {
+                    e.preventDefault();
+                    const letter = e.key.toUpperCase();
+                    const sides = this.pool[letter];
+                    if (sides) { this.addLetter(letter, sides); }
+                }
             }
         });
 
@@ -108,16 +122,27 @@ class LetterBoxedGame {
 
     addLetter(letter, sides) {
         if (this.solved) {return;}
-        
+
         if (this.currentWord.length > 0 && letter === this.currentWord.slice(-1)) {return;}
-        
+
         if (this.currentWord.length === 0 && this.lastLetter && letter !== this.lastLetter) {
             this.showMessage(`Start with "${this.lastLetter}"`, 'warning');
             return;
         }
 
+        // Side-alternation rule: the chosen letter must be placeable on a side
+        // different from the side of the previous letter. A corner letter that
+        // exists on multiple sides may use any non-lastSide side.
+        const eligible = sides.filter(s => s !== this.lastSide);
+        if (this.lastSide !== null && eligible.length === 0) {
+            this.showMessage('Letters must alternate sides', 'warning');
+            return;
+        }
+        const chosenSide = eligible.length > 0 ? eligible[0] : sides[0];
+
         this.currentWord += letter;
         this.currentPath.push({ letter, sides });
+        this.lastSide = chosenSide;
         this.updateDisplay();
         vhsEffects.playClick();
     }
@@ -125,12 +150,18 @@ class LetterBoxedGame {
     clear() {
         this.currentWord = '';
         this.currentPath = [];
+        this.lastSide = null;
         this.updateDisplay();
     }
 
     shuffle() {
-        const btns = Array.from(this.container.querySelectorAll('.pool-btn'));
-        btns.sort(() => Math.random() - 0.5).forEach(b => this.container.querySelector('.pool-ring').appendChild(b));
+        this.container.querySelectorAll('.side').forEach(side => {
+            const letters = Array.from(side.querySelectorAll('.pool-letter'));
+            for (let i = letters.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                side.insertBefore(letters[j], letters[i]);
+            }
+        });
         vhsEffects.playClick();
     }
 

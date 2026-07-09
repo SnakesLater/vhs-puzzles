@@ -352,7 +352,14 @@ class TapeCoverRenderer {
     }
 
     adjustColor(color, amount) {
-        return color;
+        // Lighten a #rrggbb hex color by `amount` (0-255 per channel).
+        const hex = color.replace('#', '');
+        if (hex.length !== 6) { return color; }
+        const num = parseInt(hex, 16);
+        const r = Math.min(255, (num >> 16) + amount);
+        const g = Math.min(255, ((num >> 8) & 0xff) + amount);
+        const b = Math.min(255, (num & 0xff) + amount);
+        return '#' + ((r << 16) | (g << 8) | b).toString(16).padStart(6, '0');
     }
 
     drawCabinStalkingsCover(ctx, width, height, backLines = null, isBack = false) {

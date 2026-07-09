@@ -133,8 +133,8 @@ function build(p) {
 const data = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'puzzles.json'), 'utf8'));
 const v = new StrandsValidator();
 let ok = true;
-const out = data.strands.map((old, i) => {
-  const def = PUZZLES[i];
+const out = data.strands.map((old) => {
+  const def = PUZZLES.find(p => p.theme === old.theme) || PUZZLES[0];
   const built = build(def);
   if (!built) { ok = false; return old; }
   const puzzle = { ...old, theme: def.theme, spangram: def.spangram, answers: built.answers, grid: built.grid };

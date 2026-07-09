@@ -20,7 +20,15 @@ const server = http.createServer((req, res) => {
                 }
             });
         } else {
-            const filePath = path.join(__dirname, pathname);
+            // Resolve within the server root and reject any path that escapes it.
+            const root = __dirname;
+            const resolved = path.resolve(root, "." + path.normalize(pathname));
+            if (!resolved.startsWith(root)) {
+                res.writeHead(403);
+                res.end("Forbidden");
+                return;
+            }
+            const filePath = resolved;
             fs.readFile(filePath, (err, data) => {
                 if (err) {
                     res.writeHead(404);
@@ -50,34 +58,6 @@ const server = http.createServer((req, res) => {
                 }
             });
         }
-    } else if (method === "POST") {
-        let body = "";
-        req.on("data", chunk => {
-            body += chunk.toString();
-        });
-        req.on("end", () => {
-            let parsedBody;
-            try {
-                parsedBody = JSON.parse(body);
-            } catch (e) {
-                res.writeHead(400, {"Content-Type": "application/json"});
-                res.end(JSON.stringify({success: false, error: "Invalid JSON"}));
-                return;
-            }
-            if (parsedBody.action === "selectGame") {
-                const response = {
-                    success: true,
-                    message: `Game ${parsedBody.gameType} selected`,
-                    gameType: parsedBody.gameType
-                };
-                res.writeHead(200, {"Content-Type": "application/json"});
-                res.end(JSON.stringify(response));
-            } else {
-                const response = {success: true, message: "POST request received"};
-                res.writeHead(200, {"Content-Type": "application/json"});
-                res.end(JSON.stringify(response));
-            }
-        });
     } else {
         res.writeHead(405);
         res.end("Method not allowed");
