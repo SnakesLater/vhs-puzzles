@@ -383,6 +383,13 @@ class StrandsGame extends BaseGame {
             vhsEffects.playSuccess();
             this.clearSelection();
             this.checkHintSystem();
+        } else if (isValidDictWord && !isTraceable) {
+            // Real English word, but those exact letters aren't adjacent on
+            // THIS board (easy to misread on a scrambled grid). NYT behaviour:
+            // acknowledge it, give no hint (not placeable), and never burn a
+            // mistake — only true non-words cost a mistake.
+            this.showMessage(`"${this.currentWord}" is a word, but not on this board`, 'warning');
+            this.clearSelection();
         } else {
             // Non-fatal: a wrong/non-word trace never locks the grid.
             this.mistakes++;
