@@ -38,12 +38,12 @@ class SpellingBeeGame {
                 </div>
 
                 <div class="bee-outer-ring">
-                    <button class="bee-center-letter" data-letter="${this.centerLetter}" aria-label="center letter ${this.centerLetter}">
-                        <span class="center-letter">${this.centerLetter}</span>
-                    </button>
                     ${this.outerLetters.map(l => `
                         <button class="bee-letter" data-letter="${l}">${l}</button>
                     `).join('')}
+                    <button class="bee-center-letter" data-letter="${this.centerLetter}" aria-label="center letter ${this.centerLetter}">
+                        <span class="center-letter">${this.centerLetter}</span>
+                    </button>
                 </div>
 
                 <div class="bee-input-area">
