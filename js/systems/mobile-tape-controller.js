@@ -1,13 +1,16 @@
 // Mobile Tape Carousel Controller
 // Parallel, mobile-only entry point. Reuses the SAME canvas cover renderers
 // as desktop so the art is identical. Activated only when matchMedia matches
-// (narrow / coarse-pointer). Desktop DOM + logic are never touched.
+// (narrow / coarse-pointer) or ?mobile=1. Desktop DOM + logic are never touched.
 //
-// Gesture model (per user spec):
+// Gesture model (per spec):
 //   horizontal swipe (L<->R)  -> flip current tape front<->back (description)
-//   vertical swipe   (U<->D)  -> switch between Game Night tape and Story Mode tape
-//   tap                       -> advance to the next set of buttons, which present
-//                                the same swipeable way (difficulty / story cards / start)
+//   vertical swipe   (U<->D)  -> at top: switch tape; in a step: cycle item
+//   tap                       -> advance / select; final tap launches
+//
+// Navigation mirrors the DESKTOP flow:
+//   GAME NIGHT  tape -> [ GAME MODES ]              -> tap plays that game
+//   STORY MODE  tape -> [ DIFFICULTY ] -> [ STORIES ] -> tap plays that story
 (function () {
     'use strict';
 
@@ -19,11 +22,17 @@
     // drive the layout from that class so JS and CSS can never disagree.
     const isCoarse = window.matchMedia('(pointer: coarse)').matches;
     const isNarrow = window.matchMedia('(max-width: 768px)').matches;
-    const noHover = window.matchMedia('(hover: none)').matches;
-    const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    const noHover  = window.matchMedia('(hover: none)').matches;
+    const isTouch  = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
     const MOBILE = FORCE || isCoarse || isNarrow || noHover || isTouch;
     if (!MOBILE) { return; }
     document.documentElement.classList.add('mtc-mode');
+
+    // Items per step. GAME path has one step (the game modes); STORY path has
+    // two (difficulty, then stories) — exactly like the desktop menu.
+    const GAMES   = ['connections', 'wordle', 'strands', 'spelling-bee', 'letter-boxed'];
+    const DIFFS   = ['easy', 'medium', 'hard', 'insane'];
+    const STORIES = ['cabin_stalkings', 'midnight_broadcast', 'the_archive'];
 
     function initMobileCarousel() {
         const stage = document.getElementById('mtc-stage');
@@ -37,21 +46,22 @@
 
         const TAPE_W = 300, TAPE_H = 420;
 
-        // ---- State machine ----
-        // level 0: top tapes  (game-night, story-mode)
-        // level 1: chooser    (game -> difficulty[0..3]; story -> story-card[0..2])
-        // level 2: start      (a single confirm tape that launches the game)
-        const TOP_TAPES = [
-            { id: 'game',  label: 'GAME NIGHT' },
-            { id: 'story', label: 'STORY MODE' }
-        ];
-        const DIFFS = ['easy', 'medium', 'hard', 'insane'];
-        const STORIES = ['cabin_stalkings', 'midnight_broadcast', 'the_archive'];
-
-        let level = 0;
-        let topIndex = 0;       // 0 game, 1 story
-        let chooserIndex = 0;   // within difficulty / story cards
+        // ---- State ----
+        let atTop = true;        // true = on the top GAME/STORY tape
+        let topIndex = 0;        // 0 = game night, 1 = story mode
+        let stepIndex = 0;       // index into the current path's steps
+        let itemIndex = 0;       // index within the current step's items
+        let picks = [];          // picks[step] = chosen item index
         let flipped = false;
+
+        function currentPath() { return topIndex === 0 ? 'game' : 'story'; }
+        function steps() { return currentPath() === 'game' ? ['game'] : ['diff', 'story']; }
+        function stepItems(key) {
+            if (key === 'game')  return GAMES;
+            if (key === 'diff')  return DIFFS;
+            if (key === 'story') return STORIES;
+            return [];
+        }
 
         // ---- Build the tape DOM (two canvases: front + back) ----
         stage.innerHTML = `
@@ -66,60 +76,99 @@
         const bctx = back.getContext('2d');
 
         // ---- Drawing (reuse desktop renderers) ----
+        function itemLines(key, item) {
+            if (key === 'game') {
+                const m = {
+                    'connections':   ['CONNECTIONS', 'Link the clues'],
+                    'wordle':        ['WORDLE', 'Guess the word'],
+                    'strands':       ['STRANDS', 'Unravel the web'],
+                    'spelling-bee':  ['SPELLING BEE', 'Build words'],
+                    'letter-boxed':  ['LETTER BOXED', 'Chain words']
+                };
+                return m[item] || [item.toUpperCase(), ''];
+            }
+            if (key === 'diff')  return ['DIFFICULTY', 'Level: ' + item.toUpperCase()];
+            if (key === 'story') {
+                const m = {
+                    'cabin_stalkings':    ['CABIN STALKINGS'],
+                    'midnight_broadcast': ['MIDNIGHT BROADCAST'],
+                    'the_archive':        ['THE ARCHIVE']
+                };
+                return m[item] || [item.toUpperCase()];
+            }
+            return ['TAPE'];
+        }
+
+        function drawGameItem(ctx, item, lines) {
+            if (item === 'connections')        renderer.drawConnectionsCover(ctx, TAPE_W, TAPE_H, lines);
+            else if (item === 'wordle')        renderer.drawWordleCover(ctx, TAPE_W, TAPE_H, lines);
+            else if (item === 'strands')       renderer.drawStrandsCover(ctx, TAPE_W, TAPE_H, lines);
+            else if (item === 'spelling-bee')  renderer.drawSpellingBeeCover(ctx, TAPE_W, TAPE_H, lines);
+            else if (item === 'letter-boxed')  renderer.drawLetterBoxedCover(ctx, TAPE_W, TAPE_H, lines);
+        }
+        function drawDiffItem(ctx, item, lines) {
+            if (item === 'easy')        renderer.drawEasyCover(ctx, TAPE_W, TAPE_H, lines);
+            else if (item === 'medium') renderer.drawMediumCover(ctx, TAPE_W, TAPE_H, lines);
+            else if (item === 'hard')   renderer.drawHardCover(ctx, TAPE_W, TAPE_H, lines);
+            else if (item === 'insane') renderer.drawInsaneCover(ctx, TAPE_W, TAPE_H, lines);
+        }
+        function drawStoryItem(ctx, item, lines) {
+            if (item === 'cabin_stalkings')         renderer.drawCabinStalkingsCover(ctx, TAPE_W, TAPE_H, lines);
+            else if (item === 'midnight_broadcast') renderer.drawMidnightBroadcastCover(ctx, TAPE_W, TAPE_H, lines);
+            else if (item === 'the_archive')        renderer.drawArchiveCover(ctx, TAPE_W, TAPE_H, lines);
+        }
+
         function drawCover(fctx2, bctx2) {
-            // Clear both
             [fctx2, bctx2].forEach(c => {
                 c.clearRect(0, 0, TAPE_W, TAPE_H);
                 c.fillStyle = '#0a0a0a';
                 c.fillRect(0, 0, TAPE_W, TAPE_H);
             });
             if (!renderer) { return; }
-            if (level === 0) {
+
+            if (atTop) {
                 const isStory = topIndex === 1;
-                const backLines = isStory
+                const lines = isStory
                     ? ['VHS HORROR PUZZLE COLLECTION', 'Rating: NC-17', 'Runtime: 94 MIN', 'Genre: Horror', 'Solve puzzles to survive', 'the nightmarish campaign']
                     : ['GAME NIGHT', 'Rating: R', 'Runtime: VARIES', 'Genre: Puzzle', 'Challenge your mind', 'with individual puzzles'];
                 if (isStory) {
-                    renderer.drawStoryCover(fctx2, TAPE_W, TAPE_H, backLines);
-                    renderer.drawStoryBackCover && renderer.drawStoryBackCover(bctx2, TAPE_W, TAPE_H, backLines, true);
+                    renderer.drawStoryCover(fctx2, TAPE_W, TAPE_H, lines);
+                    if (renderer.drawStoryBackCover) renderer.drawStoryBackCover(bctx2, TAPE_W, TAPE_H, lines, true);
                 } else {
-                    renderer.drawGameCover(fctx2, TAPE_W, TAPE_H, backLines);
-                    renderer.drawGameBackCover && renderer.drawGameBackCover(bctx2, TAPE_W, TAPE_H, backLines, true);
+                    renderer.drawGameCover(fctx2, TAPE_W, TAPE_H, lines);
+                    if (renderer.drawGameBackCover) renderer.drawGameBackCover(bctx2, TAPE_W, TAPE_H, lines, true);
                 }
-            } else if (level === 1 && topIndex === 0) {
-                const d = DIFFS[chooserIndex];
-                const backLines = ['DIFFICULTY: ' + d.toUpperCase(), 'Rating: R', 'Runtime: VARIES', 'Genre: Puzzle', 'Horror Level: ' + d.toUpperCase(), 'Test your limits'];
-                if (d === 'easy') { renderer.drawEasyCover(fctx2, TAPE_W, TAPE_H, backLines); }
-                else if (d === 'medium') { renderer.drawMediumCover(fctx2, TAPE_W, TAPE_H, backLines); }
-                else if (d === 'hard') { renderer.drawHardCover(fctx2, TAPE_W, TAPE_H, backLines); }
-                else if (d === 'insane') { renderer.drawInsaneCover(fctx2, TAPE_W, TAPE_H, backLines); }
-                // back face mirror
-                fctx2.save(); fctx2.scale(-1, 1); fctx2.translate(-TAPE_W, 0);
-                fctx2.drawImage(bctx2, 0, 0); fctx2.restore();
-            } else if (level === 1 && topIndex === 1) {
-                const s = STORIES[chooserIndex];
-                const backLines = ['STORY', 'Rating: NC-17', 'Runtime: VARIES', 'Genre: Horror', 'Achievement: Not Completed', 'Badge: Locked'];
-                if (s === 'cabin_stalkings') { renderer.drawCabinStalkingsCover(fctx2, TAPE_W, TAPE_H, backLines); }
-                else if (s === 'midnight_broadcast') { renderer.drawMidnightBroadcastCover(fctx2, TAPE_W, TAPE_H, backLines); }
-                else if (s === 'the_archive') { renderer.drawArchiveCover(fctx2, TAPE_W, TAPE_H, backLines); }
-            } else if (level === 2) {
-                const label = topIndex === 0 ? 'START ' + DIFFS[chooserIndex].toUpperCase() : 'PLAY STORY';
-                fctx2.fillStyle = '#8b0000'; fctx2.fillRect(0, 0, TAPE_W, TAPE_H);
-                fctx2.fillStyle = '#fff'; fctx2.font = 'bold 28px "Courier New"'; fctx2.textAlign = 'center';
-                fctx2.fillText(label, TAPE_W / 2, TAPE_H / 2);
-                bctx2.fillStyle = '#1a1a1a'; bctx2.fillRect(0, 0, TAPE_W, TAPE_H);
-                bctx2.fillStyle = '#fff'; bctx2.fillText('TAP TO BEGIN', TAPE_W / 2, TAPE_H / 2);
+                return;
             }
+
+            const key = steps()[stepIndex];
+            const items = stepItems(key);
+            const item = items[itemIndex];
+            const lines = itemLines(key, item);
+            if (key === 'game')       drawGameItem(fctx2, item, lines);
+            else if (key === 'diff')   drawDiffItem(fctx2, item, lines);
+            else if (key === 'story')  drawStoryItem(fctx2, item, lines);
+
+            // Back face: simple info panel (flip reveals it).
+            bctx2.fillStyle = '#1a1a1a'; bctx2.fillRect(0, 0, TAPE_W, TAPE_H);
+            bctx2.fillStyle = '#fff'; bctx2.textAlign = 'center';
+            bctx2.font = 'bold 22px "Courier New"';
+            bctx2.fillText(lines[0] || 'TAPE', TAPE_W / 2, TAPE_H * 0.45);
+            bctx2.font = '14px "Courier New"';
+            bctx2.fillStyle = '#ff6b35';
+            bctx2.fillText('↔ FLIP FOR INFO', TAPE_W / 2, TAPE_H * 0.55);
         }
 
         function setHint() {
-            if (level === 0) {
+            if (atTop) {
                 hintEl.textContent = '↕ SWITCH TAPE · ↔ FLIP · TAP OPEN';
-            } else if (level === 1) {
-                hintEl.textContent = (topIndex === 0 ? '↕ DIFFICULTY' : '↕ STORY') + ' · ↔ FLIP · TAP NEXT';
-            } else {
-                hintEl.textContent = 'TAP TO START ▶';
+                return;
             }
+            const key = steps()[stepIndex];
+            const isLast = stepIndex === steps().length - 1;
+            if (key === 'game')       hintEl.textContent = '↕ GAME · ↔ FLIP · TAP TO PLAY ▶';
+            else if (key === 'diff')  hintEl.textContent = '↕ DIFFICULTY · ↔ FLIP · TAP NEXT';
+            else if (key === 'story') hintEl.textContent = isLast ? '↕ STORY · ↔ FLIP · TAP TO PLAY ▶' : '↕ STORY · ↔ FLIP · TAP NEXT';
         }
 
         function render() {
@@ -135,63 +184,44 @@
             tapeEl.classList.toggle('flipped', flipped);
         }
         function switchTape(dir) {
-            if (level !== 0) { return; }
-            topIndex = (topIndex + dir + TOP_TAPES.length) % TOP_TAPES.length;
+            if (!atTop) { return; }
+            topIndex = (topIndex + dir + 2) % 2;
             render();
         }
-        function cycleChooser(dir) {
-            if (level !== 1) { return; }
-            const len = topIndex === 0 ? DIFFS.length : STORIES.length;
-            chooserIndex = (chooserIndex + dir + len) % len;
+        function cycleItem(dir) {
+            if (atTop) { return; }
+            const len = stepItems(steps()[stepIndex]).length;
+            itemIndex = (itemIndex + dir + len) % len;
             render();
         }
         function advance() {
-            if (level === 0) { level = 1; chooserIndex = 0; render(); }
-            else if (level === 1) { level = 2; render(); }
-            else if (level === 2) { startSelection(); }
-        }
-        function startSelection() {
-            // Hand off to the main app's existing handlers.
-            if (topIndex === 0) {
-                // Game Night -> difficulty -> game-selection
-                const game = window.__mobileLaunchGame;
-                if (game) { game(DIFFS[chooserIndex]); }
-                else { document.querySelector('[data-mode="game"]').click(); }
+            if (atTop) {
+                atTop = false; stepIndex = 0; itemIndex = 0; picks = [];
+                render();
+                return;
+            }
+            picks[stepIndex] = itemIndex;
+            if (stepIndex < steps().length - 1) {
+                stepIndex++; itemIndex = 0; render();
             } else {
-                const story = window.__mobileLaunchStory;
-                if (story) { story(STORIES[chooserIndex]); }
-                else { document.querySelector(`[data-story="${STORIES[chooserIndex]}"]`)?.click(); }
+                launch();
             }
         }
-
-        // Expose hooks so main.js can wire real launches without altering desktop code.
-        window.__mobileLaunchGame = function (difficulty) {
-            // Reuse the desktop flow: open game mode + difficulty then proceed.
-            document.querySelector('[data-mode="game"]').click();
-            const diffBtn = document.querySelector(`[data-difficulty="${difficulty}"]`);
-            if (diffBtn) { diffBtn.click(); }
-            // game-selection is now visible; emulate tap on first game for simplicity? No:
-            // Show the game-selection chooser as a second mobile carousel instead.
-            openGameChooser();
-        };
-        window.__mobileLaunchStory = function (storyId) {
-            const card = document.querySelector(`[data-story="${storyId}"]`);
-            if (card) { card.click(); }
-        };
-
-        // For Game Night level 2 we instead surface the game picker as its own
-        // swipeable set so the user can pick connections/wordle/etc. Kept minimal:
-        // reuse desktop game-selection grid but make it mobile-friendly via CSS.
-        let gameChooserActive = false;
-        function openGameChooser() {
-            gameChooserActive = true;
-            document.getElementById('game-selection').classList.remove('hidden');
-            // Switch the visible screen to game-selection on mobile; desktop CSS hides
-            // the classic grid, but we show it stacked via the mobile media query.
+        function launch() {
+            const path = currentPath();
+            hideCarousel();
+            if (path === 'game') {
+                const game = GAMES[itemIndex];
+                if (window.__mobileStartGame) window.__mobileStartGame(game);
+            } else {
+                const diff = DIFFS[picks[0]];
+                const story = STORIES[itemIndex];
+                if (window.__mobileStartStory) window.__mobileStartStory(diff, story);
+            }
+        }
+        function hideCarousel() {
             carousel.classList.add('hidden');
-            const gs = document.getElementById('game-selection');
-            gs.classList.add('active'); gs.classList.remove('hidden');
-            gs.scrollIntoView();
+            carousel.classList.remove('active');
         }
 
         // ---- Gesture handling (pointer events) ----
@@ -205,36 +235,34 @@
             tracking = false;
             const dx = e.clientX - sx, dy = e.clientY - sy;
             if (Math.abs(dx) < THRESH && Math.abs(dy) < THRESH) {
-                // tap
-                advance();
+                advance();            // tap
                 return;
             }
             if (Math.abs(dx) > Math.abs(dy)) {
-                flip();                 // horizontal -> flip
-            } else if (level === 0) {
+                flip();               // horizontal -> flip
+            } else if (atTop) {
                 switchTape(dy < 0 ? 1 : -1);       // vertical -> tape
-            } else if (level === 1) {
-                cycleChooser(dy < 0 ? 1 : -1); // vertical -> chooser
+            } else {
+                cycleItem(dy < 0 ? 1 : -1);         // vertical -> item
             }
-        });
-        stage.addEventListener('pointermove', (e) => {
-            if (!tracking) { return; }
-            if (Math.abs(e.clientX - sx) > THRESH || Math.abs(e.clientY - sy) > THRESH) { moved = true; }
         });
         stage.addEventListener('pointercancel', () => { tracking = false; });
 
-        // Back from game-selection: re-show carousel
-        const backBtn = document.getElementById('back-btn');
-        if (backBtn) {
-            backBtn.addEventListener('click', () => {
-                if (gameChooserActive) {
-                    gameChooserActive = false;
-                    const gs = document.getElementById('game-selection');
-                    gs.classList.remove('active'); gs.classList.add('hidden');
-                    carousel.classList.remove('hidden');
-                }
-            });
-        }
+        // Return-to-menu: any desktop back button re-shows the carousel on mobile
+        // (goBack() resets to the desktop menu, which is hidden under mtc-mode).
+        ['back-btn', 'game-mode-back', 'story-back-btn'].forEach((id) => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('click', () => {
+                    requestAnimationFrame(() => {
+                        if (document.documentElement.classList.contains('mtc-mode')) {
+                            carousel.classList.remove('hidden');
+                            carousel.classList.add('active');
+                        }
+                    });
+                });
+            }
+        });
 
         // Sound toggle mirror
         const sound = document.getElementById('mtc-sound');

@@ -84,6 +84,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Show main menu
         showScreen('tapeSelection');
+
+        // Mobile carousel launch hooks (non-breaking: only used when the
+        // mobile controller is active). Reuse the existing game/story flow.
+        window.__mobileStartGame = function (game) {
+            if (typeof selectGame === 'function') { selectGame(game); }
+        };
+        window.__mobileStartStory = function (difficulty, storyId) {
+            if (typeof tapeQualitySystem !== 'undefined') { tapeQualitySystem.setDifficulty(difficulty); }
+            if (typeof startStory === 'function') { startStory(storyId); }
+        };
     }
 
     function setupEventListeners() {
