@@ -24,6 +24,10 @@ class SpellingBeeGame {
                     <div class="bee-score">
                         SCORE: <span id="bee-score">0</span>
                     </div>
+                    <div class="bee-rank">RANK: <span id="bee-rank">Beginner</span></div>
+                    <div class="bee-progress-bar">
+                        <div id="bee-progress-fill" class="bee-progress-fill"></div>
+                    </div>
                 </div>
 
                 <div class="bee-center-letter">
@@ -118,8 +122,14 @@ class SpellingBeeGame {
 
         const word = this.currentWord.toUpperCase();
 
-        if (!this.isValidWord(word)) {
-            this.showMessage('Not in word list', 'error');
+        const invalid = this.isValidWord(word);
+        if (invalid) {
+            const msg = invalid === 'needs-center'
+                ? `Must include ${this.centerLetter}`
+                : invalid === 'bad-letter'
+                    ? 'Invalid letter'
+                    : 'Not in word list';
+            this.showMessage(msg, 'error');
             this.shake();
             tapeQualitySystem.decreaseQuality(3);
             this.currentWord = '';
@@ -154,41 +164,49 @@ class SpellingBeeGame {
     }
 
     isValidWord(word) {
-        if (!this.validAnswers.has(word)) {return false;}
-        
-        if (!word.includes(this.centerLetter)) {
-            this.showMessage(`Must include ${this.centerLetter}`, 'error');
-            return false;
-        }
-
+        if (!this.validAnswers.has(word)) { return 'not-in-list'; }
+        if (!word.includes(this.centerLetter)) { return 'needs-center'; }
         for (const letter of word.split('')) {
-            if (!this.allLetters.includes(letter)) {
-                this.showMessage('Invalid letter', 'error');
-                return false;
-            }
+            if (!this.allLetters.includes(letter)) { return 'bad-letter'; }
         }
-
-        return true;
+        return null; // valid
     }
 
     calculateScore(word) {
-        let score = word.length;
-        
+        let score = word.length; // 1 point per letter (NYT)
         const uniqueLetters = new Set(word.split('')).size;
-        if (uniqueLetters === 7) {
-            score += 7;
-        }
-        
-        if (word.length >= 7) {
-            score += word.length;
-        }
-        
+        if (uniqueLetters === 7) { score += 7; } // pangram bonus
         return score;
+    }
+
+    getRank() {
+        // NYT-style rank tiers by share of total possible score.
+        const pct = this.totalPossibleScore() === 0 ? 0 : this.score / this.totalPossibleScore();
+        if (pct === 0) { return 'Beginner'; }
+        if (pct < 0.25) { return 'Good Start'; }
+        if (pct < 0.5) { return 'Moving Up'; }
+        if (pct < 0.75) { return 'Good'; }
+        if (pct < 1) { return 'Amazing'; }
+        return 'Genius';
+    }
+
+    totalPossibleScore() {
+        let total = 0;
+        this.validAnswers.forEach(w => { total += this.calculateScore(w); });
+        return total;
     }
 
     updateScore() {
         document.getElementById('bee-score').textContent = this.score;
         document.getElementById('bee-found-count').textContent = this.foundWords.length;
+        const rankEl = document.getElementById('bee-rank');
+        if (rankEl) { rankEl.textContent = this.getRank(); }
+        const fill = document.getElementById('bee-progress-fill');
+        if (fill) {
+            const pct = this.totalPossibleScore() === 0 ? 0
+                : Math.round((this.score / this.totalPossibleScore()) * 100);
+            fill.style.width = pct + '%';
+        }
     }
 
     updateFoundWords() {
