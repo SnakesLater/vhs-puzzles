@@ -62,7 +62,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         const loaded = await puzzleLoader.loadAll();
         
         await unifiedDictionary.load(puzzleLoader.puzzles);
-        
+
+        // Diagnostic banner (opt-in via ?debug=dict) — surfaces dict load state
+        // on real devices where we can't open devtools. Remove once root-caused.
+        if (new URLSearchParams(location.search).has('debug')) {
+            const d = document.createElement('div');
+            d.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#000;color:#0f0;font:12px monospace;padding:4px 8px;white-space:pre;pointer-events:none;';
+            const refresh = () => {
+                d.textContent = `[dict] broadLoaded=${unifiedDictionary.broadLoaded} words=${unifiedDictionary.words.size} loaded=${unifiedDictionary.loaded}`;
+            };
+            refresh();
+            setTimeout(refresh, 1500);
+            document.body.appendChild(d);
+        }
+
         tapeRenderer.renderMenuButtons();
         
         if (!loaded) {

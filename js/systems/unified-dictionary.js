@@ -18,17 +18,19 @@ class UnifiedDictionary {
         this.letterBoxedAnswers = new Map(); // id -> Set (curated solutions)
         this.spellingBeeTargets = new Map(); // id -> Set (official answer list)
         this.loaded = false;
+        this.broadLoaded = false;        // true ONLY if the 2MB broad list actually loaded
     }
 
     async load(puzzleData) {
         await this.loadBroadList();
         if (puzzleData) { this.registerPuzzles(puzzleData); }
-        // loaded = we have SOMETHING to validate against. If the broad list
-        // failed AND there are no registered words, words stays empty and the
-        // games must degrade gracefully (see isValidWord).
+        // loaded = we have SOMETHING to validate against.
         this.loaded = this.words.size > 0 || this.letterBoxedAnswers.size > 0 || this.spellingBeeTargets.size > 0;
         if (!this.loaded) {
             console.warn('[unified-dict] NO words loaded — games will accept guesses without dict validation.');
+        }
+        if (!this.broadLoaded) {
+            console.warn('[unified-dict] broad list did NOT load — validation will be lenient (accept guesses).');
         }
     }
 
@@ -51,6 +53,7 @@ class UnifiedDictionary {
                     }
                 });
                 console.log(`[unified-dict] loaded ${added} broad words (attempt ${attempt}).`);
+                this.broadLoaded = true;
                 return;
             } catch (e) {
                 console.warn(`[unified-dict] broad list load failed (attempt ${attempt}/${MAX}):`, e.message);
@@ -92,11 +95,11 @@ class UnifiedDictionary {
 
     isValidWord(word) {
         const w = String(word).toUpperCase();
-        // Graceful degradation: if the dictionary couldn't load at all (e.g. the
-        // broad list fetch dropped on a slow mobile/tailnet link and no puzzle
-        // words were registered), don't reject every guess — accept it so the
-        // game stays playable instead of reporting "all words not valid".
-        if (this.words.size === 0) { return true; }
+        // Graceful degradation: the 2MB broad list is fetched at runtime and can
+        // fail on a slow/mobile link. If it didn't load, we must NOT reject every
+        // guess (that produces "all words not valid"). Accept the guess so the
+        // game stays playable; strict validation resumes once broadLoaded.
+        if (!this.broadLoaded) { return true; }
         return this.words.has(w);
     }
 
