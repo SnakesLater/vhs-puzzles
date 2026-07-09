@@ -169,7 +169,12 @@ class SpellingBeeGame {
     }
 
     isValidWord(word) {
-        if (!this.formableWords.has(word)) { return 'not-in-list'; }
+        // Valid if it's formable from the 7-letter set (4+, NYT min) OR it's
+        // one of the puzzle's official answers (which may include 3-letter
+        // words from the curated data). Either way it scores.
+        if (!this.formableWords.has(word) && !this.validAnswers.has(word)) {
+            return 'not-in-list';
+        }
         if (!word.includes(this.centerLetter)) { return 'needs-center'; }
         for (const letter of word.split('')) {
             if (!this.allLetters.includes(letter)) { return 'bad-letter'; }
