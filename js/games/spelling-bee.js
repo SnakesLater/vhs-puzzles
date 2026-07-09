@@ -38,9 +38,9 @@ class SpellingBeeGame {
                 </div>
 
                 <div class="bee-outer-ring">
-                    <div class="bee-center-letter">
-                        <div class="center-letter">${this.centerLetter}</div>
-                    </div>
+                    <button class="bee-center-letter" data-letter="${this.centerLetter}" aria-label="center letter ${this.centerLetter}">
+                        <span class="center-letter">${this.centerLetter}</span>
+                    </button>
                     ${this.outerLetters.map(l => `
                         <button class="bee-letter" data-letter="${l}">${l}</button>
                     `).join('')}
@@ -75,6 +75,12 @@ class SpellingBeeGame {
                 this.addLetter(btn.dataset.letter);
             });
         });
+
+        // Center ("must-use") letter is now a real button — tapping it adds it.
+        const center = this.container.querySelector('.bee-center-letter');
+        if (center) {
+            cleanupManager.addListener(center, 'click', () => this.addLetter(this.centerLetter));
+        }
 
         cleanupManager.addListener(
             document.getElementById('bee-delete'), 'click', () => this.deleteLetter()
