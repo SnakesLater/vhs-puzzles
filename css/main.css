@@ -804,6 +804,13 @@ button:disabled {
     border-radius: 2px;
     letter-spacing: 0.1em;
 }
+.found-word-0 { color: #ff6b6b; border-color: #ff6b6b; }
+.found-word-1 { color: #4cd389; border-color: #4cd389; }
+.found-word-2 { color: #6b96ff; border-color: #6b96ff; }
+.found-word-3 { color: #ffc46b; border-color: #ffc46b; }
+.found-word-4 { color: #c46bff; border-color: #c46bff; }
+.found-word-5 { color: #ff6bc4; border-color: #ff6bc4; }
+.found-word-6 { color: #4cdada; border-color: #4cdada; }
 
 .letter-boxed-controls {
     display: flex;
@@ -968,13 +975,21 @@ button:disabled {
     box-shadow: 0 0 12px rgba(255, 107, 53, 0.9);
 }
 
+/* Each found keyword gets its own stable color (index = position in puzzle.answers).
+   pointer-events kept active so solved squares stay re-selectable (no grid lock). */
 .strands-cell.found {
-    background: var(--accent-color);
     color: #fff;
-    border-color: var(--accent-color);
-    box-shadow: 0 0 6px rgba(139, 0, 0, 0.5);
-    pointer-events: none;
+    text-shadow: 0 0 4px rgba(0,0,0,0.6);
+    font-weight: bold;
 }
+.strands-cell.found-0 { background: #e23b3b; border-color: #ff6b6b; box-shadow: 0 0 6px rgba(226,59,59,0.5); }
+.strands-cell.found-1 { background: #2e9e5b; border-color: #4cd389; box-shadow: 0 0 6px rgba(46,158,91,0.5); }
+.strands-cell.found-2 { background: #3b6fe2; border-color: #6b96ff; box-shadow: 0 0 6px rgba(59,111,226,0.5); }
+.strands-cell.found-3 { background: #e2a23b; border-color: #ffc46b; box-shadow: 0 0 6px rgba(226,162,59,0.5); }
+.strands-cell.found-4 { background: #9b3be2; border-color: #c46bff; box-shadow: 0 0 6px rgba(155,59,226,0.5); }
+.strands-cell.found-5 { background: #e23b9b; border-color: #ff6bc4; box-shadow: 0 0 6px rgba(226,59,155,0.5); }
+.strands-cell.found-6 { background: #1fa6a6; border-color: #4cdada; box-shadow: 0 0 6px rgba(31,166,166,0.5); }
+.strands-cell.found-spangram { background: #f5c542; border-color: #ffe08a; box-shadow: 0 0 8px rgba(245,197,66,0.6); color: #2a1a00; }
 
 .strands-cell.invalid-temp {
     background: #ff4444;

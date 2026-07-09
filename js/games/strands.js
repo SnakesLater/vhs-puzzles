@@ -354,12 +354,20 @@ class StrandsGame extends BaseGame {
             vhsEffects.colorShift();
             tapeQualitySystem.increaseQuality(5);
 
-            // Mark cells as found
+            // Mark cells as found — with the keyword's own color, and clear any
+            // prior hint highlight so a solved hint square takes the keyword color.
+            // Spangram gets its own gold slot (index === answers.length).
+            const colorIndex = this.answers.includes(this.currentWord)
+                ? this.answers.indexOf(this.currentWord)
+                : 'spangram';
             this.selectedPath.forEach(pos => {
                 const cell = this.container.querySelector(
                     `[data-row="${pos.row}"][data-col="${pos.col}"]`
                 );
-                if (cell) {cell.classList.add('found');}
+                if (cell) {
+                    cell.classList.remove('hint-revealed');
+                    cell.classList.add('found', `found-${colorIndex}`);
+                }
             });
 
             // Check spangram
@@ -479,9 +487,11 @@ class StrandsGame extends BaseGame {
     updateFoundWordsDisplay() {
         const wordListEl = this.container.querySelector('.word-list');
         if (wordListEl) {
-            wordListEl.innerHTML = this.foundWords.map(word => 
-                `<span class="found-word">${word}</span>`
-            ).join('');
+            wordListEl.innerHTML = this.foundWords.map(word => {
+                const idx = this.answers.indexOf(word);
+                const colorClass = idx >= 0 ? `found-word-${idx}` : 'found-word-spangram';
+                return `<span class="found-word ${colorClass}">${word}</span>`;
+            }).join('');
         }
     }
 
