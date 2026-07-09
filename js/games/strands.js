@@ -385,9 +385,9 @@ class StrandsGame extends BaseGame {
             this.checkHintSystem();
         } else if (isValidDictWord && !isTraceable) {
             // Real English word, but those exact letters aren't adjacent on
-            // THIS board (easy to misread on a scrambled grid). NYT behaviour:
-            // acknowledge it, give no hint (not placeable), and never burn a
-            // mistake — only true non-words cost a mistake.
+            // THIS board (easy to misread one cell on a scrambled grid).
+            // Echo the traced letters so a near-miss is obvious, give no hint
+            // (not placeable), and never burn a mistake.
             this.showMessage(`"${this.currentWord}" is a word, but not on this board`, 'warning');
             this.clearSelection();
         } else {
