@@ -79,12 +79,12 @@
     transform: translate(-50%, -50%);
 }
 
-.bee-letter:nth-child(1) { top: 0; left: 50%; }
-.bee-letter:nth-child(2) { top: 25%; left: 100%; }
-.bee-letter:nth-child(3) { top: 75%; left: 100%; }
-.bee-letter:nth-child(4) { top: 100%; left: 50%; }
-.bee-letter:nth-child(5) { top: 75%; left: 0; }
-.bee-letter:nth-child(6) { top: 25%; left: 0; }
+.bee-letter:nth-of-type(1) { top: 0; left: 50%; }
+.bee-letter:nth-of-type(2) { top: 25%; left: 100%; }
+.bee-letter:nth-of-type(3) { top: 75%; left: 100%; }
+.bee-letter:nth-of-type(4) { top: 100%; left: 50%; }
+.bee-letter:nth-of-type(5) { top: 75%; left: 0; }
+.bee-letter:nth-of-type(6) { top: 25%; left: 0; }
 
 .bee-letter:hover {
     background: #3a3a3c;
