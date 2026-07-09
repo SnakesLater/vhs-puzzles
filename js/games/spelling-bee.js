@@ -17,6 +17,7 @@ class SpellingBeeGame {
         this.currentWord = '';
         this.score = 0;
         this.gameOver = false;
+        this.active = true;
         
         this.render();
         this.setupEventListeners();
@@ -83,8 +84,8 @@ class SpellingBeeGame {
         );
 
         document.addEventListener('keydown', this.handleKeydown = (e) => {
-            if (this.gameOver) {return;}
-            
+            if (!this.active || this.gameOver) { return; }
+
             if (e.key === 'Enter') {
                 this.submitWord();
             } else if (e.key === 'Backspace') {
@@ -263,6 +264,7 @@ class SpellingBeeGame {
     }
 
     cleanup() {
+        this.active = false;
         document.removeEventListener('keydown', this.handleKeydown);
         cleanupManager.cleanupAll();
     }

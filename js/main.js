@@ -313,6 +313,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         // Clear previous game
         const gameContainer = document.getElementById('game-container');
+        if (currentConnectionsGame && typeof currentConnectionsGame.cleanup === 'function') {
+            currentConnectionsGame.cleanup();
+        }
         gameContainer.innerHTML = '';
         
         // Set condensed header
@@ -515,7 +518,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             eventManager.off('rewindRequested'); // Clear previous listeners
         } else if (gameType === 'letter-boxed' && puzzle) {
             tapeQualitySystem.reset();
-            const lbGame = new LetterBoxedGame('single-game-container', puzzle);
+            currentConnectionsGame = new LetterBoxedGame('single-game-container', puzzle);
 
             eventManager.on('gameComplete', (won) => {
                 if (won) {
@@ -529,7 +532,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             eventManager.off('rewindRequested');
         } else if (gameType === 'strands' && puzzle) {
             tapeQualitySystem.reset();
-            const strandsGame = new StrandsGame('single-game-container', puzzle);
+            currentConnectionsGame = new StrandsGame('single-game-container', puzzle);
 
             eventManager.on('gameComplete', (won) => {
                 if (won) {
@@ -548,7 +551,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             eventManager.off('rewindRequested');
         } else if (gameType === 'spelling-bee' && puzzle) {
             tapeQualitySystem.reset();
-            const beeGame = new SpellingBeeGame('single-game-container', puzzle);
+            currentConnectionsGame = new SpellingBeeGame('single-game-container', puzzle);
 
             eventManager.on('gameComplete', (won) => {
                 if (won) {
