@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Initialize tape renderer
     const tapeRenderer = new VHSTapeRenderer();
     tapeRenderer.initialize();
+    window.tapeRenderer = tapeRenderer; // expose for mobile controller (non-breaking)
 
     // Initialize
     await initializeGame();
