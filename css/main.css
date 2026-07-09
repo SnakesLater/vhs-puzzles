@@ -1251,13 +1251,17 @@ button:disabled {
 
 /* ============================================================
    MOBILE TAPE CAROUSEL
-   Activated ONLY on narrow / coarse-pointer screens. Desktop
-   layout (.mode-grid etc.) is hidden and left fully intact.
+   Driven by the `html.mtc-mode` class, which the JS controller
+   sets when it decides this is a mobile/touch context. CSS keys
+   off that class (NOT a media query) so layout can never
+   disagree with the active JS. Desktop is untouched otherwise.
    ============================================================ */
-@media (max-width: 768px), (pointer: coarse) {
+
+/* Mobile carousel layout is driven entirely by the `html.mtc-mode`
+   class the JS controller sets; no pure-CSS media trigger needed. */
+html.mtc-mode {
     /* Hide the classic desktop menu on mobile */
-    #tape-selection:not(.active) { display: none !important; }
-    #tape-selection.active { display: none !important; }
+    #tape-selection { display: none !important; }
 
     /* Show the mobile carousel as a full-screen vertical flow */
     #mobile-tape-carousel {

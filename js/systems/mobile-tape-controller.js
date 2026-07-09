@@ -11,12 +11,19 @@
 (function () {
     'use strict';
 
-    // Only run on touch / narrow screens. Desktop stays on the classic grid.
+    // Activate on touch / narrow screens. Desktop stays on the classic grid.
     // ?mobile=1 forces the mobile UI on desktop for preview/QA (non-breaking).
     const FORCE = new URLSearchParams(location.search).has('mobile');
-    const MOBILE_QUERY = '(max-width: 768px), (pointer: coarse)';
-    const mq = window.matchMedia(MOBILE_QUERY);
-    if (!mq.matches && !FORCE) { return; }
+    // Broad detection: any one of these means "treat as mobile". We do NOT rely
+    // on the CSS @media matching — if JS thinks it's mobile we add a class and
+    // drive the layout from that class so JS and CSS can never disagree.
+    const isCoarse = window.matchMedia('(pointer: coarse)').matches;
+    const isNarrow = window.matchMedia('(max-width: 768px)').matches;
+    const noHover = window.matchMedia('(hover: none)').matches;
+    const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    const MOBILE = FORCE || isCoarse || isNarrow || noHover || isTouch;
+    if (!MOBILE) { return; }
+    document.documentElement.classList.add('mtc-mode');
 
     function initMobileCarousel() {
         const stage = document.getElementById('mtc-stage');
@@ -249,10 +256,28 @@
         if (desktopMenu) { desktopMenu.classList.add('hidden'); desktopMenu.classList.remove('active'); }
     }
 
-    // Wire after the main app initializes (tapeRenderer must exist).
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => setTimeout(initMobileCarousel, 0));
+    // Wire AFTER the main app initializes. main.js's DOMContentLoaded handler
+    // is async (it awaits data load, then calls showScreen('tapeSelection')),
+    // so we must run after that settles — otherwise showScreen re-shows the
+    // desktop menu and clobbers the mobile carousel. Use window 'load' (fires
+    // after main's async DOMContentLoaded work) plus a rAF re-assert.
+    function boot() {
+        initMobileCarousel();
+        // Re-assert mobile override one frame later so it survives showScreen().
+        requestAnimationFrame(() => {
+            if (document.documentElement.classList.contains('mtc-mode')) {
+                const dm = document.getElementById('tape-selection');
+                const mc = document.getElementById('mobile-tape-carousel');
+                if (dm) { dm.classList.add('hidden'); dm.classList.remove('active'); }
+                if (mc && !mc.classList.contains('active')) { mc.classList.remove('hidden'); mc.classList.add('active'); }
+            }
+        });
+    }
+    if (document.readyState === 'complete') {
+        boot();
     } else {
-        setTimeout(initMobileCarousel, 0);
+        window.addEventListener('load', boot);
+        // Fallback if 'load' is delayed by the avatar video etc.
+        document.addEventListener('DOMContentLoaded', () => setTimeout(boot, 50));
     }
 })();
