@@ -103,24 +103,21 @@ class StrandsGame extends BaseGame {
                 this.startSelection(cell);
             });
 
-            // Fallback: enter-driven. Steps ONE cell via continueSelection,
-            // which itself walks a shortest adjacent path if >1 cell apart.
-            cleanupManager.addListener(cell, 'mouseenter', () => {
-                if (this.isDragging) {
-                    this.continueSelection(cell);
-                }
-            });
+            // NOTE: no mouseenter fallback — gravity (nearestNeighborCell in
+            // moveHandler) is the single selection source, so the pointer can
+            // never land on a non-adjacent cell.
         });
 
         // Hit-test the cell literally under the pointer and step toward it.
         // Coalesced events recover the intermediate points a fast drag skips,
         // so diagonals no longer jump past cells.
+        // Gravity selection: snap to the legal neighbor (orth/diag) whose CENTER
+        // is closest to the pointer. Diagonals become the natural nearest choice;
+        // never selects a non-adjacent cell, so grid integrity is preserved.
         const moveHandler = (clientX, clientY) => {
             if (!this.isDragging) {return;}
-            const el = document.elementFromPoint(clientX, clientY);
-            if (el && el.classList.contains('strands-cell')) {
-                this.continueSelection(el);
-            }
+            const cell = this.nearestNeighborCell(clientX, clientY);
+            if (cell) { this.continueSelection(cell); }
         };
 
         cleanupManager.addListener(this.container, 'mousemove', (e) => {
@@ -344,6 +341,36 @@ class StrandsGame extends BaseGame {
         const rowDiff = Math.abs(pos1.row - pos2.row);
         const colDiff = Math.abs(pos1.col - pos2.col);
         return rowDiff <= 1 && colDiff <= 1 && (rowDiff !== 0 || colDiff !== 0);
+    }
+
+    getCellCenter(cell) {
+        const r = cell.getBoundingClientRect();
+        return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+    }
+
+    // Gravity selection: from the last selected cell, find the LEGAL neighbor
+    // (orth/diag) whose center is closest to the pointer. Returns the nearest
+    // neighbor cell element, or null before any selection. Constrained to
+    // neighbors only -> a non-adjacent cell is never chosen, so the grid (and
+    // thus puzzle validity) stays intact. Diagonals become the natural nearest
+    // step because gesturing toward them puts their center closest.
+    nearestNeighborCell(clientX, clientY) {
+        if (this.selectedPath.length === 0) { return null; }
+        const last = this.selectedPath[this.selectedPath.length - 1];
+        let best = null, bestDist = Infinity;
+        for (let dr = -1; dr <= 1; dr++) {
+            for (let dc = -1; dc <= 1; dc++) {
+                if (!dr && !dc) { continue; }
+                const nr = last.row + dr, nc = last.col + dc;
+                if (nr < 0 || nr >= this.grid.length || nc < 0 || nc >= this.grid[0].length) { continue; }
+                const cell = this.container.querySelector(`[data-row="${nr}"][data-col="${nc}"]`);
+                if (!cell) { continue; }
+                const c = this.getCellCenter(cell);
+                const d = (c.x - clientX) ** 2 + (c.y - clientY) ** 2;
+                if (d < bestDist) { bestDist = d; best = cell; }
+            }
+        }
+        return best;
     }
 
     updateCurrentWord() {
