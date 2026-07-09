@@ -57,9 +57,9 @@
         function currentPath() { return topIndex === 0 ? 'game' : 'story'; }
         function steps() { return currentPath() === 'game' ? ['game'] : ['diff', 'story']; }
         function stepItems(key) {
-            if (key === 'game')  return GAMES;
-            if (key === 'diff')  return DIFFS;
-            if (key === 'story') return STORIES;
+            if (key === 'game')  {return GAMES;}
+            if (key === 'diff')  {return DIFFS;}
+            if (key === 'story') {return STORIES;}
             return [];
         }
 
@@ -87,7 +87,7 @@
                 };
                 return m[item] || [item.toUpperCase(), ''];
             }
-            if (key === 'diff')  return ['DIFFICULTY', 'Level: ' + item.toUpperCase()];
+            if (key === 'diff')  {return ['DIFFICULTY', 'Level: ' + item.toUpperCase()];}
             if (key === 'story') {
                 const m = {
                     'cabin_stalkings':    ['CABIN STALKINGS'],
@@ -100,22 +100,22 @@
         }
 
         function drawGameItem(ctx, item, lines) {
-            if (item === 'connections')        renderer.drawConnectionsCover(ctx, TAPE_W, TAPE_H, lines);
-            else if (item === 'wordle')        renderer.drawWordleCover(ctx, TAPE_W, TAPE_H, lines);
-            else if (item === 'strands')       renderer.drawStrandsCover(ctx, TAPE_W, TAPE_H, lines);
-            else if (item === 'spelling-bee')  renderer.drawSpellingBeeCover(ctx, TAPE_W, TAPE_H, lines);
-            else if (item === 'letter-boxed')  renderer.drawLetterBoxedCover(ctx, TAPE_W, TAPE_H, lines);
+            if (item === 'connections')        {renderer.drawConnectionsCover(ctx, TAPE_W, TAPE_H, lines);}
+            else if (item === 'wordle')        {renderer.drawWordleCover(ctx, TAPE_W, TAPE_H, lines);}
+            else if (item === 'strands')       {renderer.drawStrandsCover(ctx, TAPE_W, TAPE_H, lines);}
+            else if (item === 'spelling-bee')  {renderer.drawSpellingBeeCover(ctx, TAPE_W, TAPE_H, lines);}
+            else if (item === 'letter-boxed')  {renderer.drawLetterBoxedCover(ctx, TAPE_W, TAPE_H, lines);}
         }
         function drawDiffItem(ctx, item, lines) {
-            if (item === 'easy')        renderer.drawEasyCover(ctx, TAPE_W, TAPE_H, lines);
-            else if (item === 'medium') renderer.drawMediumCover(ctx, TAPE_W, TAPE_H, lines);
-            else if (item === 'hard')   renderer.drawHardCover(ctx, TAPE_W, TAPE_H, lines);
-            else if (item === 'insane') renderer.drawInsaneCover(ctx, TAPE_W, TAPE_H, lines);
+            if (item === 'easy')        {renderer.drawEasyCover(ctx, TAPE_W, TAPE_H, lines);}
+            else if (item === 'medium') {renderer.drawMediumCover(ctx, TAPE_W, TAPE_H, lines);}
+            else if (item === 'hard')   {renderer.drawHardCover(ctx, TAPE_W, TAPE_H, lines);}
+            else if (item === 'insane') {renderer.drawInsaneCover(ctx, TAPE_W, TAPE_H, lines);}
         }
         function drawStoryItem(ctx, item, lines) {
-            if (item === 'cabin_stalkings')         renderer.drawCabinStalkingsCover(ctx, TAPE_W, TAPE_H, lines);
-            else if (item === 'midnight_broadcast') renderer.drawMidnightBroadcastCover(ctx, TAPE_W, TAPE_H, lines);
-            else if (item === 'the_archive')        renderer.drawArchiveCover(ctx, TAPE_W, TAPE_H, lines);
+            if (item === 'cabin_stalkings')         {renderer.drawCabinStalkingsCover(ctx, TAPE_W, TAPE_H, lines);}
+            else if (item === 'midnight_broadcast') {renderer.drawMidnightBroadcastCover(ctx, TAPE_W, TAPE_H, lines);}
+            else if (item === 'the_archive')        {renderer.drawArchiveCover(ctx, TAPE_W, TAPE_H, lines);}
         }
 
         function drawCover(fctx2, bctx2) {
@@ -133,10 +133,10 @@
                     : ['GAME NIGHT', 'Rating: R', 'Runtime: VARIES', 'Genre: Puzzle', 'Challenge your mind', 'with individual puzzles'];
                 if (isStory) {
                     renderer.drawStoryCover(fctx2, TAPE_W, TAPE_H, lines);
-                    if (renderer.drawStoryBackCover) renderer.drawStoryBackCover(bctx2, TAPE_W, TAPE_H, lines, true);
+                    if (renderer.drawStoryBackCover) {renderer.drawStoryBackCover(bctx2, TAPE_W, TAPE_H, lines, true);}
                 } else {
                     renderer.drawGameCover(fctx2, TAPE_W, TAPE_H, lines);
-                    if (renderer.drawGameBackCover) renderer.drawGameBackCover(bctx2, TAPE_W, TAPE_H, lines, true);
+                    if (renderer.drawGameBackCover) {renderer.drawGameBackCover(bctx2, TAPE_W, TAPE_H, lines, true);}
                 }
                 return;
             }
@@ -145,9 +145,9 @@
             const items = stepItems(key);
             const item = items[itemIndex];
             const lines = itemLines(key, item);
-            if (key === 'game')       drawGameItem(fctx2, item, lines);
-            else if (key === 'diff')   drawDiffItem(fctx2, item, lines);
-            else if (key === 'story')  drawStoryItem(fctx2, item, lines);
+            if (key === 'game')       {drawGameItem(fctx2, item, lines);}
+            else if (key === 'diff')   {drawDiffItem(fctx2, item, lines);}
+            else if (key === 'story')  {drawStoryItem(fctx2, item, lines);}
 
             // Back face: simple info panel (flip reveals it).
             bctx2.fillStyle = '#1a1a1a'; bctx2.fillRect(0, 0, TAPE_W, TAPE_H);
@@ -166,9 +166,9 @@
             }
             const key = steps()[stepIndex];
             const isLast = stepIndex === steps().length - 1;
-            if (key === 'game')       hintEl.textContent = '↕ GAME · ↔ FLIP · TAP TO PLAY ▶';
-            else if (key === 'diff')  hintEl.textContent = '↕ DIFFICULTY · ↔ FLIP · TAP NEXT';
-            else if (key === 'story') hintEl.textContent = isLast ? '↕ STORY · ↔ FLIP · TAP TO PLAY ▶' : '↕ STORY · ↔ FLIP · TAP NEXT';
+            if (key === 'game')       {hintEl.textContent = '↕ GAME · ↔ FLIP · TAP TO PLAY ▶';}
+            else if (key === 'diff')  {hintEl.textContent = '↕ DIFFICULTY · ↔ FLIP · TAP NEXT';}
+            else if (key === 'story') {hintEl.textContent = isLast ? '↕ STORY · ↔ FLIP · TAP TO PLAY ▶' : '↕ STORY · ↔ FLIP · TAP NEXT';}
         }
 
         function render() {
@@ -212,11 +212,11 @@
             hideCarousel();
             if (path === 'game') {
                 const game = GAMES[itemIndex];
-                if (window.__mobileStartGame) window.__mobileStartGame(game);
+                if (window.__mobileStartGame) {window.__mobileStartGame(game);}
             } else {
                 const diff = DIFFS[picks[0]];
                 const story = STORIES[itemIndex];
-                if (window.__mobileStartStory) window.__mobileStartStory(diff, story);
+                if (window.__mobileStartStory) {window.__mobileStartStory(diff, story);}
             }
         }
         function hideCarousel() {
