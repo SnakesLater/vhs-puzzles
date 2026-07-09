@@ -15,7 +15,9 @@ class StrandsGame extends BaseGame {
         this.currentWord = '';
         this.spangramFound = false;
         this.mistakes = 0;
-        this.maxMistakes = 4;
+        // NYT-style: mistakes are non-fatal — they fill a meter but never
+        // lock the grid. Kept only for display/progress, not game-over.
+        this.maxMistakes = Infinity;
         this.isDragging = false;
         
         // Hint system: track non-theme words found
@@ -339,7 +341,9 @@ class StrandsGame extends BaseGame {
         const isThemeWord = this.answers.includes(this.currentWord) || this.currentWord === this.spangram;
         
         // Check if it's a valid dictionary word (for hint system)
-        const isValidDictWord = wordDictionary && wordDictionary.isValidWord(this.currentWord);
+        // Use the broad Strands dictionary (4-10 letter English), NOT the
+        // 5-letter Wordle list, so any real traced word counts toward hints.
+        const isValidDictWord = strandsDictionary && strandsDictionary.isValidWord(this.currentWord);
         const isTraceable = this.isWordTraceable(this.currentWord);
 
         if (isThemeWord) {
@@ -349,7 +353,7 @@ class StrandsGame extends BaseGame {
             vhsEffects.playSuccess();
             vhsEffects.colorShift();
             tapeQualitySystem.increaseQuality(5);
-            
+
             // Mark cells as found
             this.selectedPath.forEach(pos => {
                 const cell = this.container.querySelector(
@@ -357,17 +361,17 @@ class StrandsGame extends BaseGame {
                 );
                 if (cell) {cell.classList.add('found');}
             });
-            
+
             // Check spangram
             if (this.currentWord === this.spangram) {
                 this.spangramFound = true;
                 this.showMessage('SPANGRAM FOUND!', 'success');
             }
-            
+
             this.updateFoundWordsDisplay();
             this.clearSelection();
-            
-            // FIX #1 & #7: Win only when ALL answers AND spangram are found
+
+            // Win only when ALL answers AND spangram are found
             const allAnswersFound = this.answers.every(word => this.foundWords.includes(word));
             if (allAnswersFound && this.spangramFound) {
                 this.completeGame(true);
@@ -380,12 +384,13 @@ class StrandsGame extends BaseGame {
             this.clearSelection();
             this.checkHintSystem();
         } else {
+            // Non-fatal: a wrong/non-word trace never locks the grid.
             this.mistakes++;
             this.showMessage(`"${this.currentWord}" not found`, 'error');
             vhsEffects.playError();
             vhsEffects.shake();
             tapeQualitySystem.decreaseQuality(10);
-            
+
             // Show invalid feedback
             this.selectedPath.forEach(pos => {
                 const cell = this.container.querySelector(
@@ -396,12 +401,8 @@ class StrandsGame extends BaseGame {
                     setTimeout(() => cell.classList.remove('invalid-temp'), 600);
                 }
             });
-            
-            if (this.mistakes >= this.maxMistakes) {
-                this.completeGame(false);
-            } else {
-                setTimeout(() => this.clearSelection(), 800);
-            }
+
+            setTimeout(() => this.clearSelection(), 800);
         }
     }
 

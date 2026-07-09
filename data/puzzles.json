@@ -7,22 +7,42 @@
         {
           "category": "Weapons found at crime scene",
           "difficulty": "easy",
-          "words": ["KNIFE", "PISTOL", "ROPE", "HAMMER"]
+          "words": [
+            "KNIFE",
+            "PISTOL",
+            "ROPE",
+            "HAMMER"
+          ]
         },
         {
           "category": "Victim's last known locations",
           "difficulty": "medium",
-          "words": ["CAFE", "OFFICE", "PARK", "HOME"]
+          "words": [
+            "CAFE",
+            "OFFICE",
+            "PARK",
+            "HOME"
+          ]
         },
         {
           "category": "Types of evidence bags",
           "difficulty": "medium",
-          "words": ["BLOOD", "HAIR", "PRINT", "DUST"]
+          "words": [
+            "BLOOD",
+            "HAIR",
+            "PRINT",
+            "DUST"
+          ]
         },
         {
           "category": "Detective's coffee orders",
           "difficulty": "tricky",
-          "words": ["BLACK", "MILK", "SUGAR", "CREAM"]
+          "words": [
+            "BLACK",
+            "MILK",
+            "SUGAR",
+            "CREAM"
+          ]
         }
       ]
     },
@@ -33,22 +53,42 @@
         {
           "category": "Fingerprint types",
           "difficulty": "easy",
-          "words": ["LOOP", "WHORL", "ARCH", "COMPOSITE"]
+          "words": [
+            "LOOP",
+            "WHORL",
+            "ARCH",
+            "COMPOSITE"
+          ]
         },
         {
           "category": "Police radio codes",
           "difficulty": "medium",
-          "words": ["ALPHA", "CODE", "URGENT", "COPY"]
+          "words": [
+            "ALPHA",
+            "CODE",
+            "URGENT",
+            "COPY"
+          ]
         },
         {
           "category": "Murder motives",
           "difficulty": "hard",
-          "words": ["MONEY", "LOVE", "POWER", "REVENGE"]
+          "words": [
+            "MONEY",
+            "LOVE",
+            "POWER",
+            "REVENGE"
+          ]
         },
         {
           "category": "Cabin in the woods features",
           "difficulty": "tricky",
-          "words": ["CELLAR", "ATTIC", "PORCH", "DOCK"]
+          "words": [
+            "CELLAR",
+            "ATTIC",
+            "PORCH",
+            "DOCK"
+          ]
         }
       ]
     },
@@ -59,22 +99,42 @@
         {
           "category": "Forensic tools",
           "difficulty": "easy",
-          "words": ["SWAB", "TAPE", "LIGHT", "KITS"]
+          "words": [
+            "SWAB",
+            "TAPE",
+            "LIGHT",
+            "KITS"
+          ]
         },
         {
           "category": "Suspect aliases",
           "difficulty": "medium",
-          "words": ["SHADOW", "GHOST", "VIPER", "WOLF"]
+          "words": [
+            "SHADOW",
+            "GHOST",
+            "VIPER",
+            "WOLF"
+          ]
         },
         {
           "category": "Horror movie weapons",
           "difficulty": "hard",
-          "words": ["BLADE", "CHAINSAW", "DRILL", "MACHETE"]
+          "words": [
+            "BLADE",
+            "CHAINSAW",
+            "DRILL",
+            "MACHETE"
+          ]
         },
         {
           "category": "Words ending in 'ER'",
           "difficulty": "tricky",
-          "words": ["KILLER", "STALKER", "WATCHER", "MURDERER"]
+          "words": [
+            "KILLER",
+            "STALKER",
+            "WATCHER",
+            "MURDERER"
+          ]
         }
       ]
     },
@@ -85,22 +145,42 @@
         {
           "category": "Crime scene measurements",
           "difficulty": "medium",
-          "words": ["FEET", "INCH", "YARD", "MILE"]
+          "words": [
+            "FEET",
+            "INCH",
+            "YARD",
+            "MILE"
+          ]
         },
         {
           "category": "Types of killers",
           "difficulty": "hard",
-          "words": ["SERIAL", "MASS", "SPREE", "VIGILANTE"]
+          "words": [
+            "SERIAL",
+            "MASS",
+            "SPREE",
+            "VIGILANTE"
+          ]
         },
         {
           "category": "Forest sounds",
           "difficulty": "medium",
-          "words": ["HAWK", "WIND", "WOLF", "CROW"]
+          "words": [
+            "HAWK",
+            "WIND",
+            "WOLF",
+            "CROW"
+          ]
         },
         {
           "category": "Anagram of 'STALKER'",
           "difficulty": "tricky",
-          "words": ["STAR", "LARK", "RATS", "STALK"]
+          "words": [
+            "STAR",
+            "LARK",
+            "RATS",
+            "STALK"
+          ]
         }
       ]
     },
@@ -111,22 +191,42 @@
         {
           "category": "Cold case files",
           "difficulty": "medium",
-          "words": ["FILE", "CASE", "LEAD", "CLUE"]
+          "words": [
+            "FILE",
+            "CASE",
+            "LEAD",
+            "CLUE"
+          ]
         },
         {
           "category": "Words that can follow 'DARK'",
           "difficulty": "hard",
-          "words": ["ROOM", "WATER", "FOREST", "SOUL"]
+          "words": [
+            "ROOM",
+            "WATER",
+            "FOREST",
+            "SOUL"
+          ]
         },
         {
           "category": "Police ranks",
           "difficulty": "easy",
-          "words": ["CADET", "DETECTIVE", "SERGEANT", "CHIEF"]
+          "words": [
+            "CADET",
+            "DETECTIVE",
+            "SERGEANT",
+            "CHIEF"
+          ]
         },
         {
           "category": "Horror creature synonyms",
           "difficulty": "tricky",
-          "words": ["BEAST", "MONSTER", "FIEND", "DEMON"]
+          "words": [
+            "BEAST",
+            "MONSTER",
+            "FIEND",
+            "DEMON"
+          ]
         }
       ]
     }
@@ -189,15 +289,77 @@
       "difficulty": "easy",
       "theme": "Gardening",
       "grid": [
-        ["P", "L", "A", "N", "T", "I", "N", "G"],
-        ["R", "O", "S", "E", "S", "O", "I", "L"],
-        ["S", "E", "E", "D", "G", "R", "O", "W"],
-        ["T", "R", "A", "N", "S", "T", "E", "M"],
-        ["B", "U", "D", "S", "P", "E", "T", "A"],
-        ["F", "L", "O", "W", "T", "R", "S", "L"]
+        [
+          "A",
+          "P",
+          "E",
+          "E",
+          "T",
+          "U",
+          "S",
+          "P"
+        ],
+        [
+          "N",
+          "L",
+          "S",
+          "T",
+          "R",
+          "S",
+          "O",
+          "R"
+        ],
+        [
+          "L",
+          "T",
+          "L",
+          "B",
+          "H",
+          "E",
+          "A",
+          "E"
+        ],
+        [
+          "I",
+          "S",
+          "L",
+          "A",
+          "C",
+          "S",
+          "V",
+          "L"
+        ],
+        [
+          "F",
+          "O",
+          "M",
+          "T",
+          "A",
+          "N",
+          "O",
+          "E"
+        ],
+        [
+          "E",
+          "O",
+          "B",
+          "R",
+          "E",
+          "P",
+          "S",
+          "R"
+        ]
       ],
-      "answers": ["ROSES", "SEEDS", "TREE", "BUDS", "SOIL", "GROW", "STEM", "PETAL", "FLOW", "REST"],
-      "spangram": "PLANTING",
+      "answers": [
+        "SPROUT",
+        "BRANCH",
+        "LEAVES",
+        "PETALS",
+        "BLOOMS",
+        "ROSES",
+        "TREE"
+      ],
+      "spangram": "PLANTLIFE",
       "spangramHint": "Growing things"
     },
     {
@@ -205,15 +367,77 @@
       "difficulty": "easy",
       "theme": "Space",
       "grid": [
-        ["G", "A", "L", "A", "X", "I", "E", "S"],
-        ["P", "L", "A", "N", "E", "T", "S", "R"],
-        ["S", "T", "A", "R", "S", "M", "O", "O"],
-        ["M", "O", "O", "N", "C", "O", "M", "E"],
-        ["C", "O", "M", "E", "T", "U", "S", "N"],
-        ["A", "S", "T", "R", "O", "N", "A", "U"]
+        [
+          "M",
+          "E",
+          "T",
+          "R",
+          "O",
+          "O",
+          "L",
+          "A"
+        ],
+        [
+          "N",
+          "O",
+          "M",
+          "E",
+          "C",
+          "U",
+          "T",
+          "U"
+        ],
+        [
+          "O",
+          "S",
+          "T",
+          "E",
+          "M",
+          "O",
+          "E",
+          "B"
+        ],
+        [
+          "A",
+          "T",
+          "S",
+          "O",
+          "M",
+          "R",
+          "S",
+          "E"
+        ],
+        [
+          "V",
+          "N",
+          "E",
+          "L",
+          "P",
+          "S",
+          "N",
+          "P"
+        ],
+        [
+          "O",
+          "N",
+          "A",
+          "C",
+          "O",
+          "E",
+          "C",
+          "A"
+        ]
       ],
-      "answers": ["PLANETS", "MOON", "COMET", "ASTRO", "STARS"],
-      "spangram": "GALAXIES",
+      "answers": [
+        "PLANETS",
+        "COSMOS",
+        "NEBULA",
+        "METEOR",
+        "COMET",
+        "MOON",
+        "NOVA"
+      ],
+      "spangram": "OUTERSPACE",
       "spangramHint": "Out of this world"
     },
     {
@@ -221,15 +445,76 @@
       "difficulty": "easy",
       "theme": "Colors",
       "grid": [
-        ["R", "A", "I", "N", "B", "O", "W", "S"],
-        ["B", "L", "U", "E", "R", "E", "D", "V"],
-        ["G", "R", "E", "E", "N", "Y", "L", "W"],
-        ["P", "U", "R", "P", "L", "E", "O", "R"],
-        ["O", "R", "A", "N", "G", "E", "A", "P"],
-        ["P", "I", "N", "K", "C", "Y", "A", "N"]
+        [
+          "C",
+          "C",
+          "R",
+          "O",
+          "O",
+          "R",
+          "R",
+          "P"
+        ],
+        [
+          "R",
+          "O",
+          "L",
+          "W",
+          "A",
+          "N",
+          "U",
+          "L"
+        ],
+        [
+          "M",
+          "I",
+          "H",
+          "T",
+          "E",
+          "P",
+          "G",
+          "E"
+        ],
+        [
+          "S",
+          "E",
+          "A",
+          "L",
+          "N",
+          "T",
+          "R",
+          "E"
+        ],
+        [
+          "E",
+          "O",
+          "R",
+          "A",
+          "E",
+          "M",
+          "E",
+          "G"
+        ],
+        [
+          "N",
+          "L",
+          "S",
+          "C",
+          "A",
+          "G",
+          "E",
+          "N"
+        ]
       ],
-      "answers": ["BLUE", "GREEN", "PURPLE", "ORANGE", "PINK", "CYAN", "RED"],
-      "spangram": "RAINBOWS",
+      "answers": [
+        "SCARLET",
+        "MAGENTA",
+        "CRIMSON",
+        "PURPLE",
+        "ORANGE",
+        "GREEN"
+      ],
+      "spangram": "COLORWHEEL",
       "spangramHint": "Every color"
     }
   ],
@@ -239,12 +524,33 @@
       "difficulty": "medium",
       "theme": "The Investigation",
       "sides": [
-        ["C", "R", "I"],
-        ["L", "U", "E"],
-        ["S", "A", "T"],
-        ["D", "O", "N"]
+        [
+          "C",
+          "R",
+          "I"
+        ],
+        [
+          "L",
+          "U",
+          "E"
+        ],
+        [
+          "S",
+          "A",
+          "T"
+        ],
+        [
+          "D",
+          "O",
+          "N"
+        ]
       ],
-      "answers": ["CRUEL", "SLATE", "DRAIN", "CAULDRON"],
+      "answers": [
+        "CRUEL",
+        "SLATE",
+        "DRAIN",
+        "CAULDRON"
+      ],
       "minWords": 3
     },
     {
@@ -252,12 +558,33 @@
       "difficulty": "medium",
       "theme": "Dark Woods",
       "sides": [
-        ["G", "R", "O"],
-        ["V", "E", "S"],
-        ["N", "I", "G"],
-        ["H", "T", "W"]
+        [
+          "G",
+          "R",
+          "O"
+        ],
+        [
+          "V",
+          "E",
+          "S"
+        ],
+        [
+          "N",
+          "I",
+          "G"
+        ],
+        [
+          "H",
+          "T",
+          "W"
+        ]
       ],
-      "answers": ["GROWN", "VINES", "SWORN", "EIGHT"],
+      "answers": [
+        "GROWN",
+        "VINES",
+        "SWORN",
+        "EIGHT"
+      ],
       "minWords": 3
     }
   ],
@@ -265,20 +592,61 @@
     {
       "id": "sb_horror_001",
       "centerLetter": "O",
-      "outerLetters": ["B", "D", "G", "H", "M", "R"],
-      "answers": [
-        "BOG", "BOD", "DOG", "DOGO", "HOG", "HOOD", "HOBO", "GOOD", "GOD", "ROOD", "BOGHOG"
+      "outerLetters": [
+        "B",
+        "D",
+        "G",
+        "H",
+        "M",
+        "R"
       ],
-      "pangrams": ["BOGHOG", "GOOD"]
+      "answers": [
+        "BOG",
+        "BOD",
+        "DOG",
+        "DOGO",
+        "HOG",
+        "HOOD",
+        "HOBO",
+        "GOOD",
+        "GOD",
+        "ROOD",
+        "BOGHOG"
+      ],
+      "pangrams": [
+        "BOGHOG",
+        "GOOD"
+      ]
     },
     {
       "id": "sb_horror_002",
       "centerLetter": "A",
-      "outerLetters": ["C", "D", "M", "R", "S", "W"],
-      "answers": [
-        "ARM", "MAD", "RAD", "WAD", "CAM", "DAM", "DRAM", "SCAM", "SWAM", "CRAM", "WASD", "AWARD"
+      "outerLetters": [
+        "C",
+        "D",
+        "M",
+        "R",
+        "S",
+        "W"
       ],
-      "pangrams": ["AWARD", "SCARWAD"]
+      "answers": [
+        "ARM",
+        "MAD",
+        "RAD",
+        "WAD",
+        "CAM",
+        "DAM",
+        "DRAM",
+        "SCAM",
+        "SWAM",
+        "CRAM",
+        "WASD",
+        "AWARD"
+      ],
+      "pangrams": [
+        "AWARD",
+        "SCARWAD"
+      ]
     }
   ]
 }
