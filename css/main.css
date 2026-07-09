@@ -966,14 +966,17 @@ button:disabled {
     text-shadow: 0 0 4px rgba(0,0,0,0.6);
     font-weight: bold;
 }
-.strands-cell.found-0 { background: #e23b3b; border-color: #ff6b6b; box-shadow: 0 0 6px rgba(226,59,59,0.5); }
-.strands-cell.found-1 { background: #2e9e5b; border-color: #4cd389; box-shadow: 0 0 6px rgba(46,158,91,0.5); }
-.strands-cell.found-2 { background: #3b6fe2; border-color: #6b96ff; box-shadow: 0 0 6px rgba(59,111,226,0.5); }
-.strands-cell.found-3 { background: #e2a23b; border-color: #ffc46b; box-shadow: 0 0 6px rgba(226,162,59,0.5); }
-.strands-cell.found-4 { background: #9b3be2; border-color: #c46bff; box-shadow: 0 0 6px rgba(155,59,226,0.5); }
-.strands-cell.found-5 { background: #e23b9b; border-color: #ff6bc4; box-shadow: 0 0 6px rgba(226,59,155,0.5); }
-.strands-cell.found-6 { background: #1fa6a6; border-color: #4cdada; box-shadow: 0 0 6px rgba(31,166,166,0.5); }
-.strands-cell.found-spangram { background: #f5c542; border-color: #ffe08a; box-shadow: 0 0 8px rgba(245,197,66,0.6); color: #2a1a00; }
+/* Found-keyword colors mapped to each answer's NAMED color (index = position in
+   puzzle.answers). Distinct hues; cool chrome below keeps solved clearly separate
+   from the live-selection state. */
+.strands-cell.found-0 { background: #FF2400; border-color: #ff7a4d; box-shadow: 0 0 6px rgba(255,36,0,0.5); }   /* SCARLET */
+.strands-cell.found-1 { background: #E0218A; border-color: #ff6ec7; box-shadow: 0 0 6px rgba(224,33,138,0.5); } /* MAGENTA */
+.strands-cell.found-2 { background: #B80F0A; border-color: #ff5b56; box-shadow: 0 0 6px rgba(184,15,10,0.5); }  /* CRIMSON */
+.strands-cell.found-3 { background: #9B30FF; border-color: #c488ff; box-shadow: 0 0 6px rgba(155,48,255,0.5); } /* PURPLE */
+.strands-cell.found-4 { background: #FF8C00; border-color: #ffbe5c; box-shadow: 0 0 6px rgba(255,140,0,0.5); }  /* ORANGE */
+.strands-cell.found-5 { background: #2ECC40; border-color: #7dff8c; box-shadow: 0 0 6px rgba(46,204,64,0.5); }  /* GREEN */
+.strands-cell.found-6 { background: #1FA6A6; border-color: #4cdada; box-shadow: 0 0 6px rgba(31,166,166,0.5); } /* fallback */
+.strands-cell.found-spangram { background: #FFD700; border-color: #fff0a8; box-shadow: 0 0 8px rgba(255,215,0,0.7); color: #2a1a00; } /* COLORWHEEL */
 
 .strands-cell.invalid-temp {
     background: #ff4444;
@@ -1122,9 +1125,9 @@ button:disabled {
 
 /* Strands Hint System Styles */
 .strands-cell.hint-revealed {
-    background: #aa8800;
-    border-color: #ffcc00;
-    box-shadow: 0 0 8px rgba(255, 204, 0, 0.6);
+    background: #1f6f8b;
+    border-color: #4fc3e0;
+    box-shadow: 0 0 8px rgba(79, 195, 224, 0.6);
     animation: hint-pulse 2s infinite;
 }
 
@@ -1137,17 +1140,17 @@ button:disabled {
    colors so the player can see exactly which cells are in the current drag —
    including letters pulled from already-solved words. Placed last on purpose. */
 .strands-cell.selected {
-    background: var(--secondary-accent) !important;
-    color: #000 !important;
-    border-color: var(--secondary-accent) !important;
-    box-shadow: 0 0 8px rgba(255, 107, 53, 0.6) !important;
+    background: #19c3d6 !important;
+    color: #001014 !important;
+    border-color: #7ff0ff !important;
+    box-shadow: 0 0 8px rgba(25, 195, 214, 0.6) !important;
 }
 .strands-cell.selected.first {
     border-width: 3px !important;
     border-color: #fff !important;
 }
 .strands-cell.selected.last {
-    box-shadow: 0 0 12px rgba(255, 107, 53, 0.9) !important;
+    box-shadow: 0 0 12px rgba(127, 240, 255, 0.9) !important;
 }
 
 .hint-counter {
