@@ -423,61 +423,53 @@ class StrandsGame extends BaseGame {
     }
 
     /**
-     * Hint system: Every 3 valid non-theme words reveals a hint
-     * FIX #7: Added hint system
+     * Hint system: every 3 valid non-theme words auto-reveals the
+     * next unrevealed theme word by highlighting its path on the grid.
      */
     checkHintSystem() {
         const hintCount = Math.floor(this.nonThemeWords.length / 3);
         const revealedCount = this.hintRevealedWords.length;
-        
+
         if (hintCount > revealedCount) {
-            // Reveal a new hint word
-            const unrevealedAnswers = this.answers.filter(word => 
+            const unrevealed = this.answers.filter(word =>
                 !this.foundWords.includes(word) && !this.hintRevealedWords.includes(word)
             );
-            
-            if (unrevealedAnswers.length > 0) {
-                // Pick first unrevealed answer as hint
-                const hintWord = unrevealedAnswers[0];
+            if (unrevealed.length > 0) {
+                const hintWord = unrevealed[0];
                 this.hintRevealedWords.push(hintWord);
                 this.revealHintWord(hintWord);
                 this.showMessage(`HINT: "${hintWord}" revealed!`, 'warning');
             }
         }
-        
+
         this.updateHintDisplay();
     }
 
     /**
-     * Visually reveal a hint word on the grid
+     * Visually reveal a hint word on the grid by highlighting its path.
      */
     revealHintWord(word) {
-        // Find the word path using the validator logic
         const validator = new StrandsValidator();
         const paths = validator.findAllPaths(this.grid, word);
-        
         if (paths.length > 0) {
-            const path = paths[0];
-            path.forEach(pos => {
+            paths[0].forEach(pos => {
                 const cell = this.container.querySelector(
                     `[data-row="${pos.row}"][data-col="${pos.col}"]`
                 );
-                if (cell) {
-                    cell.classList.add('hint-revealed');
-                }
+                if (cell) { cell.classList.add('hint-revealed'); }
             });
         }
     }
 
     /**
-     * Update hint counter display
+     * Update hint counter display (reset on a fresh game).
      */
     updateHintDisplay() {
         const hintEl = document.getElementById('hint-counter');
         if (hintEl) {
             const progress = this.nonThemeWords.length % 3;
             const hintsEarned = Math.floor(this.nonThemeWords.length / 3);
-            const hintText = hintsEarned > 0 
+            const hintText = hintsEarned > 0
                 ? `Hints: ${hintsEarned} | Next hint: ${progress}/3`
                 : `Next hint: ${progress}/3`;
             hintEl.textContent = hintText;
