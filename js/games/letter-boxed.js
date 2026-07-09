@@ -58,7 +58,6 @@ class LetterBoxedGame {
                 <div class="letter-boxed-controls">
                     <button id="lb-clear">CLEAR</button>
                     <button id="lb-submit" disabled>SUBMIT</button>
-                    <button id="lb-shuffle">SHUFFLE</button>
                 </div>
 
                 <div id="lb-message" class="letter-boxed-message"></div>
@@ -130,9 +129,6 @@ class LetterBoxedGame {
 
         cleanupManager.addListener(
             document.getElementById('lb-clear'), 'click', () => this.clear()
-        );
-        cleanupManager.addListener(
-            document.getElementById('lb-shuffle'), 'click', () => this.shuffle()
         );
         cleanupManager.addListener(
             document.getElementById('lb-submit'), 'click', () => this.commitWord()
@@ -250,18 +246,6 @@ class LetterBoxedGame {
         this.typebox.value = w;
         this.updateDisplay();
         if (this.typebox) { this.typebox.focus(); }
-    }
-
-    shuffle() {
-        this.container.querySelectorAll('.side').forEach(side => {
-            const letters = Array.from(side.querySelectorAll('.pool-letter'));
-            for (let i = letters.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                side.insertBefore(letters[j], letters[i]);
-            }
-        });
-        this.drawPath();
-        vhsEffects.playClick();
     }
 
     // Enter: commit the current word into the player's progress sequence.

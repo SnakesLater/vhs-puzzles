@@ -801,13 +801,13 @@ button:disabled {
 
 /* Letter Boxed typebox: replaces the tab/Enter tile flow. Looks like the VHS
    readout but is a real, autofocused <input> — letters route here on entry.
-   Flows in normal order BELOW the box (overrides the old absolute-centered rule). */
+   Sits well below the box and well above the CLEAR/SUBMIT buttons. */
 .letter-boxed-center {
     position: relative;
     top: auto;
     left: auto;
     transform: none;
-    margin-top: 24px;
+    margin-top: 64px;
     text-align: center;
 }
 .lb-typebox {
@@ -868,7 +868,7 @@ button:disabled {
     display: flex;
     justify-content: center;
     gap: 8px;
-    margin: 12px 0;
+    margin: 48px 0 12px;
 }
 
 .letter-boxed-controls button {
