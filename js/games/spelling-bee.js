@@ -30,11 +30,10 @@ class SpellingBeeGame {
                     </div>
                 </div>
 
-                <div class="bee-center-letter">
-                    <div class="center-letter">${this.centerLetter}</div>
-                </div>
-
                 <div class="bee-outer-ring">
+                    <div class="bee-center-letter">
+                        <div class="center-letter">${this.centerLetter}</div>
+                    </div>
                     ${this.outerLetters.map(l => `
                         <button class="bee-letter" data-letter="${l}">${l}</button>
                     `).join('')}
