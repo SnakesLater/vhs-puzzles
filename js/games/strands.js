@@ -262,15 +262,45 @@ class StrandsGame extends BaseGame {
             return;
         }
         
-        // Check adjacency to last selected cell
+        // Check adjacency to last selected cell. Fast/skipped drags (esp.
+        // diagonals) often jump past an intermediate cell, so instead of
+        // dropping the selection we interpolate a contiguous 8-dir line
+        // from the last cell to the newly entered one and fill it in.
         if (this.selectedPath.length > 0) {
             const lastPos = this.selectedPath[this.selectedPath.length - 1];
             if (!this.isAdjacent({row, col}, lastPos)) {
+                this.fillLine(lastPos, {row, col});
                 return;
             }
         }
-        
+
         this.selectedPath.push({row, col});
+        this.updateCurrentWord();
+        this.highlightSelectedPath();
+    }
+
+    /**
+     * Walk a contiguous 8-directional line from `a` to `b` (one step of ±1 in
+     * each axis per cell) and append every intermediate cell to the path.
+     * Makes diagonal / fast drags forgiving instead of dropping the selection.
+     */
+    fillLine(a, b) {
+        let r = a.row, c = a.col;
+        const dr = Math.sign(b.row - r);
+        const dc = Math.sign(b.col - c);
+        while (r !== b.row || c !== b.col) {
+            r += dr;
+            c += dc;
+            // clamp to grid bounds (defensive)
+            if (r < 0 || r >= this.grid.length || c < 0 || c >= this.grid[0].length) { break; }
+            const idx = this.selectedPath.findIndex(p => p.row === r && p.col === c);
+            if (idx !== -1) {
+                // hit an already-selected cell — truncate back to it
+                this.selectedPath = this.selectedPath.slice(0, idx + 1);
+                break;
+            }
+            this.selectedPath.push({row: r, col: c});
+        }
         this.updateCurrentWord();
         this.highlightSelectedPath();
     }
