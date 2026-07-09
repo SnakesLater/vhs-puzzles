@@ -23,23 +23,41 @@ class UnifiedDictionary {
     async load(puzzleData) {
         await this.loadBroadList();
         if (puzzleData) { this.registerPuzzles(puzzleData); }
-        this.loaded = true;
+        // loaded = we have SOMETHING to validate against. If the broad list
+        // failed AND there are no registered words, words stays empty and the
+        // games must degrade gracefully (see isValidWord).
+        this.loaded = this.words.size > 0 || this.letterBoxedAnswers.size > 0 || this.spellingBeeTargets.size > 0;
+        if (!this.loaded) {
+            console.warn('[unified-dict] NO words loaded — games will accept guesses without dict validation.');
+        }
     }
 
     async loadBroadList() {
-        try {
-            const res = await fetch('/data/strands-dictionary.txt');
-            if (!res.ok) { throw new Error('dict http ' + res.status); }
-            const text = await res.text();
-            text.split('\n').forEach(line => {
-                const w = line.trim().toUpperCase();
-                if (w.length >= 3 && w.length <= 10 && /^[A-Z]+$/.test(w)) {
-                    this.words.add(w);
-                }
-            });
-        } catch (e) {
-            console.warn('[unified-dict] broad list load failed:', e.message);
+        // Retry a few times: a 2MB plaintext fetch over a slow link (mobile/
+        // tailnet) can drop. Failing silently here previously left the games
+        // rejecting every guess ("all words not valid").
+        const MAX = 3;
+        for (let attempt = 1; attempt <= MAX; attempt++) {
+            try {
+                const res = await fetch('/data/strands-dictionary.txt');
+                if (!res.ok) { throw new Error('dict http ' + res.status); }
+                const text = await res.text();
+                let added = 0;
+                text.split('\n').forEach(line => {
+                    const w = line.trim().toUpperCase();
+                    if (w.length >= 3 && w.length <= 10 && /^[A-Z]+$/.test(w)) {
+                        this.words.add(w);
+                        added++;
+                    }
+                });
+                console.log(`[unified-dict] loaded ${added} broad words (attempt ${attempt}).`);
+                return;
+            } catch (e) {
+                console.warn(`[unified-dict] broad list load failed (attempt ${attempt}/${MAX}):`, e.message);
+                if (attempt < MAX) { await new Promise(r => setTimeout(r, 400 * attempt)); }
+            }
         }
+        console.warn('[unified-dict] broad list unavailable after retries — falling back to registered words only.');
     }
 
     registerPuzzles(data) {
@@ -73,7 +91,13 @@ class UnifiedDictionary {
     }
 
     isValidWord(word) {
-        return this.words.has(String(word).toUpperCase());
+        const w = String(word).toUpperCase();
+        // Graceful degradation: if the dictionary couldn't load at all (e.g. the
+        // broad list fetch dropped on a slow mobile/tailnet link and no puzzle
+        // words were registered), don't reject every guess — accept it so the
+        // game stays playable instead of reporting "all words not valid".
+        if (this.words.size === 0) { return true; }
+        return this.words.has(w);
     }
 
     // Words buildable from `letters` (array, case-insensitive). Options:
