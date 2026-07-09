@@ -37,6 +37,12 @@ class LetterBoxedGame {
                     <p class="horror-hint">Chain words - each new word must start with the last letter of the previous. Type or click letters; consecutive letters must come from different sides of the box.</p>
                 </div>
 
+                <div class="lb-progress">
+                    <span id="lb-count">0</span> / 12 letters used
+                    &nbsp;·&nbsp;
+                    <span id="lb-words">0</span> words
+                </div>
+
                 <div class="letter-boxed-sides">
                     <svg class="lb-path"></svg>
                     ${this.sides.map((side, i) => `
@@ -61,11 +67,6 @@ class LetterBoxedGame {
                 </div>
 
                 <div id="lb-message" class="letter-boxed-message"></div>
-                <div class="lb-progress">
-                    <span id="lb-count">0</span> / 12 letters used
-                    &nbsp;·&nbsp;
-                    <span id="lb-words">0</span> words
-                </div>
             </div>
         `;
         this.container.innerHTML = html;

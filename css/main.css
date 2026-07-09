@@ -10,6 +10,17 @@
     --warning-color: #f39c12;
     --danger-color: #e74c3c;
     --tape-border: 4px solid #333;
+
+    /* Letter Boxed theme aliases (used by .letter-boxed-* rules below). */
+    --vhs-accent: #b59f3b;
+    --vhs-accent-dim: #3a3a3c;
+    --vhs-bright: #e0e0e0;
+    --vhs-text: #e0e0e0;
+    --vhs-muted: #8a8a9a;
+    --vhs-dim: #565758;
+    --vhs-border: 0 0 8px rgba(181,159,59,0.4);
+    --vhs-glow-accent: 0 0 10px rgba(181,159,59,0.5);
+    --vhs-glow-bright: 0 0 12px rgba(224,224,224,0.5);
 }
 
 * {
@@ -677,6 +688,13 @@ button:disabled {
    ============================================ */
 
 .letter-boxed-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    max-height: 100vh;
+    overflow-y: auto;
+    margin: auto;
     text-align: center;
     padding: 20px;
     color: var(--vhs-text);
