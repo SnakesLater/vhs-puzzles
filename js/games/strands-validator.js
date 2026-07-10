@@ -86,51 +86,57 @@ class StrandsValidator {
         const rows = grid.length;
         const cols = grid[0].length;
         const results = [];
-        
-        const search = (row, col, index, path) => {
-            if (index === word.length) {
-                results.push([...path]);
-                return;
+        // Seeds can start a path only where the word's first letter matches.
+        const seeds = [];
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+                if (grid[r][c] === word[0]) { seeds.push({ row: r, col: c }); }
             }
-            
+        }
+
+        const search = (row, col, index, path) => {
             // Bounds check
-            if (row < 0 || row >= rows || col < 0 || col >= cols) {return;}
-            
+            if (row < 0 || row >= rows || col < 0 || col >= cols) { return; }
+
             // Check if already in path (no self-crossing)
-            if (path.some(p => p.row === row && p.col === col)) {return;}
-            
+            if (path.some(p => p.row === row && p.col === col)) { return; }
+
             // Check if letter matches
-            if (grid[row][col] !== word[index]) {return;}
-            
+            if (grid[row][col] !== word[index]) { return; }
+
             // Check adjacency to previous cell
             if (path.length > 0) {
                 const last = path[path.length - 1];
                 const rowDiff = Math.abs(row - last.row);
                 const colDiff = Math.abs(col - last.col);
                 // Must be adjacent (max 1 step in each direction)
-                if (rowDiff > 1 || colDiff > 1) {return;}
+                if (rowDiff > 1 || colDiff > 1) { return; }
             }
-            
-            path.push({row, col});
-            
-            // Explore all 8 directions
-            for (let dr = -1; dr <= 1; dr++) {
-                for (let dc = -1; dc <= 1; dc++) {
-                    if (dr === 0 && dc === 0) {continue;}
-                    search(row + dr, col + dc, index + 1, path);
+
+            path.push({ row, col });
+
+            if (index === word.length - 1) {
+                results.push([...path]);
+            } else {
+                // Explore all 8 directions
+                for (let dr = -1; dr <= 1; dr++) {
+                    for (let dc = -1; dc <= 1; dc++) {
+                        if (dr === 0 && dc === 0) { continue; }
+                        search(row + dr, col + dc, index + 1, path);
+                    }
                 }
             }
-            
+
             path.pop();
         };
-        
-        // Try all starting positions
-        for (let r = 0; r < rows; r++) {
-            for (let c = 0; c < cols; c++) {
-                search(r, c, 0, []);
-            }
-        }
-        
+
+        // Start searches only from cells matching the first letter. This also
+        // fixes the previous bug where every cell was used as a seed and the
+        // recursion re-entered a valid path from each intermediate step,
+        // emitting the SAME path once per traversal order (e.g. 8x / 48x
+        // duplicates). Now each distinct path is recorded exactly once.
+        seeds.forEach(s => search(s.row, s.col, 0, []));
+
         return results;
     }
 
