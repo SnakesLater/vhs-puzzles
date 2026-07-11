@@ -23,3 +23,6 @@ Thumbs.db
 
 # Progress data
 data/progress.json
+
+# Dev-only tooling — not part of the shipped product (dev page later if wanted)
+dev/

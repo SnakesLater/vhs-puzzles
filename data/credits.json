@@ -1,0 +1,20 @@
+{
+  "description": "Contributor-credit registry for the VHS Horror Puzzle Collection. The Narrative & Content Engineer maintains this file. Each campaign in stories.json references contributors by id + role (see content-schema.json -> creditRoles).",
+  "roles": {
+    "Director": "Created complete stories/campaigns",
+    "Producer": "Designed full puzzle sets",
+    "Writer": "Crafted narrative elements",
+    "Actor": "Provided character ideas/dialogue",
+    "Special Effects": "Contributed code/visual enhancements"
+  },
+  "contributors": {
+    "snak3": {
+      "displayName": "Snak3",
+      "roles": ["Director", "Producer"]
+    },
+    "narrative-engineer": {
+      "displayName": "Narrative & Content Engineer",
+      "roles": ["Writer", "Director"]
+    }
+  }
+}

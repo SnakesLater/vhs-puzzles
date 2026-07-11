@@ -1,13 +1,26 @@
 {
+  "schemaVersion": 1,
   "campaigns": [
     {
       "id": "cabin_stalkings",
       "title": "The Cabin Stalkings",
       "premise": "Detective Mills investigates a series of disappearances at remote cabins in the woods. The evidence points to a pattern... but what's really hunting these victims?",
+      "theme": "survivor-detective",
+      "difficulty": "medium",
       "characters": {
         "detective": "Detective Mills",
         "victim": "Unknown (multiple victims)"
       },
+      "credits": [
+        {
+          "id": "snak3",
+          "role": "Director"
+        },
+        {
+          "id": "narrative-engineer",
+          "role": "Writer"
+        }
+      ],
       "scenes": [
         {
           "sceneId": "cabin_stalkings_001",
@@ -43,7 +56,7 @@
           "sceneId": "cabin_stalkings_004",
           "gameType": "connections",
           "puzzleId": "conn_detective_004",
-          "timer": 60,
+          "timer": 180,
           "narrative": {
             "before": "Detective Mills: 'I'm at the fourth cabin. The security footage shows someone was here 20 minutes ago. I have limited time to gather evidence before they return...'",
             "after": "Detective Mills: 'I barely got out with the evidence. Serial, mass, spree, vigilante... the killer's profile is becoming clear. And these forest sounds... I heard them all while I was escaping.'"
@@ -63,22 +76,148 @@
       "epilogue": "Detective Mills: 'The Cabin Stalkings case... closed? No. Never closed. There are more cabins. More victims. More darkness. But now I understand the pattern. Now I can start hunting back...'"
     },
     {
-      "id": "midnight_broadcast",
-      "title": "The Midnight Broadcast",
-      "premise": "Reporter Jane receives a pirate TV signal that only appears at midnight. Each broadcast contains a puzzle - solve it, or the next victim dies. Can she decode the signal and stop the killer?",
+      "id": "the_recording",
+      "title": "The Recording",
+      "premise": "Sole survivor Ellie Vance wakes in a shelved tape archive with no memory of the last hour. Detective Cross patches in over a dying radio. Together they must decode the evidence on the reel before the signal flatlines - and before whatever is on the tape finishes its loop.",
+      "theme": "survivor-detective",
+      "difficulty": "hard",
       "characters": {
-        "reporter": "Reporter Jane",
-        "victim": "Unknown (broadcast victims)"
+        "detective": "Detective Cross",
+        "survivor": "Ellie Vance"
       },
+      "credits": [
+        {
+          "id": "snak3",
+          "role": "Director"
+        },
+        {
+          "id": "narrative-engineer",
+          "role": "Writer"
+        }
+      ],
       "scenes": [
         {
-          "sceneId": "midnight_broadcast_001",
+          "sceneId": "the_recording_001",
           "gameType": "connections",
           "puzzleId": "conn_detective_001",
           "timer": null,
           "narrative": {
+            "before": "Cross (radio): 'Ellie, can you hear me? The tape on the reel - it's the only record of what happened. Sort the evidence on it. Find what belongs together.'",
+            "after": "Ellie: 'Weapons, locations, evidence, the killer's habits... the reel is a confession in code. Whoever filmed this wanted it found.'"
+          }
+        },
+        {
+          "sceneId": "the_recording_002",
+          "gameType": "strands",
+          "puzzleId": "strands_game_001",
+          "timer": 180,
+          "narrative": {
+            "before": "Ellie: 'Freeze-frames flicker across the monitor. The words in the static spell something - I have to pull the threads before the next commercial break.'",
+            "after": "Cross (radio): 'Good. The spangram locked the loop open. Keep talking to me, Ellie - the signal's fading.'"
+          }
+        },
+        {
+          "sceneId": "the_recording_003",
+          "gameType": "letter-boxed",
+          "puzzleId": "lb_horror_001",
+          "timer": null,
+          "narrative": {
+            "before": "Cross (radio): 'The box of the tape case has four sides, each printed with letters. Chain them - spell what the killer left at the scene.'",
+            "after": "Ellie: 'CAULDRON... the evidence photos showed one in the barn. This isn't random. The killer stages every frame.'"
+          }
+        },
+        {
+          "sceneId": "the_recording_004",
+          "gameType": "spelling-bee",
+          "puzzleId": "sb_horror_001",
+          "timer": null,
+          "narrative": {
+            "before": "Ellie: 'A buzzing hive of letters hums from the speaker. One letter is the core - build every word the victim tried to scream.'",
+            "after": "Cross (radio): 'BOG, HOOD, BROOM... she was trapped, wasn't she? The reel ends in the basement. Get to the door, Ellie.'"
+          }
+        },
+        {
+          "sceneId": "the_recording_005",
+          "gameType": "connections",
+          "puzzleId": "conn_detective_005",
+          "timer": 150,
+          "narrative": {
+            "before": "Ellie: 'The final shelf. Cold case files, words that follow DARK, police ranks, creature names. I have 150 seconds before the tape loops.'",
+            "after": "Cross (radio): 'You did it. The loop broke. Ellie - you're the only one who made it to the end of the reel. You survived it.'"
+          }
+        }
+      ],
+      "epilogue": "Ellie: 'The tape stopped mid-scream. I walked out of that archive with the reel under my arm. Detective Cross says the killer is still recording somewhere. But now I know the language of the static - and I'm not afraid of it anymore.'"
+    },
+    {
+      "id": "midnight_broadcast",
+      "title": "The Midnight Broadcast",
+      "premise": "Reporter Jane receives a pirate TV signal that only appears at midnight. Each broadcast contains a puzzle - solve it, or the next victim dies. Can she decode the signal and stop the killer?",
+      "theme": "survivor-detective",
+      "difficulty": "hard",
+      "characters": {
+        "reporter": "Reporter Jane",
+        "victim": "Unknown (broadcast victims)"
+      },
+      "credits": [
+        {
+          "id": "snak3",
+          "role": "Director"
+        },
+        {
+          "id": "narrative-engineer",
+          "role": "Writer"
+        }
+      ],
+      "scenes": [
+        {
+          "sceneId": "midnight_broadcast_001",
+          "gameType": "connections",
+          "puzzleId": "conn_horror_016",
+          "timer": null,
+          "narrative": {
             "before": "Reporter Jane: 'The broadcast just started. Static, then a message: \"Find what doesn't belong.\" I need to analyze what I'm seeing before it's too late...'",
             "after": "Reporter Jane: 'The groups are connected. But what's the message hidden in these connections? There must be something I'm missing...'"
+          }
+        },
+        {
+          "sceneId": "midnight_broadcast_002",
+          "gameType": "strands",
+          "puzzleId": "strands_horror_005",
+          "timer": 180,
+          "narrative": {
+            "before": "Reporter Jane: 'The signal is breaking up - I can see letters scattered in the interference. If I don't untangle them before the next commercial, the killer broadcasts again at midnight.'",
+            "after": "Reporter Jane: 'SLASHER. The spangram spelled it out. The killer is mocking me. This isn't random - these are their favorite horror icons.'"
+          }
+        },
+        {
+          "sceneId": "midnight_broadcast_003",
+          "gameType": "letter-boxed",
+          "puzzleId": "lb_horror_003",
+          "timer": null,
+          "narrative": {
+            "before": "Reporter Jane: 'The broadcast cut to a close-up of a screaming face. Letters crawl around the edges of the frame. I need to spell what the victim is trying to say before the signal degrades.'",
+            "after": "Reporter Jane: 'SCREAM... that's what she was saying. The victim knew the killer. This is connected to a case file from three years ago.'"
+          }
+        },
+        {
+          "sceneId": "midnight_broadcast_004",
+          "gameType": "spelling-bee",
+          "puzzleId": "sb_horror_003",
+          "timer": null,
+          "narrative": {
+            "before": "Reporter Jane: 'A honeycomb of letters pulses on screen. The killer says every word I find brings me closer to their identity. One letter is the key - everything must contain it.'",
+            "after": "Reporter Jane: 'CRACKER. The name of a program on the dark web. This isn't a person broadcasting - it's a group. They have a protocol, a signature.'"
+          }
+        },
+        {
+          "sceneId": "midnight_broadcast_005",
+          "gameType": "connections",
+          "puzzleId": "conn_horror_018",
+          "timer": 180,
+          "narrative": {
+            "before": "Reporter Jane: 'The final broadcast. The killer says I have 180 seconds before they go live with a new victim. Everything I've decoded leads to this moment. I need to sort the evidence one last time.'",
+            "after": "Reporter Jane: 'The signal went dark. But I found them. I know where the broadcast originates. The story isn't over - it's just moving from the screen to the street. Meet me at the old station.'"
           }
         }
       ],
@@ -88,19 +227,71 @@
       "id": "the_archive",
       "title": "The Archive",
       "premise": "Archivist discovers forbidden texts that drive readers to madness. Each text contains a puzzle - solve it to seal the text away, or succumb to its influence.",
+      "theme": "survivor-detective",
+      "difficulty": "hard",
       "characters": {
         "archivist": "The Archivist",
         "victim": "Previous archive readers"
       },
+      "credits": [
+        {
+          "id": "snak3",
+          "role": "Director"
+        },
+        {
+          "id": "narrative-engineer",
+          "role": "Writer"
+        }
+      ],
       "scenes": [
         {
           "sceneId": "the_archive_001",
           "gameType": "connections",
-          "puzzleId": "conn_detective_001",
+          "puzzleId": "conn_horror_017",
           "timer": null,
           "narrative": {
             "before": "Archivist: 'I found this book in the restricted section. It says: \"Only those who can separate the threads of knowledge may read further.\" The pages are filled with scattered words...'",
             "after": "Archivist: 'The words are connected by unseen threads. But I can feel something watching from between the pages...'"
+          }
+        },
+        {
+          "sceneId": "the_archive_002",
+          "gameType": "spelling-bee",
+          "puzzleId": "sb_horror_004",
+          "timer": null,
+          "narrative": {
+            "before": "Archivist: 'The book grows warm in my hands. A single word pulses on the page — I must decode its letters before the text burns itself away. One letter is the key.'",
+            "after": "Archivist: 'The book's first warning: humanity is neither good nor evil — merely capable of both. I should stop. But the next chapter calls to me...'"
+          }
+        },
+        {
+          "sceneId": "the_archive_003",
+          "gameType": "strands",
+          "puzzleId": "strands_horror_006",
+          "timer": null,
+          "narrative": {
+            "before": "Archivist: 'Chapter three is written in scattered letters. I must weave them together to read the text before the ink rearranges itself. The symbols won't stay still.'",
+            "after": "Archivist: 'SURVIVAL GEAR. The text describes what previous readers took into the dark places. They all prepared. They all went anyway. The archive doesn't trap you - it warns you.'"
+          }
+        },
+        {
+          "sceneId": "the_archive_004",
+          "gameType": "letter-boxed",
+          "puzzleId": "lb_horror_005",
+          "timer": null,
+          "narrative": {
+            "before": "Archivist: 'The walls of the archive are closing in. Letters line the spines of every book - I must chain them to spell the incantation that seals the text. But which words are correct?'",
+            "after": "Archivist: 'DARK, BOLT, HELD, WALK... the words form a map through the corridors of the archive. The building itself is the puzzle. Every room leads deeper.'"
+          }
+        },
+        {
+          "sceneId": "the_archive_005",
+          "gameType": "connections",
+          "puzzleId": "conn_horror_016",
+          "timer": null,
+          "narrative": {
+            "before": "Archivist: 'The final chapter. Names of those who came before, measurements of things not meant to be measured, the psychology of madness itself. I must sort truth from fiction one last time.'",
+            "after": "Archivist: 'DAHMER, GEIN, GACY, BUNDY - the previous readers. They weren't victims. They were contributors. The archive doesn't drive readers mad - it selects mad readers. And now I know my name belongs on this shelf too.'"
           }
         }
       ],

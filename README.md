@@ -189,13 +189,34 @@ vhs-puzzles/
 - `CHANGELOG.md` - Version history
 
 ## 📋 Documentation Policy
-
 - Keep docs accurate (update when status changes)
 - Verify all claims against actual codebase
 - Opencode + Openclaw verify implementation status
 
----
+## 📼 Narrative & Content Pipeline
 
+Content is **data, not code**. The Narrative & Content Engineer authors
+storylines and puzzle content; runtime logic never forks on a specific theme.
+
+- `data/content-schema.json` — source of truth for the content contract
+  (per-gameType shapes, enums, credit roles). Adding a theme/gameType is a
+  data change here + a line in `dev/tools/validate-content.js`.
+- `data/credits.json` — contributor registry (Director / Producer / Writer /
+  Actor / Special Effects). Campaigns reference contributors by `id`+`role`.
+- `data/stories.json` — campaigns. Each carries `theme`, `difficulty`, and
+  `credits`; scenes bind `gameType`+`puzzleId` to `narrative.{before,after}`.
+- `data/puzzles.json` — all puzzle data (connections / wordle / strands /
+  letter-boxed / spelling-bee).
+- `dev/tools/validate-content.js` — CI validator. Enforces the schema, referential
+  integrity (every `scene.puzzleId` must exist), the credit system, and
+  **data-vs-runtime drift** (e.g. it flags the hardcoded campaign-difficulty
+  map in `js/main.js` that duplicates data now owned by `stories.json`).
+
+Run it: `npm run validate:content`
+
+---
 **Version**: 3.0 (Updated — all games implemented)
+**Verified Date**: 2026-04-12
+**Pipeline Verified**: 2026-07-10 (SNA-8)
 **Verified Date**: 2026-04-12
 **Verified By**: Hermes Agent

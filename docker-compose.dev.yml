@@ -1,0 +1,22 @@
+# vhs-dev — live-mount dev stack for Portainer.
+# Replicates the running `vhs-dev` container: whole repo bind-mounted at /app
+# so any edit shows on next request (no image rebuild). node:18-slim base.
+#
+# Deploy in Portainer: Stacks > + Add stack > paste this file (or "Upload").
+# NOTE: a container named `vhs-dev` already exists (manual docker run).
+# Stop/remove it first, or Portainer will refuse the name:
+#   docker rm -f vhs-dev
+# Then Deploy the stack. Portainer then owns it (restart/redeploy from UI).
+services:
+  vhs-dev:
+    image: node:18-slim
+    container_name: vhs-dev
+    working_dir: /app
+    command: sh -c "node server.js"
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./:/app
+    restart: unless-stopped
+    # node has NO hot-reload. After editing server.js, restart:
+    #   Portainer: Stacks > vhs-dev > Redeploy  (or Containers > vhs-dev > Restart)

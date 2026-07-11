@@ -394,7 +394,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
             
             // Start timer if specified
-            if (timer) {
+            if (timer && typeof currentConnectionsGame.startTimer === 'function') {
                 showTimer(timer, () => {
                     currentConnectionsGame.startTimer(timer);
                 });
@@ -416,7 +416,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 rewindScene();
             });
 
-            if (timer) {
+            if (timer && typeof currentConnectionsGame.startTimer === 'function') {
                 showTimer(timer, () => {
                     currentConnectionsGame.startTimer(timer);
                 });
@@ -439,7 +439,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 rewindScene();
             });
 
-            if (timer) {
+            if (timer && typeof strandsGame.startTimer === 'function') {
                 showTimer(timer, () => {
                     strandsGame.startTimer(timer);
                 });
@@ -461,7 +461,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 rewindScene();
             });
 
-            if (timer) {
+            if (timer && typeof beeGame.startTimer === 'function') {
                 showTimer(timer, () => {
                     beeGame.startTimer(timer);
                 });
@@ -773,14 +773,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     function showTimer(seconds, callback) {
         const timerOverlay = document.getElementById('timer-overlay');
         const timerCount = document.getElementById('timer-count');
-        
+
         timerCount.textContent = formatTime(seconds);
         timerOverlay.classList.remove('hidden');
-        
-        setTimeout(() => {
-            timerOverlay.classList.add('hidden');
-            if (callback) {callback();}
-        }, 3000);
+
+        // Run the game's countdown immediately; the game hides the overlay
+        // itself on completion (e.g. ConnectionsGame.completeGame -> stopTimer).
+        if (callback) { callback(); }
     }
 
     function formatTime(seconds) {

@@ -1,0 +1,89 @@
+{
+  "$schema": "vhs-puzzles/content-schema v1",
+  "version": 1,
+  "description": "Single source of truth for the content contract. Adding a new horror theme, game type, or credit role is a DATA change here + a couple of lines in dev/tools/validate-content.js. No runtime code fork required. Consumed by dev/tools/validate-content.js (CI) and the Narrative & Content Engineer.",
+
+  "enums": {
+    "difficulty": ["easy", "medium", "hard"],
+    "groupDifficulty": ["easy", "medium", "hard", "tricky"]
+  },
+
+  "gameTypes": {
+    "connections": {
+      "idPrefix": "conn_",
+      "shape": [
+        { "name": "id", "type": "string" },
+        { "name": "difficulty", "type": "enum", "valuesRef": "difficulty" },
+        {
+          "name": "groups",
+          "type": "array",
+          "len": 4,
+          "item": {
+            "shape": [
+              { "name": "category", "type": "string" },
+              { "name": "difficulty", "type": "enum", "valuesRef": "groupDifficulty" },
+              { "name": "words", "type": "array", "len": 4, "item": { "type": "string", "upper": true } }
+            ]
+          }
+        }
+      ]
+    },
+    "wordle": {
+      "idPrefix": "wordle_",
+      "shape": [
+        { "name": "id", "type": "string" },
+        { "name": "answer", "type": "string", "minLen": 4, "maxLen": 6, "upper": true },
+        { "name": "difficulty", "type": "enum", "valuesRef": "difficulty" }
+      ]
+    },
+    "strands": {
+      "idPrefix": "strands_",
+      "shape": [
+        { "name": "id", "type": "string" },
+        { "name": "difficulty", "type": "enum", "valuesRef": "difficulty" },
+        { "name": "theme", "type": "string" },
+        { "name": "grid", "type": "array", "minLen": 1 },
+        { "name": "answers", "type": "array", "minLen": 1, "item": { "type": "string", "upper": true } },
+        { "name": "spangram", "type": "string", "upper": true },
+        { "name": "spangramHint", "type": "string" }
+      ]
+    },
+    "letter-boxed": {
+      "idPrefix": "lb_",
+      "shape": [
+        { "name": "id", "type": "string" },
+        { "name": "difficulty", "type": "enum", "valuesRef": "difficulty" },
+        { "name": "theme", "type": "string" },
+        {
+          "name": "sides",
+          "type": "array",
+          "len": 4,
+          "item": { "type": "array", "len": 3, "item": { "type": "string", "upper": true } }
+        },
+        { "name": "answers", "type": "array", "minLen": 1, "item": { "type": "string", "upper": true } },
+        { "name": "minWords", "type": "integer", "min": 1 }
+      ]
+    },
+    "spelling-bee": {
+      "idPrefix": "sb_",
+      "shape": [
+        { "name": "id", "type": "string" },
+        { "name": "centerLetter", "type": "string", "len": 1, "upper": true },
+        { "name": "outerLetters", "type": "array", "len": 6, "item": { "type": "string", "upper": true } },
+        { "name": "answers", "type": "array", "minLen": 1, "item": { "type": "string", "upper": true } },
+        { "name": "pangrams", "type": "array", "item": { "type": "string", "upper": true } }
+      ]
+    }
+  },
+
+  "campaign": {
+    "required": ["id", "title", "premise", "characters", "theme", "difficulty", "scenes", "epilogue", "credits"],
+    "sceneRequired": ["sceneId", "gameType", "puzzleId", "narrative"],
+    "sceneOptional": ["timer"],
+    "narrativeRequired": ["before", "after"]
+  },
+
+  "runtimeSupportedGameTypes": ["connections", "strands", "letter-boxed", "spelling-bee"],
+
+  "creditRoles": ["Director", "Producer", "Writer", "Actor", "Special Effects"]
+}

@@ -7,6 +7,7 @@
     "start": "node server.js",
     "lint": "npx eslint --config eslint.config.mjs js/",
     "lint:check": "npx eslint --config eslint.config.mjs js/",
+    "validate:content": "node dev/tools/validate-content.js",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:watch": "node server.js && echo \"Waiting for browser\"",
     "audit": "npm audit",

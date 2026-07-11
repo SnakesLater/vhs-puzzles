@@ -296,8 +296,11 @@ class ConnectionsGame {
     }
 
     completeGame(won) {
+        this.stopTimer();
+        const timerOverlay = document.getElementById('timer-overlay');
+        if (timerOverlay) { timerOverlay.classList.add('hidden'); }
         this.isComplete = true;
-        
+
         const controls = this.container.querySelector('.connections-controls');
         // Clear existing buttons to prevent stacking
         controls.innerHTML = '';
@@ -346,28 +349,26 @@ class ConnectionsGame {
 
     startTimer(seconds) {
         this.timeRemaining = seconds;
-        
+
         const timerDisplay = document.getElementById('timer-count');
-        timerDisplay.textContent = this.formatTime(this.timeRemaining);
-        
-        // Update story text renderer timer display as well
-        if (window.storyRenderer) {
-            storyRenderer.setTimer(`TIME: ${this.formatTime(this.timeRemaining)}`);
-        }
-        
-        this.timer = cleanupManager.addTimer(setInterval(() => {
-            this.timeRemaining--;
-            timerDisplay.textContent = this.formatTime(this.timeRemaining);
-            
-            // Update story text renderer timer display
-            if (window.storyRenderer) {
-                storyRenderer.setTimer(`TIME: ${this.formatTime(this.timeRemaining)}`);
-            }
-            
-            if (this.timeRemaining <= 10) {
+        // Reveal the overlay so the live countdown is actually visible
+        // (showTimer may have already shown it; this is idempotent).
+        const timerOverlay = document.getElementById('timer-overlay');
+        if (timerOverlay) { timerOverlay.classList.remove('hidden'); }
+
+        const render = () => {
+            const text = this.formatTime(this.timeRemaining);
+            if (timerDisplay) { timerDisplay.textContent = text; }
+            if (window.storyRenderer) { storyRenderer.setTimer(`TIME: ${text}`); }
+            if (timerDisplay && this.timeRemaining <= 10) {
                 timerDisplay.classList.add('timer-warning');
             }
-            
+        };
+        render();
+
+        this.timer = cleanupManager.addTimer(setInterval(() => {
+            this.timeRemaining--;
+            render();
             if (this.timeRemaining <= 0) {
                 this.stopTimer();
                 this.completeGame(false);
@@ -399,6 +400,3 @@ class ConnectionsGame {
         this.isComplete = true;
     }
 }
-
-// Global game instance
-const currentConnectionsGame = null;

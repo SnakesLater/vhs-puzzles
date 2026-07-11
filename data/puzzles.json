@@ -229,6 +229,834 @@
           ]
         }
       ]
+    },
+    {
+      "id": "conn_horror_016",
+      "difficulty": "easy",
+      "groups": [
+        {
+          "category": "Things that haunt houses",
+          "difficulty": "easy",
+          "words": [
+            "GHOST",
+            "SPIRIT",
+            "PHANTOM",
+            "POLTERGEIST"
+          ]
+        },
+        {
+          "category": "Ways to die in horror movies",
+          "difficulty": "medium",
+          "words": [
+            "STABBED",
+            "STRANGLED",
+            "DROWNED",
+            "BURNED"
+          ]
+        },
+        {
+          "category": "Horror movie settings",
+          "difficulty": "medium",
+          "words": [
+            "CABIN",
+            "ASYLUM",
+            "CEMETERY",
+            "MANSION"
+          ]
+        },
+        {
+          "category": "___ of the Dead",
+          "difficulty": "tricky",
+          "words": [
+            "NIGHT",
+            "DAY",
+            "DAWN",
+            "LAND"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conn_horror_017",
+      "difficulty": "hard",
+      "groups": [
+        {
+          "category": "Classic monsters",
+          "difficulty": "easy",
+          "words": [
+            "VAMPIRE",
+            "WEREWOLF",
+            "MUMMY",
+            "FRANKENSTEIN"
+          ]
+        },
+        {
+          "category": "Occult symbols",
+          "difficulty": "medium",
+          "words": [
+            "PENTAGRAM",
+            "CROSS",
+            "ANARCH",
+            "OUJIA"
+          ]
+        },
+        {
+          "category": "Ritual tools",
+          "difficulty": "hard",
+          "words": [
+            "ATHAME",
+            "CHALICE",
+            "WAND",
+            "PENTACLE"
+          ]
+        },
+        {
+          "category": "Words with silent letters",
+          "difficulty": "tricky",
+          "words": [
+            "KNIFE",
+            "PSALM",
+            "GNOME",
+            "WRING"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conn_horror_018",
+      "difficulty": "easy",
+      "groups": [
+        {
+          "category": "Horror movie weapons",
+          "difficulty": "hard",
+          "words": [
+            "BLADE",
+            "CHAINSAW",
+            "DRILL",
+            "MACHETE"
+          ]
+        },
+        {
+          "category": "Words ending in 'ER'",
+          "difficulty": "tricky",
+          "words": [
+            "KILLER",
+            "STALKER",
+            "HUNTER",
+            "WATCHER"
+          ]
+        },
+        {
+          "category": "Things that can haunt",
+          "difficulty": "easy",
+          "words": [
+            "HOUSE",
+            "MANSION",
+            "CASTLE",
+            "HUT"
+          ]
+        },
+        {
+          "category": "Ways creatures die",
+          "difficulty": "medium",
+          "words": [
+            "BITE",
+            "TEAR",
+            "RIP",
+            "MAUL"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conn_horror_001",
+      "difficulty": "easy",
+      "groups": [
+        {
+          "category": "Types of Evidence",
+          "difficulty": "easy",
+          "words": [
+            "BLOOD",
+            "HAIR",
+            "FIBER",
+            "PRINT"
+          ]
+        },
+        {
+          "category": "Police Ranks",
+          "difficulty": "easy",
+          "words": [
+            "CADET",
+            "SERGEANT",
+            "DETECTIVE",
+            "CHIEF"
+          ]
+        },
+        {
+          "category": "Crime Scene Locations",
+          "difficulty": "medium",
+          "words": [
+            "CELLAR",
+            "ATTIC",
+            "BARN",
+            "SHED"
+          ]
+        },
+        {
+          "category": "Words That Can Follow 'DARK'",
+          "difficulty": "tricky",
+          "words": [
+            "ROOM",
+            "WATER",
+            "FOREST",
+            "SOUL"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conn_horror_002",
+      "difficulty": "easy",
+      "groups": [
+        {
+          "category": "Weapons",
+          "difficulty": "easy",
+          "words": [
+            "KNIFE",
+            "AXE",
+            "CHAIN",
+            "BLADE"
+          ]
+        },
+        {
+          "category": "Victim Conditions",
+          "difficulty": "medium",
+          "words": [
+            "LOST",
+            "MISSING",
+            "TAKEN",
+            "HIDDEN"
+          ]
+        },
+        {
+          "category": "Killer Monikers",
+          "difficulty": "medium",
+          "words": [
+            "SHADOW",
+            "PHANTOM",
+            "GHOST",
+            "SPECTRE"
+          ]
+        },
+        {
+          "category": "___ Man (Horror Tropes)",
+          "difficulty": "tricky",
+          "words": [
+            "ICICLE",
+            "CANDY",
+            "BOGEY",
+            "WET"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conn_horror_003",
+      "difficulty": "easy",
+      "groups": [
+        {
+          "category": "Body Fluids at Crime Scenes",
+          "difficulty": "easy",
+          "words": [
+            "BLOOD",
+            "SWEAT",
+            "SALIVA",
+            "TEARS"
+          ]
+        },
+        {
+          "category": "Lock Types",
+          "difficulty": "medium",
+          "words": [
+            "PAD",
+            "DEAD",
+            "BOLT",
+            "CHAIN"
+          ]
+        },
+        {
+          "category": "Modes of Transport in Horror",
+          "difficulty": "medium",
+          "words": [
+            "VAN",
+            "SEDAN",
+            "TRUCK",
+            "WAGON"
+          ]
+        },
+        {
+          "category": "Words That End With 'ER'",
+          "difficulty": "tricky",
+          "words": [
+            "KILLER",
+            "STALKER",
+            "HUNTER",
+            "WATCHER"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conn_horror_004",
+      "difficulty": "medium",
+      "groups": [
+        {
+          "category": "Forensic Light Sources",
+          "difficulty": "easy",
+          "words": [
+            "UV",
+            "IR",
+            "LASER",
+            "LED"
+          ]
+        },
+        {
+          "category": "Killer Souvenirs",
+          "difficulty": "medium",
+          "words": [
+            "PHOTO",
+            "LOCKET",
+            "RING",
+            "WATCH"
+          ]
+        },
+        {
+          "category": "Places to Hide a Body",
+          "difficulty": "hard",
+          "words": [
+            "SWAMP",
+            "MINE",
+            "WELL",
+            "TOMB"
+          ]
+        },
+        {
+          "category": "Cryptid Names",
+          "difficulty": "tricky",
+          "words": [
+            "MOTHMAN",
+            "CHUPACABRA",
+            "BIGFOOT",
+            "JERSEYDEVIL"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conn_horror_005",
+      "difficulty": "medium",
+      "groups": [
+        {
+          "category": "Tape Deck Controls",
+          "difficulty": "easy",
+          "words": [
+            "PLAY",
+            "STOP",
+            "REWIND",
+            "RECORD"
+          ]
+        },
+        {
+          "category": "Analog Artifacts",
+          "difficulty": "medium",
+          "words": [
+            "SNOW",
+            "GLITCH",
+            "SCAN",
+            "FLICKER"
+          ]
+        },
+        {
+          "category": "Broadcast Terms",
+          "difficulty": "medium",
+          "words": [
+            "SIGNAL",
+            "FREQ",
+            "CHANNEL",
+            "STATIC"
+          ]
+        },
+        {
+          "category": "VHS Tape Formats",
+          "difficulty": "tricky",
+          "words": [
+            "BETAMAX",
+            "VHS",
+            "SVR",
+            "MINIDV"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conn_horror_006",
+      "difficulty": "medium",
+      "groups": [
+        {
+          "category": "Occult Ritual Items",
+          "difficulty": "easy",
+          "words": [
+            "CANDLE",
+            "CHALK",
+            "BOWL",
+            "BELL"
+          ]
+        },
+        {
+          "category": "Supernatural Entities",
+          "difficulty": "medium",
+          "words": [
+            "DEMON",
+            "GHOUL",
+            "WRAITH",
+            "POLTERGEIST"
+          ]
+        },
+        {
+          "category": "Cemetery Features",
+          "difficulty": "hard",
+          "words": [
+            "VAULT",
+            "PLOT",
+            "STONE",
+            "GATE"
+          ]
+        },
+        {
+          "category": "Words With Silent Letters",
+          "difficulty": "tricky",
+          "words": [
+            "GNOME",
+            "KNEEL",
+            "PSALM",
+            "WRACK"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conn_horror_007",
+      "difficulty": "medium",
+      "groups": [
+        {
+          "category": "Emergency Services",
+          "difficulty": "easy",
+          "words": [
+            "POLICE",
+            "MEDIC",
+            "FIRE",
+            "SHERIFF"
+          ]
+        },
+        {
+          "category": "Kill Count Terms",
+          "difficulty": "medium",
+          "words": [
+            "BODY",
+            "TALLY",
+            "SCORE",
+            "TOTAL"
+          ]
+        },
+        {
+          "category": "Interrogation Room Types",
+          "difficulty": "hard",
+          "words": [
+            "MIRROR",
+            "OBSERVATION",
+            "HOLDING",
+            "INTERVIEW"
+          ]
+        },
+        {
+          "category": "Things That Come in Pairs",
+          "difficulty": "tricky",
+          "words": [
+            "GLOVES",
+            "SHOES",
+            "EYES",
+            "CUFFS"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conn_horror_008",
+      "difficulty": "hard",
+      "groups": [
+        {
+          "category": "Classic Movie Monsters",
+          "difficulty": "easy",
+          "words": [
+            "FRANKENSTEIN",
+            "DRACULA",
+            "WEREWOLF",
+            "MUMMY"
+          ]
+        },
+        {
+          "category": "Stalker Pattern Phases",
+          "difficulty": "medium",
+          "words": [
+            "WATCH",
+            "FOLLOW",
+            "APPROACH",
+            "STRIKE"
+          ]
+        },
+        {
+          "category": "Evidence Bag Materials",
+          "difficulty": "hard",
+          "words": [
+            "BROWN",
+            "ZIP",
+            "NYLON",
+            "MANILA"
+          ]
+        },
+        {
+          "category": "Grimoire Chapter Titles",
+          "difficulty": "tricky",
+          "words": [
+            "INVOCATION",
+            "CONJURATION",
+            "EVOCATION",
+            "BANISHMENT"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conn_horror_009",
+      "difficulty": "hard",
+      "groups": [
+        {
+          "category": "Autopsy Tools",
+          "difficulty": "easy",
+          "words": [
+            "SCALPEL",
+            "SAW",
+            "CLAMP",
+            "PROBE"
+          ]
+        },
+        {
+          "category": "Time of Death Indicators",
+          "difficulty": "medium",
+          "words": [
+            "RIGOR",
+            "LIVOR",
+            "ALGOR",
+            "PUTREFY"
+          ]
+        },
+        {
+          "category": "Evidence Disposal Methods",
+          "difficulty": "hard",
+          "words": [
+            "BURN",
+            "BURY",
+            "BLEACH",
+            "BAG"
+          ]
+        },
+        {
+          "category": "Urban Legend Locations",
+          "difficulty": "tricky",
+          "words": [
+            "HOOK",
+            "LANE",
+            "BRIDGE",
+            "ROAD"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conn_horror_010",
+      "difficulty": "hard",
+      "groups": [
+        {
+          "category": "Obsessive Collection Items",
+          "difficulty": "easy",
+          "words": [
+            "DOLL",
+            "MASK",
+            "KEY",
+            "TAPE"
+          ]
+        },
+        {
+          "category": "Confinement Spaces",
+          "difficulty": "medium",
+          "words": [
+            "CAGE",
+            "BOX",
+            "ROOM",
+            "VAULT"
+          ]
+        },
+        {
+          "category": "Asylum Ward Wings",
+          "difficulty": "hard",
+          "words": [
+            "EAST",
+            "WEST",
+            "NORTH",
+            "SOUTH"
+          ]
+        },
+        {
+          "category": "Blood Color Synonyms",
+          "difficulty": "tricky",
+          "words": [
+            "CRIMSON",
+            "SCARLET",
+            "RUST",
+            "MAROON"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conn_horror_011",
+      "difficulty": "medium",
+      "groups": [
+        {
+          "category": "Cabin Amenities",
+          "difficulty": "easy",
+          "words": [
+            "STOVE",
+            "BED",
+            "SINK",
+            "LAMP"
+          ]
+        },
+        {
+          "category": "Wild Forest Animals",
+          "difficulty": "medium",
+          "words": [
+            "BEAR",
+            "WOLF",
+            "OWL",
+            "DEER"
+          ]
+        },
+        {
+          "category": "Survival Gear",
+          "difficulty": "medium",
+          "words": [
+            "FLARE",
+            "RADIO",
+            "KNIFE",
+            "MATCH"
+          ]
+        },
+        {
+          "category": "Things That Creak",
+          "difficulty": "tricky",
+          "words": [
+            "FLOOR",
+            "DOOR",
+            "STAIR",
+            "HINGE"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conn_horror_012",
+      "difficulty": "medium",
+      "groups": [
+        {
+          "category": "TV Static Descriptors",
+          "difficulty": "easy",
+          "words": [
+            "SNOW",
+            "RAIN",
+            "HISS",
+            "FIZZ"
+          ]
+        },
+        {
+          "category": "Midnight Broadcast Signals",
+          "difficulty": "medium",
+          "words": [
+            "TEST",
+            "TONE",
+            "SIGN",
+            "OFF"
+          ]
+        },
+        {
+          "category": "Signal Interference Types",
+          "difficulty": "hard",
+          "words": [
+            "JAM",
+            "SCRAMBLE",
+            "HACK",
+            "OVERLAY"
+          ]
+        },
+        {
+          "category": "Words That Read the Same Upside Down",
+          "difficulty": "tricky",
+          "words": [
+            "NOON",
+            "SWIMS",
+            "OHO",
+            "SIS"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conn_horror_013",
+      "difficulty": "easy",
+      "groups": [
+        {
+          "category": "Detective's Desk Items",
+          "difficulty": "easy",
+          "words": [
+            "FILE",
+            "CASE",
+            "NOTE",
+            "PHOTO"
+          ]
+        },
+        {
+          "category": "Witness Categories",
+          "difficulty": "medium",
+          "words": [
+            "EYE",
+            "KEY",
+            "EXPERT",
+            "CHILD"
+          ]
+        },
+        {
+          "category": "Break Room Supplies",
+          "difficulty": "medium",
+          "words": [
+            "COFFEE",
+            "CREAM",
+            "SUGAR",
+            "MUG"
+          ]
+        },
+        {
+          "category": "Shades of Red",
+          "difficulty": "tricky",
+          "words": [
+            "CRIMSON",
+            "RUST",
+            "BRICK",
+            "ROSE"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conn_horror_014",
+      "difficulty": "hard",
+      "groups": [
+        {
+          "category": "Puzzle Game Types",
+          "difficulty": "easy",
+          "words": [
+            "CONNECTIONS",
+            "STRANDS",
+            "WORDLE",
+            "BOXED"
+          ]
+        },
+        {
+          "category": "Tape Quality States",
+          "difficulty": "medium",
+          "words": [
+            "CLEAN",
+            "DEGRADED",
+            "FRAYED",
+            "CORRUPT"
+          ]
+        },
+        {
+          "category": "Transport Controls",
+          "difficulty": "hard",
+          "words": [
+            "BACK",
+            "SKIP",
+            "TRACK",
+            "PREV"
+          ]
+        },
+        {
+          "category": "VHS Rental Chains",
+          "difficulty": "tricky",
+          "words": [
+            "BLOCKBUSTER",
+            "FAMILY",
+            "HOLLYWOOD",
+            "VIDEO"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "conn_horror_015",
+      "difficulty": "easy",
+      "groups": [
+        {
+          "category": "Body Parts in Evidence",
+          "difficulty": "easy",
+          "words": [
+            "HAND",
+            "FOOT",
+            "HEAD",
+            "TORSO"
+          ]
+        },
+        {
+          "category": "Mysterious Messages",
+          "difficulty": "medium",
+          "words": [
+            "NOTE",
+            "TAPE",
+            "CALL",
+            "EMAIL"
+          ]
+        },
+        {
+          "category": "Cold Trail Adjectives",
+          "difficulty": "medium",
+          "words": [
+            "COLD",
+            "DEAD",
+            "CLOSED",
+            "BURIED"
+          ]
+        },
+        {
+          "category": "Horror Film Subgenres",
+          "difficulty": "tricky",
+          "words": [
+            "SLASHER",
+            "PSYCH",
+            "GOTHIC",
+            "BODY"
+          ]
+        }
+      ]
     }
   ],
   "wordle": [
@@ -516,135 +1344,401 @@
       ],
       "spangram": "COLORWHEEL",
       "spangramHint": "Every color"
-    }
-  ],
-  "letter-boxed": [
+    },
     {
-      "id": "lb_horror_001",
-      "difficulty": "medium",
-      "theme": "The Investigation",
-      "sides": [
+      "id": "strands_horror_005",
+      "theme": "Horror Icons",
+      "answers": [
+        "FREDDY",
+        "JASON",
+        "MICHAEL",
+        "PINHEAD",
+        "GHOST",
+        "CHUCKY"
+      ],
+      "spangram": "SLASHER",
+      "spangramHint": "They never die",
+      "grid": [
         [
-          "C",
+          "S",
+          "L",
+          "F",
           "R",
-          "I"
+          "E",
+          "D",
+          "D",
+          "Y"
         ],
         [
-          "L",
-          "U",
-          "E"
+          "A",
+          "J",
+          "N",
+          "M",
+          "I",
+          "C",
+          "H",
+          "A"
         ],
         [
           "S",
-          "A",
-          "T"
-        ],
-        [
-          "D",
           "O",
-          "N"
-        ]
-      ],
-      "answers": [
-        "CRUEL",
-        "SLATE",
-        "DRAIN",
-        "CAULDRON"
-      ],
-      "minWords": 3
-    },
-    {
-      "id": "lb_horror_002",
-      "difficulty": "medium",
-      "theme": "Dark Woods",
-      "sides": [
-        [
-          "G",
-          "R",
-          "O"
-        ],
-        [
-          "V",
-          "E",
-          "S"
-        ],
-        [
-          "N",
+          "P",
           "I",
+          "N",
+          "L",
+          "E",
           "G"
         ],
         [
           "H",
+          "A",
+          "E",
+          "H",
+          "S",
+          "O",
+          "H",
+          "C"
+        ],
+        [
+          "E",
+          "D",
+          "Y",
           "T",
-          "W"
+          "C",
+          "U",
+          "H",
+          "R"
+        ],
+        [
+          "R",
+          "K",
+          "T",
+          "K",
+          "D",
+          "O",
+          "J",
+          "P"
+        ]
+      ]
+    },
+    {
+      "id": "strands_horror_006",
+      "theme": "Haunted Mansions",
+      "answers": [
+        "BLOOD",
+        "DARK",
+        "SHADOW",
+        "BONE",
+        "DEATH",
+        "GRAVE"
+      ],
+      "spangram": "DARKNESS",
+      "spangramHint": "What the monsters hide",
+      "grid": [
+        [
+          "D",
+          "A",
+          "R",
+          "K",
+          "N",
+          "E",
+          "S",
+          "S"
+        ],
+        [
+          "B",
+          "L",
+          "O",
+          "O",
+          "D",
+          "H",
+          "A",
+          "D"
+        ],
+        [
+          "O",
+          "N",
+          "E",
+          "G",
+          "R",
+          "W",
+          "O",
+          "T"
+        ],
+        [
+          "Z",
+          "O",
+          "V",
+          "A",
+          "V",
+          "P",
+          "H",
+          "Z"
+        ],
+        [
+          "B",
+          "N",
+          "B",
+          "V",
+          "P",
+          "V",
+          "K",
+          "J"
+        ],
+        [
+          "X",
+          "Z",
+          "I",
+          "J",
+          "S",
+          "O",
+          "C",
+          "K"
+        ]
+      ]
+    },
+    {
+      "id": "strands_horror_007",
+      "theme": "Creature Features",
+      "answers": [
+        "VAMPIRE",
+        "WEREWOLF",
+        "ZOMBIE",
+        "GHOST",
+        "GOBLIN",
+        "CORPSE"
+      ],
+      "spangram": "MONSTER",
+      "spangramHint": "What they all become",
+      "grid": [
+        [
+          "M",
+          "O",
+          "V",
+          "A",
+          "M",
+          "P",
+          "I",
+          "R"
+        ],
+        [
+          "N",
+          "W",
+          "E",
+          "R",
+          "E",
+          "W",
+          "E",
+          "Z"
+        ],
+        [
+          "S",
+          "G",
+          "F",
+          "L",
+          "O",
+          "M",
+          "O",
+          "G"
+        ],
+        [
+          "T",
+          "H",
+          "E",
+          "I",
+          "B",
+          "B",
+          "L",
+          "I"
+        ],
+        [
+          "E",
+          "O",
+          "S",
+          "T",
+          "C",
+          "O",
+          "N",
+          "D"
+        ],
+        [
+          "R",
+          "O",
+          "Z",
+          "P",
+          "R",
+          "D",
+          "B",
+          "Z"
+        ]
+      ]
+    }
+  ],
+  "letter-boxed": [
+    {
+      "id": "lb_horror_003",
+      "difficulty": "hard",
+      "theme": "Horror",
+      "sides": [
+        [
+          "A",
+          "B",
+          "C"
+        ],
+        [
+          "D",
+          "E",
+          "F"
+        ],
+        [
+          "G",
+          "H",
+          "I"
+        ],
+        [
+          "J",
+          "K",
+          "L"
         ]
       ],
       "answers": [
-        "GROWN",
-        "VINES",
-        "SWORN",
-        "EIGHT"
+        "DARK",
+        "BONE",
+        "SHADOW",
+        "DEATH"
+      ],
+      "minWords": 3
+    },
+    {
+      "id": "lb_horror_005",
+      "difficulty": "hard",
+      "theme": "Horror",
+      "sides": [
+        [
+          "A",
+          "B",
+          "C"
+        ],
+        [
+          "D",
+          "E",
+          "F"
+        ],
+        [
+          "G",
+          "H",
+          "I"
+        ],
+        [
+          "J",
+          "K",
+          "L"
+        ]
+      ],
+      "answers": [
+        "DARKNESS",
+        "GRAVE",
+        "KING",
+        "EVIL"
+      ],
+      "minWords": 4
+    },
+    {
+      "id": "lb_horror_001",
+      "difficulty": "medium",
+      "theme": "Detective",
+      "sides": [
+        [
+          "A",
+          "B",
+          "C"
+        ],
+        [
+          "D",
+          "E",
+          "F"
+        ],
+        [
+          "G",
+          "H",
+          "I"
+        ],
+        [
+          "J",
+          "K",
+          "L"
+        ]
+      ],
+      "answers": [
+        "DEAD",
+        "CAGE",
+        "HEAD",
+        "FBI",
+        "CABLE",
+        "AIDE"
       ],
       "minWords": 3
     }
   ],
   "spelling-bee": [
     {
-      "id": "sb_horror_001",
-      "centerLetter": "O",
-      "outerLetters": [
-        "B",
-        "D",
-        "G",
-        "H",
-        "M",
-        "R"
-      ],
-      "answers": [
-        "BOG",
-        "BOD",
-        "DOG",
-        "DOGO",
-        "HOG",
-        "HOOD",
-        "HOBO",
-        "GOOD",
-        "GOD",
-        "ROOD",
-        "BOGHOG",
-        "MOOR",
-        "ROOM",
-        "BOOM",
-        "BROOM"
-      ],
-      "pangrams": []
-    },
-    {
-      "id": "sb_horror_002",
+      "id": "sb_horror_003",
       "centerLetter": "A",
       "outerLetters": [
+        "B",
         "C",
         "D",
-        "M",
-        "R",
-        "S",
-        "W"
+        "F",
+        "G",
+        "H"
       ],
       "answers": [
-        "ARM",
-        "MAD",
-        "RAD",
-        "WAD",
-        "CAM",
-        "DAM",
-        "DRAM",
-        "SCAM",
-        "SWAM",
-        "CRAM",
-        "WASD",
-        "AWARD"
+        "DARK",
+        "BEAST",
+        "SHADOW"
       ],
-      "pangrams": []
+      "pangrams": [],
+      "theme": "Horror"
+    },
+    {
+      "id": "sb_horror_004",
+      "centerLetter": "E",
+      "outerLetters": [
+        "B",
+        "C",
+        "D",
+        "F",
+        "G",
+        "H"
+      ],
+      "answers": [
+        "DEATH",
+        "SAD",
+        "HEAL"
+      ],
+      "pangrams": [],
+      "theme": "Horror"
+    },
+    {
+      "id": "sb_horror_001",
+      "centerLetter": "E",
+      "outerLetters": [
+        "R",
+        "T",
+        "A",
+        "C",
+        "S",
+        "D"
+      ],
+      "answers": [
+        "TRACE",
+        "ACTED",
+        "CREST",
+        "DATES",
+        "SECRET"
+      ],
+      "pangrams": [],
+      "theme": "Detective"
     }
   ]
 }
